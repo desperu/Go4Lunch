@@ -43,6 +43,10 @@ dependencies {
     implementation 'com.jakewharton:butterknife:10.2.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.0'
 
+    // Ice Pick
+    implementation 'frankiesardo:icepick:3.2.0'
+    annotationProcessor 'frankiesardo:icepick-processor:3.2.0'
+
     //FIREBASE
     implementation "com.google.firebase:firebase-core:17.2.1"
 

@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Go4Lunch</string>
     <string name="title_activity_maps">Map</string>
+
+    <!-- LOGIN ACTIVITY -->
+    <string name="error_unknown_error">Unknown error append !</string>
+
 </resources>
