@@ -11,19 +11,28 @@
     <!-- STYLE SIGN-IN ACTIVITY -->
     <style name="LoginTheme" parent="AppTheme">
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/colorLightGray</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="colorButtonNormal">@color/colorAccent</item>
-        <item name="colorControlNormal">@android:color/darker_gray</item>
-        <item name="colorControlActivated">@android:color/darker_gray</item>
-        <item name="colorControlHighlight">@android:color/darker_gray</item>
+        <item name="colorControlNormal">@android:color/white</item>
+        <item name="colorControlActivated">@android:color/white</item>
+        <item name="colorControlHighlight">@android:color/white</item>
         <item name="android:textColor">@android:color/white</item>
-        <item name="android:textColorPrimary">@android:color/darker_gray</item>
-        <item name="android:textColorSecondary">@android:color/darker_gray</item>
-        <item name="android:windowBackground">@drawable/lunch_workmates_background</item>
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:textColorSecondary">@android:color/white</item>
+        <item name="android:windowBackground">@drawable/ic_login_background</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:textColorHint">@android:color/white</item>
+    </style>
+
+    <!-- FIREBASE AUTH LOGO  TODO not good-->
+    <style name="FirebaseUI.AuthMethodPicker.Logo">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:scaleType">fitXY</item>
+        <item name="android:padding">0dp</item>
+        <item name="android:layout_gravity">center</item>
     </style>
 
 </resources>

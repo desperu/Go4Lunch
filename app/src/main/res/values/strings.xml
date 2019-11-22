@@ -1,8 +1,20 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Go4Lunch</string>
     <string name="title_activity_maps">Map</string>
 
     <!-- LOGIN ACTIVITY -->
+    <string name="error_not_connected">You need to sign in !</string>
+    <string name="error_authentication_canceled">Authentication canceled !</string>
+    <string name="error_no_internet">No network connexion !</string>
     <string name="error_unknown_error">Unknown error append !</string>
+    <string name="connection_succeed">Success login !</string>
+
+    <!-- FACEBOOK PURPOSE -->
+    <string name="facebook_application_id" translatable="false">2475450979175039</string>
+    <string name="facebook_login_protocol_scheme" translatable="false" tools:ignore="UnusedResources">fb2475450979175039</string>
+
+    <!-- TWITTER PURPOSE -->
+    <string name="twitter_consumer_key" translatable="false">4wAnm8B6ASiWMdCPTTuwSlIRd</string>
+    <string name="twitter_consumer_secret" translatable="false">n7xapY3YccZ7FuOTdtCQyxrYvOuoUcs7Pfo9PPVJsG28WxXXVn</string>
 
 </resources>

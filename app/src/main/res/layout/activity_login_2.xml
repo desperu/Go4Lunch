@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/ic_login_background">
+
+    <ImageView
+        android:id="@+id/activity_login_image_view_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="4"
+        android:src="@drawable/ic_login_logo_white_orig"
+        android:layout_gravity="center"
+        android:layout_marginTop="50dp"/>
+
+    <com.google.android.gms.common.internal.SignInButtonImpl
+        android:id="@+id/activity_login_button_email"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_gravity="center"/>
+
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/activity_login_button_google"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_gravity="center"/>
+
+    <com.facebook.login.widget.LoginButton
+        android:id="@+id/activity_login_button_facebook"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_gravity="center"/>
+
+    <com.twitter.sdk.android.core.identity.TwitterLoginButton
+        android:id="@+id/activity_login_button_twitter"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_gravity="center"/>
+
+</LinearLayout>

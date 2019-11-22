@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Go4Lunch colors -->
     <color name="colorPrimary">#ff5722</color>
     <color name="colorPrimaryDark">#c41c00</color>
     <color name="colorAccent">#ff5722</color>
+    <color name="colorLightGray">#974D4D4D</color>
 </resources>
