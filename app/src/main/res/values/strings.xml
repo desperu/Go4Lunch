@@ -1,6 +1,21 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Go4Lunch</string>
     <string name="title_activity_maps">Map</string>
+    <string name="title_activity_main">I\'m Hungry!</string>
+
+    <!-- MENU -->
+    <!-- Nav Drawer -->
+    <string name="navigation_drawer_your_lunch">YOUR LUNCH</string>
+    <string name="navigation_drawer_settings">SETTINGS</string>
+    <string name="navigation_drawer_log_out">LOGOUT</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <!-- Menu Search -->
+    <string name="menu_item_search">Search</string>
+    <!-- Nav bottom -->
+    <string name="activity_main_menu_bottom_map">Map View</string>
+    <string name="activity_main_menu_bottom_list">List View</string>
+    <string name="activity_main_menu_bottom_workmates">Workmates</string>
 
     <!-- LOGIN ACTIVITY -->
     <string name="error_not_connected">You need to sign in !</string>

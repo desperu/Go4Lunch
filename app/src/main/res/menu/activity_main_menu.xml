@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/activity_main_menu_search"
+        android:icon="@drawable/ic_baseline_search_white_24"
+        app:showAsAction="ifRoom"
+        android:title="@string/menu_item_search">
+    </item>
+
+</menu>

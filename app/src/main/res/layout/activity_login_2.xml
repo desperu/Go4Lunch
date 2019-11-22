@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_weight="4"
-        android:src="@drawable/ic_login_logo_white_orig"
+        android:src="@drawable/ic_login_logo_white"
         android:layout_gravity="center"
         android:layout_marginTop="50dp"/>
 

@@ -11,7 +11,6 @@ import com.firebase.ui.auth.IdpResponse;
 import org.desperu.go4lunch.R;
 import org.desperu.go4lunch.api.UserHelper;
 import org.desperu.go4lunch.base.BaseActivity;
-import org.desperu.go4lunch.fragments.MapsActivity;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -52,7 +51,7 @@ public class LoginActivity extends BaseActivity {
      */
     private void isAlreadyLogged() {
         if (this.isCurrentUserLogged()) {
-            startMapsActivity();
+            startMainActivity();
             this.finish();
         }
         else startSignInActivity();
@@ -83,7 +82,7 @@ public class LoginActivity extends BaseActivity {
                                 // Twitter authentication
                                 new AuthUI.IdpConfig.TwitterBuilder().build()))
                         .setIsSmartLockEnabled(false, true)
-                        .setLogo(R.drawable.ic_login_logo_white_orig)
+                        .setLogo(R.drawable.ic_login_logo_white)
                         // TODO to test for custom layout
 //                        .setAuthMethodPickerLayout(customLayout)
                         .build(),
@@ -141,7 +140,7 @@ public class LoginActivity extends BaseActivity {
             if (resultCode == RESULT_OK) { // SUCCESS
                 this.createUserInFirestore();
                 showToast(getString(R.string.connection_succeed));
-                this.startMapsActivity();
+                this.startMainActivity();
             } else { // ERRORS
                 if (response == null) {
                     showToast(getString(R.string.error_authentication_canceled));
@@ -155,15 +154,13 @@ public class LoginActivity extends BaseActivity {
     }
 
     // --------------------
-    // ACTION
+    // ACTIVITY
     // --------------------
-
-    //TODO for test
 
     /**
      * Start Main Activity.
      */
-    private void startMapsActivity() {
-        startActivity(new Intent(this, MapsActivity.class));
+    private void startMainActivity() {
+        startActivity(new Intent(this, MainActivity.class));
     }
 }

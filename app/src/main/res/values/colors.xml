@@ -5,4 +5,5 @@
     <color name="colorPrimaryDark">#c41c00</color>
     <color name="colorAccent">#ff5722</color>
     <color name="colorLightGray">#974D4D4D</color>
+    <color name="colorNavDrawer">#ff8a50</color>
 </resources>
