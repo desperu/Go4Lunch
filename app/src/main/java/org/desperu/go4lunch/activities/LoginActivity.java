@@ -39,7 +39,7 @@ public class LoginActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         // Handle SignIn Activity response on activity result.
         this.handleResponseAfterSignIn(requestCode, resultCode, data);
-        this.finish(); // TODO for test
+        this.finish(); // TODO another way??
     }
 
     // --------------------
@@ -61,7 +61,7 @@ public class LoginActivity extends BaseActivity {
      * Launch sign in activity with firesbase ui.
      */
     private void startSignInActivity(){
-        AuthMethodPickerLayout customLayout = new AuthMethodPickerLayout.Builder(R.layout.activity_login_2)
+        AuthMethodPickerLayout customLayout = new AuthMethodPickerLayout.Builder(R.layout.activity_login)
                                 .setEmailButtonId(R.id.activity_login_button_email)
                                 .setGoogleButtonId(R.id.activity_login_button_google)
                                 .setFacebookButtonId(R.id.activity_login_button_facebook)
@@ -83,8 +83,7 @@ public class LoginActivity extends BaseActivity {
                                 new AuthUI.IdpConfig.TwitterBuilder().build()))
                         .setIsSmartLockEnabled(false, true)
                         .setLogo(R.drawable.ic_login_logo_white)
-                        // TODO to test for custom layout
-//                        .setAuthMethodPickerLayout(customLayout)
+                        .setAuthMethodPickerLayout(customLayout)
                         .build(),
                 RC_SIGN_IN);
     }
@@ -98,7 +97,7 @@ public class LoginActivity extends BaseActivity {
      */
     private void createUserInFirestore(){
 
-        if (this.getCurrentUser() != null){
+        if (this.getCurrentUser() != null) {
 
             String urlPicture = (this.getCurrentUser().getPhotoUrl() != null) ?
                     this.getCurrentUser().getPhotoUrl().toString() : null;
@@ -125,7 +124,7 @@ public class LoginActivity extends BaseActivity {
     // UTILS
     // --------------------
 
-    //TODO not good
+    //TODO not good not show
     /**
      * Method that handles response after SignIn Activity close.
      * @param requestCode Code of the request.

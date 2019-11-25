@@ -1,5 +1,6 @@
 package org.desperu.go4lunch.activities;
 
+import android.content.Intent;
 import android.os.Build;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,6 +12,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import org.desperu.go4lunch.R;
 import org.desperu.go4lunch.base.BaseActivity;
@@ -70,6 +72,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT)
             navigationView.setPadding(0, 0, 0, 0);
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.getMenu().setGroupCheckable(R.id.activity_main_menu_drawer_group, false, false);
     }
 
     // -----------------
@@ -87,7 +90,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 //                this.showNotificationsActivity();
                 break;
             case R.id.activity_main_menu_drawer_log_out:
-//                this.showAboutDialog();
+                this.logOut();
                 break;
             default:
                 break;
@@ -134,6 +137,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     // ACTIVITY
     // -----------------
 
+    /**
+     * Log out of current login, and start Login Activity.
+     */
+    private void logOut() {
+        FirebaseAuth.getInstance().signOut();
+        startActivity(new Intent(this, LoginActivity.class));
+        this.finish();
+    }
 //    /**
 //     * Start show article activity.
 //     *

@@ -1,11 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_login_constraint_layout"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.LoginActivity">
+    android:background="@drawable/ic_login_background">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/activity_login_image_view_logo"
+            android:layout_width="@dimen/activity_login_image_width"
+            android:layout_height="@dimen/activity_login_image_height"
+            android:layout_marginTop="@dimen/activity_login_image_margin_top"
+            android:layout_marginStart="@dimen/activity_login_image_margin_start"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_base_logo_white"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/activity_login_text_app_name_text_size"
+            android:textStyle="bold"
+            android:includeFontPadding="false"
+            android:layout_marginTop="@dimen/activity_login_text_app_name_margin_top"
+            android:layout_marginBottom="@dimen/activity_login_text_app_name_margin_bottom"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/activity_login_text_presentation"
+            android:textColor="@android:color/white"
+            android:textStyle="italic"
+            android:textSize="@dimen/activity_login_text_description_text_size"
+            android:includeFontPadding="false"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/activity_login_button_email"
+            android:layout_width="@dimen/activity_login_button_width"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_email"
+            android:text="@string/activity_login_button_email"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/activity_login_button_text_size"
+            android:drawableStart="@drawable/ic_logo_mail"
+            android:paddingStart="@dimen/activity_login_button_padding_start_end"
+            android:paddingEnd="@dimen/activity_login_button_padding_start_end"
+            android:layout_margin="@dimen/activity_login_button_margin"/>
+
+        <Button
+            android:id="@+id/activity_login_button_google"
+            android:layout_width="@dimen/activity_login_button_width"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_google"
+            android:text="@string/activity_login_button_google"
+            android:textAllCaps="false"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/activity_login_button_text_size"
+            android:drawableStart="@drawable/ic_logo_google"
+            android:paddingStart="@dimen/activity_login_button_padding_start_end"
+            android:paddingEnd="@dimen/activity_login_button_padding_start_end"
+            android:layout_margin="@dimen/activity_login_button_margin"/>
+
+        <Button
+            android:id="@+id/activity_login_button_facebook"
+            android:layout_width="@dimen/activity_login_button_width"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_facebook"
+            android:text="@string/activity_login_button_facebook"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/activity_login_button_text_size"
+            android:drawableStart="@drawable/ic_logo_facebook"
+            android:paddingStart="@dimen/activity_login_button_facebook_padding_start_end"
+            android:paddingEnd="@dimen/activity_login_button_facebook_padding_start_end"
+            android:layout_margin="@dimen/activity_login_button_margin"/>
+
+        <Button
+            android:id="@+id/activity_login_button_twitter"
+            android:layout_width="@dimen/activity_login_button_width"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_twitter"
+            android:text="@string/activity_login_button_twitter"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/activity_login_button_text_size"
+            android:drawableStart="@drawable/ic_logo_twitter"
+            android:paddingStart="@dimen/activity_login_button_padding_start_end"
+            android:paddingEnd="@dimen/activity_login_button_padding_start_end"
+            android:layout_margin="@dimen/activity_login_button_margin"/>
+
+    </LinearLayout>
+
+</LinearLayout>

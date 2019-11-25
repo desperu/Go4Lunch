@@ -18,6 +18,13 @@
     <string name="activity_main_menu_bottom_workmates">Workmates</string>
 
     <!-- LOGIN ACTIVITY -->
+    <!-- Layout Login -->
+    <string name="activity_login_text_presentation">Find a nice restaurant and invite your co-workers for lunch!</string>
+    <string name="activity_login_button_email">Sign in with Email</string>
+    <string name="activity_login_button_google">Sign in with Google</string>
+    <string name="activity_login_button_facebook">Sign in with Facebook</string>
+    <string name="activity_login_button_twitter">Sign in with Twitter</string>
+    <!-- Messages login -->
     <string name="error_not_connected">You need to sign in !</string>
     <string name="error_authentication_canceled">Authentication canceled !</string>
     <string name="error_no_internet">No network connexion !</string>

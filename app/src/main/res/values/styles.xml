@@ -32,13 +32,4 @@
         <item name="android:textColorHint">@android:color/white</item>
     </style>
 
-    <!-- FIREBASE AUTH LOGO  TODO not good-->
-    <style name="FirebaseUI.AuthMethodPicker.Logo">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:scaleType">fitXY</item>
-        <item name="android:padding">0dp</item>
-        <item name="android:layout_gravity">center</item>
-    </style>
-
 </resources>
