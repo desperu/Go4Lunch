@@ -45,7 +45,7 @@
             android:label="@string/title_activity_main" />
 
         <activity
-            android:name=".fragments.MapsActivity"
+            android:name=".fragments.MapsFragment"
             android:label="@string/title_activity_maps">
         </activity>
     </application>

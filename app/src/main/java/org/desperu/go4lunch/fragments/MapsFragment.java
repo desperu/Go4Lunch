@@ -1,7 +1,5 @@
 package org.desperu.go4lunch.fragments;
 
-import androidx.fragment.app.FragmentActivity;
-
 import android.os.Bundle;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -12,19 +10,34 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.desperu.go4lunch.R;
+import org.desperu.go4lunch.base.BaseFragment;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsFragment extends BaseFragment implements OnMapReadyCallback {
 
     private GoogleMap mMap;
 
+    // --------------
+    // BASE METHODS
+    // --------------
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected int getFragmentLayout() { return R.layout.fragment_maps; }
+
+    @Override
+    protected void configureDesign() { }
+
+    public MapsFragment() {
+        // Needed empty constructor
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        // TODO put into activity >>
+//        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+//                .findFragmentById(R.id.map);
+//        mapFragment.getMapAsync(this);
     }
 
 

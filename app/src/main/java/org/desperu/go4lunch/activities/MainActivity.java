@@ -2,29 +2,38 @@ package org.desperu.go4lunch.activities;
 
 import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
 import org.desperu.go4lunch.R;
 import org.desperu.go4lunch.base.BaseActivity;
+import org.jetbrains.annotations.NotNull;
+
+import butterknife.BindView;
 
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener,
         BottomNavigationView.OnNavigationItemSelectedListener {
 
     // FOR DESIGN
-    private Toolbar toolbar;
     private DrawerLayout drawerLayout;
-    private NavigationView navigationView;
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.activity_main_nav_view) NavigationView navigationView;
+    @BindView(R.id.activity_main_nav_bottom) BottomNavigationView bottomNavigationView;
 
     // --------------
     // BASE METHODS
@@ -38,19 +47,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         this.configureToolBar();
         this.configureDrawerLayout();
         this.configureNavigationView();
+        this.configureBottomNavigationView();
     }
 
     // -----------------
     // CONFIGURATION
     // -----------------
-
-    /**
-     * Configure ToolBar.
-     */
-    protected void configureToolBar() {
-        this.toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-    }
 
     /**
      * Configure Drawer layout.
@@ -67,7 +69,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
      * Configure Navigation Drawer.
      */
     private void configureNavigationView() {
-        this.navigationView = findViewById(R.id.activity_main_nav_view);
         // Support status bar for KitKat.
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT)
             navigationView.setPadding(0, 0, 0, 0);
@@ -75,14 +76,66 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         navigationView.getMenu().setGroupCheckable(R.id.activity_main_menu_drawer_group, false, false);
     }
 
+    /**
+     * Configure Bottom Navigation View.
+     */
+    private void configureBottomNavigationView() {
+        bottomNavigationView.setOnNavigationItemSelectedListener(this);
+    }
+
+    /**
+     * Configure and show corresponding fragment.
+     */
+    private void configureAndShowFragment(Fragment frag) {
+        Fragment fragment = frag;
+
+        fragment = (Fragment) getSupportFragmentManager()
+                .findFragmentById(R.id.activity_main_frame_layout);
+
+        if (fragment == null) {
+            fragment = new Fragment();
+//            Bundle bundle = new Bundle();
+//            bundle.putInt(KEY_FRAGMENT, NOTIFICATION_FRAGMENT);
+//            fragment.setArguments(bundle);
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.activity_main_frame_layout, fragment)
+                    .commit();
+        }
+    }
+
+    // TODO one method for all fragments
+    /**
+     * Configure and show map fragment.
+     */
+    private void configureAndShowMapsFragment() {
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.activity_main_frame_layout);
+
+        if (mapFragment == null) {
+            mapFragment = new SupportMapFragment();
+//            mapFragment.getMapAsync(MapsFragment.class);
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.activity_main_frame_layout, mapFragment)
+                    .commit();
+        }
+    }
+
     // -----------------
     // METHODS OVERRIDE
     // -----------------
 
+
     @Override
-    public boolean onNavigationItemSelected(MenuItem menuItem) {
-        int id = menuItem.getItemId();
-        switch (id) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (savedInstanceState == null)
+            this.configureAndShowMapsFragment();
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NotNull MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+                // Menu drawer
             case R.id.activity_main_menu_drawer_your_lunch:
 //                this.showSearchArticlesActivity();
                 break;
@@ -92,6 +145,16 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             case R.id.activity_main_menu_drawer_log_out:
                 this.logOut();
                 break;
+                // Bottom Navigation
+            case R.id.activity_main_menu_bottom_map:
+                this.configureAndShowMapsFragment();
+                break;
+            case R.id.activity_main_menu_bottom_list:
+                Toast.makeText(this, "test list", Toast.LENGTH_SHORT).show();
+//                this.showAboutDialog();
+                break;
+            case R.id.activity_main_menu_bottom_workmates:
+//                this.showHelpDocumentation();
             default:
                 break;
         }
@@ -114,19 +177,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NotNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.activity_main_menu_search:
 //                this.showSearchArticlesActivity();
-                return true;
-            case R.id.activity_main_menu_bottom_map:
-//                this.showNotificationsActivity();
-                return true;
-            case R.id.activity_main_menu_bottom_list:
-//                this.showAboutDialog();
-                return true;
-            case R.id.activity_main_menu_bottom_workmates:
-//                this.showHelpDocumentation();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
