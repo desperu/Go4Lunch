@@ -3,14 +3,17 @@ package org.desperu.go4lunch.activities;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
+import androidx.databinding.DataBindingUtil;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
@@ -21,6 +24,8 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import org.desperu.go4lunch.R;
 import org.desperu.go4lunch.base.BaseActivity;
+import org.desperu.go4lunch.databinding.ActivityMainNavHeaderBinding;
+import org.desperu.go4lunch.viewmodel.UserViewModel;
 import org.jetbrains.annotations.NotNull;
 
 import butterknife.BindView;
@@ -30,8 +35,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         BottomNavigationView.OnNavigationItemSelectedListener {
 
     // FOR DESIGN
-    private DrawerLayout drawerLayout;
     @BindView(R.id.toolbar) Toolbar toolbar;
+    private DrawerLayout drawerLayout;
     @BindView(R.id.activity_main_nav_view) NavigationView navigationView;
     @BindView(R.id.activity_main_nav_bottom) BottomNavigationView bottomNavigationView;
 
@@ -54,6 +59,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     // CONFIGURATION
     // -----------------
 
+//    /**
+//     * Configure ToolBar.
+//     */
+//    protected void configureToolBar() {
+//        this.toolbar = findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
+//    }
+
     /**
      * Configure Drawer layout.
      */
@@ -73,7 +86,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT)
             navigationView.setPadding(0, 0, 0, 0);
         navigationView.setNavigationItemSelectedListener(this);
+        // Disable check item
         navigationView.getMenu().setGroupCheckable(R.id.activity_main_menu_drawer_group, false, false);
+        // Enable Data binding for user info
+        View headerView = navigationView.getHeaderView(0);
+        ActivityMainNavHeaderBinding activityMainNavHeaderBinding = ActivityMainNavHeaderBinding.bind(headerView);
+        UserViewModel userViewModel = new UserViewModel(getBaseContext());
+        activityMainNavHeaderBinding.setUserViewModel(userViewModel);
     }
 
     /**
@@ -155,6 +174,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 break;
             case R.id.activity_main_menu_bottom_workmates:
 //                this.showHelpDocumentation();
+                // TODO for test only
+                startActivity(new Intent(this, TestBindingActivity.class));
+                break;
+            case R.id.activity_main_menu_bottom_chat:
+                Toast.makeText(this, "test chat", Toast.LENGTH_SHORT).show();
+                break;
             default:
                 break;
         }

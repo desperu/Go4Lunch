@@ -13,6 +13,11 @@
         <!-- Color of the title text in the Toolbar  -->
         <item name="android:textColorPrimary">@android:color/white</item>
     </style>
+    
+    <!-- NAVIGATION VIEW THEME -->
+    <style name="NavigationDrawerTheme">
+        <item name="android:textSize">16sp</item>
+    </style>
 
     <!-- STYLE SIGN-IN ACTIVITY -->
     <style name="LoginTheme" parent="AppTheme">

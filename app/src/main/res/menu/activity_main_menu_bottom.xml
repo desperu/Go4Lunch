@@ -12,4 +12,8 @@
         android:title="@string/activity_main_menu_bottom_workmates"
         android:icon="@drawable/ic_baseline_people_black_24" />
 
+    <item android:id="@+id/activity_main_menu_bottom_chat"
+        android:title="@string/activity_main_menu_bottom_chat"
+        android:icon="@drawable/ic_baseline_chat_black_24" />
+
 </menu>

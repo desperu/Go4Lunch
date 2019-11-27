@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="org.desperu.go4lunch">
-
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -19,7 +18,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-
+        <!-- TODO only for test binding data -->
+        <activity android:name=".activities.TestBindingActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -33,21 +33,17 @@
             android:value="@string/google_maps_api_key" />
 
         <!-- LOGIN ACTIVITY -->
-        <activity android:name=".activities.LoginActivity" >
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
+        <activity android:name=".activities.LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
-
-        <activity android:name=".activities.MainActivity"
-            android:label="@string/title_activity_main" />
 
         <activity
-            android:name=".fragments.MapsFragment"
-            android:label="@string/title_activity_maps">
-        </activity>
+            android:name=".activities.MainActivity"
+            android:label="@string/title_activity_main" />
     </application>
 
 </manifest>

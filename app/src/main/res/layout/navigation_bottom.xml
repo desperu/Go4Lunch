@@ -8,6 +8,7 @@
     android:layout_height="@dimen/nav_bottom_height"
     android:layout_gravity="bottom"
 
+    app:labelVisibilityMode="labeled"
     app:itemTextColor="@color/bnv_tab_item_foreground"
     app:itemIconTint="@color/bnv_tab_item_foreground"
     app:menu="@menu/activity_main_menu_bottom" />
