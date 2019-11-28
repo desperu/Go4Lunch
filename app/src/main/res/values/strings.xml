@@ -32,6 +32,9 @@
     <string name="error_unknown_error">Unknown error append !</string>
     <string name="connection_succeed">Success login !</string>
 
+    <!-- MAP FRAGMENT -->
+    <string name="popup_title_permission_coarse_location">This application need permission.</string>
+
     <!-- FACEBOOK PURPOSE -->
     <string name="facebook_application_id" translatable="false">2475450979175039</string>
     <string name="facebook_login_protocol_scheme" translatable="false" tools:ignore="UnusedResources">fb2475450979175039</string>

@@ -48,6 +48,9 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
+    //EASY PERMISSIONS
+    implementation 'pub.devrel:easypermissions:1.1.1'
+
     //BUTTERKNIFE
     implementation 'com.jakewharton:butterknife:10.2.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.0'
@@ -95,6 +98,9 @@ dependencies {
 
     // Google map
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
+
+    // Google places
+    implementation 'com.google.android.libraries.places:places:2.1.0'
 }
 
 apply plugin: 'com.google.gms.google-services'
