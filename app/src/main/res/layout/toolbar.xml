@@ -1,13 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.Toolbar
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-
-    android:id="@+id/toolbar"
-    android:minHeight="?attr/actionBarSize"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="?attr/colorPrimary"
+    android:layout_height="?attr/actionBarSize">
 
-    android:theme="@style/ToolbarTheme"
-    app:titleTextColor="@android:color/white"/>
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:minHeight="?attr/actionBarSize"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+
+        android:theme="@style/ToolbarTheme"
+        app:titleTextColor="@android:color/white" />
+
+    <RelativeLayout
+        android:id="@+id/toolbar_autocomplete"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_container_autocomplete_height"
+        android:background="@android:color/white"
+        android:visibility="gone"
+        android:layout_margin="@dimen/toolbar_container_autocomplete_margin">
+
+    </RelativeLayout>
+
+</RelativeLayout>

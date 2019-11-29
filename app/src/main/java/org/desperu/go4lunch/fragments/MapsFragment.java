@@ -24,7 +24,7 @@ import org.desperu.go4lunch.base.BaseFragment;
 import butterknife.BindView;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class MapFragment extends BaseFragment implements OnMapReadyCallback {
+public class MapsFragment extends BaseFragment implements OnMapReadyCallback {
 
     @BindView(R.id.map) MapView mapView;
 
@@ -42,18 +42,18 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
     // --------------
 
     @Override
-    protected int getFragmentLayout() { return R.layout.fragment_map; }
+    protected int getFragmentLayout() { return R.layout.fragment_maps; }
 
     @Override
     protected void configureDesign() { this.configureMapFragment(); }
 
 
-    public MapFragment() {
+    public MapsFragment() {
         // Needed empty constructor
     }
 
-    public static MapFragment newInstance() {
-        return new MapFragment();
+    public static MapsFragment newInstance() {
+        return new MapsFragment();
     }
 
     // --------------
@@ -74,6 +74,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
         mMap.addMarker(new MarkerOptions().position(latLng)
                 .title("Singapore"));
         mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+        mMap.clear();
 
         // Enable MyLocation button
         this.checkLocationPermissionsStatus();

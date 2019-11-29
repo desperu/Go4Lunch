@@ -32,6 +32,9 @@
     <string name="error_unknown_error">Unknown error append !</string>
     <string name="connection_succeed">Success login !</string>
 
+    <!-- MAIN ACTIVITY -->
+    <string name="activity_main_search_edit_text_hint">Search restaurant</string>
+
     <!-- MAP FRAGMENT -->
     <string name="popup_title_permission_coarse_location">This application need permission.</string>
 
