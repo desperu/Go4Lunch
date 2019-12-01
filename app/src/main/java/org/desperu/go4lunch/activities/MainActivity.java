@@ -13,7 +13,6 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.libraries.places.api.Places;
@@ -22,7 +21,6 @@ import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.auth.FirebaseAuth;
 
 import org.desperu.go4lunch.BuildConfig;
 import org.desperu.go4lunch.R;
@@ -41,15 +39,16 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         BottomNavigationView.OnNavigationItemSelectedListener {
 
     // FOR DESIGN
-    private DrawerLayout drawerLayout;
     @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.activity_main_drawer_layout) DrawerLayout drawerLayout;
+    @BindView(R.id.toolbar_autocomplete) RelativeLayout autoCompleteContainer;
     @BindView(R.id.activity_main_nav_view) NavigationView navigationView;
     @BindView(R.id.activity_main_nav_bottom) BottomNavigationView bottomNavigationView;
 
-    @BindView(R.id.toolbar_autocomplete) RelativeLayout autoCompleteTextView;
-
+    // FOR DATA
+    private UserViewModel userViewModel;
     private AutocompleteSupportFragment autocompleteFragment;
-    private Fragment completeFragment;
+
 
 
     // --------------
@@ -76,7 +75,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
      * Configure Drawer layout.
      */
     private void configureDrawerLayout() {
-        this.drawerLayout = findViewById(R.id.activity_main_drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
@@ -93,12 +91,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         navigationView.setNavigationItemSelectedListener(this);
         // Disable check item
         navigationView.getMenu().setGroupCheckable(R.id.activity_main_menu_drawer_group, false, false);
-
-        // Enable Data binding for user info
-        View headerView = navigationView.getHeaderView(0);
-        ActivityMainNavHeaderBinding activityMainNavHeaderBinding = ActivityMainNavHeaderBinding.bind(headerView);
-        UserViewModel userViewModel = new UserViewModel(getBaseContext());
-        activityMainNavHeaderBinding.setUserViewModel(userViewModel);
+        this.updateHeaderWithUserInfo();
     }
 
     /**
@@ -147,6 +140,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 //        TypeFilter typeFilter = TypeFilter.Creator<Place.Type.RESTAURANT>;
 //        autocompleteFragment.setTypeFilter(typeFilter);
 
+        // TODO put int a ViewModel
         Places.initialize(this, BuildConfig.google_maps_api_key);
 
 //        PlacesClient placesClient = Places.createClient(this);
@@ -216,9 +210,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     public void onBackPressed() {
         if (this.drawerLayout.isDrawerOpen(GravityCompat.START))
             this.drawerLayout.closeDrawer(GravityCompat.START);
-        else if (autoCompleteTextView != null && autoCompleteTextView.isShown()) {
-            getSupportFragmentManager().beginTransaction().remove(autocompleteFragment).commit();
-            autoCompleteTextView.setVisibility(View.GONE);
+        else if (autoCompleteContainer != null && autoCompleteContainer.isShown()) {
+            if (autocompleteFragment != null && autocompleteFragment.isVisible())
+                getSupportFragmentManager().beginTransaction().remove(autocompleteFragment).commit();
+            autoCompleteContainer.setVisibility(View.GONE);
         }
         else
             super.onBackPressed();
@@ -233,11 +228,26 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     public boolean onOptionsItemSelected(@NotNull MenuItem item) {
         if (item.getItemId() == R.id.activity_main_menu_search) {
-            autoCompleteTextView.setVisibility(View.VISIBLE);
+            autoCompleteContainer.setVisibility(View.VISIBLE);
             this.configureAutocomplete();
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    // -----------------
+    // UI
+    // -----------------
+
+    /**
+     * Update Navigation View Header with user info.
+     */
+    private void updateHeaderWithUserInfo() {
+        // Enable Data binding for user info
+        View headerView = navigationView.getHeaderView(0);
+        ActivityMainNavHeaderBinding activityMainNavHeaderBinding = ActivityMainNavHeaderBinding.bind(headerView);
+        userViewModel = new UserViewModel(getBaseContext());
+        activityMainNavHeaderBinding.setUserViewModel(userViewModel);
     }
 
     // -----------------
@@ -247,8 +257,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     /**
      * Log out of current login, and start Login Activity.
      */
-    private void logOut() { // TODO use viewModel
-        FirebaseAuth.getInstance().signOut();
+    private void logOut() {
+        userViewModel.userLogOut();
         startActivity(new Intent(this, LoginActivity.class));
         this.finish();
     }

@@ -34,6 +34,9 @@
     <dimen name="nav_view_image_view_height">120dp</dimen>
     <dimen name="nav_view_image_view_margin_start">30dp</dimen>
 
+    <!-- Maps Fragment -->
+    <dimen name="fragment_maps_floating_button_location">15dp</dimen>
+
     <!-- MENU -->
 
     <!-- Menu Drawer -->

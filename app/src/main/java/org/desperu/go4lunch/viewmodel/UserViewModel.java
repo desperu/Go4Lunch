@@ -35,4 +35,6 @@ public class UserViewModel {
     @BindingAdapter("imageUrl") public static void setImageUrl(@NotNull ImageView imageView, String url) {
         Glide.with(imageView.getContext()).load(url).circleCrop().into(imageView);
     }
+
+    public void userLogOut() { FirebaseAuth.getInstance().signOut(); }
 }

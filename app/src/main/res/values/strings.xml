@@ -36,7 +36,7 @@
     <string name="activity_main_search_edit_text_hint">Search restaurant</string>
 
     <!-- MAP FRAGMENT -->
-    <string name="popup_title_permission_coarse_location">This application need permission.</string>
+    <string name="popup_title_permission_location">This application need location permission.</string>
 
     <!-- FACEBOOK PURPOSE -->
     <string name="facebook_application_id" translatable="false">2475450979175039</string>

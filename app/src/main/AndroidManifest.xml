@@ -41,13 +41,15 @@
             </intent-filter>
         </activity>
 
+        <!-- MAIN ACTIVITY -->
         <activity
             android:name=".activities.MainActivity"
             android:label="@string/title_activity_main">
-            <intent-filter>
-                <action android:name="com.google.android.gms.actions.SEARCH_ACTION"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
+            <!-- TODO remove ? -->
+<!--            <intent-filter>-->
+<!--                <action android:name="com.google.android.gms.actions.SEARCH_ACTION"/>-->
+<!--                <category android:name="android.intent.category.DEFAULT"/>-->
+<!--            </intent-filter>-->
         </activity>
     </application>
 
