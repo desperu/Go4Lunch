@@ -1,24 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".fragments.MapsFragment">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <com.google.android.gms.maps.MapView
-        android:id="@+id/map"
+    <data>
+        <variable
+            name="placeViewModel"
+            type="org.desperu.go4lunch.viewmodel.PlaceViewModel" />
+    </data>
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        tools:context=".view.fragments.MapsFragment">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fragment_maps_floating_button_location"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="@dimen/fragment_maps_floating_button_location"
-        app:backgroundTint="@android:color/white"
-        app:srcCompat="@drawable/ic_baseline_my_location_black_24"/>
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:addMarker="@{placeViewModel.foundPlaceList}"/>
 
-</RelativeLayout>
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fragment_maps_floating_button_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="@dimen/fragment_maps_floating_button_location"
+            app:backgroundTint="@android:color/white"
+            app:srcCompat="@drawable/ic_baseline_my_location_black_24"/>
+
+    </RelativeLayout>
+
+</layout>

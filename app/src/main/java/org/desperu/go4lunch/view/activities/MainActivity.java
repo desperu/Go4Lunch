@@ -1,4 +1,4 @@
-package org.desperu.go4lunch.activities;
+package org.desperu.go4lunch.view.activities;
 
 import android.content.Intent;
 import android.os.Build;
@@ -26,7 +26,7 @@ import org.desperu.go4lunch.BuildConfig;
 import org.desperu.go4lunch.R;
 import org.desperu.go4lunch.base.BaseActivity;
 import org.desperu.go4lunch.databinding.ActivityMainNavHeaderBinding;
-import org.desperu.go4lunch.fragments.MapsFragment;
+import org.desperu.go4lunch.view.fragments.MapsFragment;
 import org.desperu.go4lunch.viewmodel.UserViewModel;
 import org.jetbrains.annotations.NotNull;
 

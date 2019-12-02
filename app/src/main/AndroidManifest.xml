@@ -19,7 +19,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <!-- TODO only for test binding data -->
-        <activity android:name=".activities.TestBindingActivity" />
+        <activity android:name=".view.activities.TestBindingActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -33,7 +33,7 @@
             android:value="@string/google_maps_api_key" />
 
         <!-- LOGIN ACTIVITY -->
-        <activity android:name=".activities.LoginActivity">
+        <activity android:name=".view.activities.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -43,7 +43,7 @@
 
         <!-- MAIN ACTIVITY -->
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".view.activities.MainActivity"
             android:label="@string/title_activity_main">
             <!-- TODO remove ? -->
 <!--            <intent-filter>-->

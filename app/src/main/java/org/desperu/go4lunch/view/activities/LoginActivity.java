@@ -1,4 +1,4 @@
-package org.desperu.go4lunch.activities;
+package org.desperu.go4lunch.view.activities;
 
 import android.content.Intent;
 import android.widget.Toast;

@@ -14,6 +14,8 @@ import icepick.Icepick;
 
 public abstract class BaseFragment extends Fragment {
 
+    private View view;
+
     // --------------
     // BASE METHODS
     // --------------
@@ -27,7 +29,7 @@ public abstract class BaseFragment extends Fragment {
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(getFragmentLayout(), container, false);
+        view = inflater.inflate(getFragmentLayout(), container, false);
         ButterKnife.bind(this, view);
         Icepick.restoreInstanceState(this, savedInstanceState);
         this.configureDesign();
@@ -39,4 +41,7 @@ public abstract class BaseFragment extends Fragment {
         super.onSaveInstanceState(outState);
         Icepick.saveInstanceState(this, outState);
     }
+
+    // TODO for data binding test
+    protected View getFragmentView() { return view; }
 }

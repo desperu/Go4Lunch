@@ -1,4 +1,4 @@
-package org.desperu.go4lunch.fragments;
+package org.desperu.go4lunch.view.fragments;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -7,14 +7,13 @@ import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
 
-import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -23,28 +22,25 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.Task;
-import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.model.PlaceLikelihood;
-import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
-import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
-import com.google.android.libraries.places.api.net.PlacesClient;
 
-import org.desperu.go4lunch.BuildConfig;
 import org.desperu.go4lunch.R;
 import org.desperu.go4lunch.base.BaseFragment;
-
-import java.util.Arrays;
-import java.util.List;
+import org.desperu.go4lunch.databinding.FragmentMapsBinding;
+import org.desperu.go4lunch.viewmodel.PlaceViewModel;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import pub.devrel.easypermissions.EasyPermissions;
 
-import static org.desperu.go4lunch.Go4LunchTools.GoogleMap.*;
+import static org.desperu.go4lunch.Go4LunchTools.GoogleMap.GOOGLE_MAP_TOOLBAR;
+import static org.desperu.go4lunch.Go4LunchTools.GoogleMap.GOOGLE_MAP_ZOOM_OUT_BUTTON;
+import static org.desperu.go4lunch.Go4LunchTools.GoogleMap.TOOLBAR_MARGIN_BOTTOM;
+import static org.desperu.go4lunch.Go4LunchTools.GoogleMap.TOOLBAR_MARGIN_END;
+import static org.desperu.go4lunch.Go4LunchTools.GoogleMap.ZOOM_OUT_MARGIN_BOTTOM;
+import static org.desperu.go4lunch.Go4LunchTools.GoogleMap.ZOOM_OUT_MARGIN_END;
 
-public class MapsFragment extends BaseFragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnMapLongClickListener {
+public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
+        GoogleMap.OnMarkerClickListener, GoogleMap.OnMapLongClickListener {
 
     // FOR DESIGN
     @BindView(R.id.map) MapView mapView;
@@ -66,7 +62,10 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
     protected int getFragmentLayout() { return R.layout.fragment_maps; }
 
     @Override
-    protected void configureDesign() { this.configureMapFragment(); }
+    protected void configureDesign() {
+        this.configureMapFragment();
+//        this.configureDataBindingMapsFragment();
+    }
 
 
     public MapsFragment() {
@@ -82,10 +81,6 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.mMap = googleMap;
-        LatLng latLng = new LatLng(1.289545, 103.849972);
-        mMap.addMarker(new MarkerOptions().position(latLng)
-                .title("Singapore"));
-        mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
 
         // Check location permission, enable MyLocation button,
         // and hide google MyLocation button to use custom.
@@ -97,6 +92,9 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
         // Hide map toolbar.
 //        mMap.getUiSettings().setMapToolbarEnabled(true);
 
+        // Configure data binding after google map is configured.
+        this.configureDataBindingMapsFragment();
+
         // Show zoom control, and reposition them.
         mMap.getUiSettings().setZoomControlsEnabled(true);
         this.repositionMapButton(GOOGLE_MAP_ZOOM_OUT_BUTTON, ZOOM_OUT_MARGIN_BOTTOM, ZOOM_OUT_MARGIN_END);
@@ -104,11 +102,11 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
         mMap.getUiSettings().setAllGesturesEnabled(true);
         mMap.setOnMapLongClickListener(this);
 
-        // Update map with restaurant
-        this.updateMapWithNearbyRestaurant();
-
         // Set onMarkerClick Listener
         mMap.setOnMarkerClickListener(this);
+
+        // Update map with restaurant
+        this.updateMapWithNearbyRestaurant();
     }
 
     @Override
@@ -179,6 +177,17 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
         else isLocationEnabled = true;
     }
 
+    // TODO to perform
+    /**
+     * Configure data binding for the map view.
+     */
+    private void configureDataBindingMapsFragment() {
+//        FragmentMapsBinding fragmentMapsBinding = DataBindingUtil.setContentView(getActivity(), R.layout.fragment_maps);
+        FragmentMapsBinding fragmentMapsBinding = DataBindingUtil.bind(this.getFragmentView());//mapView.getRootView());
+        PlaceViewModel placeViewModel = new PlaceViewModel(getContext(), this);
+        fragmentMapsBinding.setPlaceViewModel(placeViewModel);
+    }
+
     // --------------
     // ACTION
     // --------------
@@ -199,59 +208,20 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
      * Update map with nearby restaurants.
      */
     private void updateMapWithNearbyRestaurant() {
-        mMap.setMyLocationEnabled(isLocationEnabled);
+//        mMap.setMyLocationEnabled(isLocationEnabled);
         mMap.clear();
 
-        // TODO use ViewModel
-        Places.initialize(getContext(), BuildConfig.google_maps_api_key);
-        PlacesClient placesClient = Places.createClient(getContext());
+        PlaceViewModel placeViewModel = new PlaceViewModel(getContext(), this);
+        placeViewModel.getNearbyRestaurant();
+    }
 
-        // Specify the fields to return.
-        List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.TYPES, Place.Field.LAT_LNG);
-        FindCurrentPlaceRequest findRequest = FindCurrentPlaceRequest.builder(placeFields).build();
-
-        Task<FindCurrentPlaceResponse> placeResponse = placesClient.findCurrentPlace(findRequest);
-        placeResponse.addOnCompleteListener(task -> {
-            if (task.isSuccessful()){
-                FindCurrentPlaceResponse response = task.getResult();
-                for (PlaceLikelihood placeLikelihood : response.getPlaceLikelihoods()) {
-                    Log.i("TAG", String.format("Place '%s' has likelihood: %f",
-                            placeLikelihood.getPlace().getName(),
-                            placeLikelihood.getLikelihood()));
-
-                    for (Place.Type type : placeLikelihood.getPlace().getTypes()) {
-                        if ((type.toString().equals("RESTAURANT") || type.toString().equals("FOOD"))
-                                && placeLikelihood.getPlace().getLatLng() != null)
-                                mMap.addMarker(new MarkerOptions()
-                                        .position(placeLikelihood.getPlace().getLatLng())
-                                        .title(placeLikelihood.getPlace().getName()));
-                    }
-                }
-            } else {
-                Exception exception = task.getException();
-                if (exception instanceof ApiException) {
-                    ApiException apiException = (ApiException) exception;
-                    Log.e("TAG", "Place not found: " + apiException.getStatusCode());
-                }
-            }
-        });
-
-//        FetchPlaceRequest request = FetchPlaceRequest.newInstance("restaurant", placeFields);
-//        placesClient.fetchPlace(request);
-//
-//        placesClient.findCurrentPlace(findRequest);
-
-
-
-
-//        var request = {
-//                location: pyrmont,
-//                type: ['restaurant']
-//  };
-//
-//        infowindow = new google.maps.InfoWindow();
-//        places = new google.maps.places.PlacesService(map);
-//        places.nearbySearch(request, callback);
+    /**
+     * Add a new marker on the map.
+     * @param latLng Latitude and longitude for the marker.
+     * @param title Title for the marker.
+     */
+    public void addMarker(LatLng latLng, String title) {
+        mMap.addMarker(new MarkerOptions().position(latLng).title(title));
     }
 
     /**
@@ -278,4 +248,6 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
             }
         }
     }
+
+    // TODO add on map move Listener
 }
