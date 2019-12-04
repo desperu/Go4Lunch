@@ -6,4 +6,10 @@
     <color name="colorAccent">#ff5722</color>
     <color name="colorLightGray">#974D4D4D</color>
     <color name="colorNavDrawer">#ff8a50</color>
+
+    <!-- Marker maps color -->
+    <color name="colorMarkerNotBookedFont">#ff8a50</color>
+    <color name="colorMarkerNotBookedCutlery">#c41c00</color>
+    <color name="colorMarkerBookedFont">#69f0ae</color>
+    <color name="colorMarkerBookedCutlery">@android:color/white</color>
 </resources>

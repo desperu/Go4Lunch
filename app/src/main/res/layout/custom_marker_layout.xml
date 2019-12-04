@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/custom_marker_layout_root"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/custom_marker_layout_room"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="center_horizontal"
+        android:contentDescription="@null"
+        app:srcCompat="@drawable/ic_baseline_room_black_48"/>
+
+    <ImageView
+        android:id="@+id/custom_marker_layout_cutlery"
+        android:layout_width="20dp"
+        android:layout_height="24dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="13dp"
+        android:layout_marginBottom="15dp"
+        android:layout_alignBottom="@id/custom_marker_layout_room"
+        android:contentDescription="@null"
+        app:srcCompat="@drawable/ic_baseline_restaurant_black_24"/>
+
+</RelativeLayout>

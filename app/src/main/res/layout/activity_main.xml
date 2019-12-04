@@ -54,7 +54,8 @@
             android:src="@drawable/ic_base_logo_white"
             android:layout_gravity="bottom"
             android:scaleX="1.1"
-            android:layout_marginStart="@dimen/nav_view_image_view_margin_start"/>
+            android:layout_marginStart="@dimen/nav_view_image_view_margin_start"
+            android:contentDescription="@null"/>
 
     </com.google.android.material.navigation.NavigationView>
 

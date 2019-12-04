@@ -19,6 +19,7 @@
             android:layout_marginTop="@dimen/activity_login_image_margin_top"
             android:layout_marginStart="@dimen/activity_login_image_margin_start"
             android:scaleType="fitXY"
+            android:contentDescription="@null"
             android:src="@drawable/ic_base_logo_white"/>
 
         <TextView

@@ -57,6 +57,7 @@ public class PlaceViewModel {
                 Place.Field.PLUS_CODE);
         FindCurrentPlaceRequest findRequest = FindCurrentPlaceRequest.builder(placeFields).build();
 
+        // TODO add rect for the limit search places
 //        List<PlaceLikelihood> foundPlaceList = new ArrayList<>();
         Task<FindCurrentPlaceResponse> placeResponse = placesClient.findCurrentPlace(findRequest);
         placeResponse.addOnCompleteListener(task -> {
