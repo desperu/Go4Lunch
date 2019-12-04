@@ -1,8 +1,14 @@
 package org.desperu.go4lunch;
 
+import android.Manifest;
+
 public final class Go4LunchTools {
 
     public static final class GoogleMap {
+
+        // FOR PERMISSION
+        public static final String[] PERMS = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
+        public static final int PERM_COARSE_LOCATION = 100;
 
         // TO REPLACE BUTTON
         // Map Toolbar
