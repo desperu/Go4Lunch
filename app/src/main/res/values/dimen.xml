@@ -59,5 +59,11 @@
     <!-- Toolbar -->
     <dimen name="toolbar_container_autocomplete_height">36dp</dimen>
     <dimen name="toolbar_container_autocomplete_margin">10dp</dimen>
+    
+    <!-- Custom Marker -->
+    <dimen name="custom_marker_layout_cutlery_width">20dp</dimen>
+    <dimen name="custom_marker_layout_cutlery_height">24dp</dimen>
+    <dimen name="custom_marker_layout_cutlery_margin_start">13dp</dimen>
+    <dimen name="custom_marker_layout_cutlery_margin_bottom">15dp</dimen>
 
 </resources>

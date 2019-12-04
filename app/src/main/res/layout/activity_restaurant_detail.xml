@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:theme="@style/LoginTheme"
+    tools:context=".view.restaurantdetail.RestaurantDetailActivity">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <ImageView
+            android:id="@+id/activity_restaurant_detail_image_restaurant"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@null" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/colorPrimary"
+            android:padding="20dp">
+
+            <TextView
+                android:id="@+id/activity_restaurant_detail_text_view_restaurant_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <ImageView
+                android:id="@+id/activity_restaurant_detail_image_restaurant_stars_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/activity_restaurant_detail_text_view_restaurant_name"
+                android:layout_alignBottom="@id/activity_restaurant_detail_text_view_restaurant_name"
+                android:contentDescription="@null"
+                app:srcCompat="@drawable/ic_baseline_star_border_black_24"
+                android:tint="@color/quantum_yellow600"/>
+
+            <ImageView
+                android:id="@+id/activity_restaurant_detail_image_restaurant_stars_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/activity_restaurant_detail_image_restaurant_stars_1"
+                android:layout_alignBottom="@id/activity_restaurant_detail_text_view_restaurant_name"
+                android:contentDescription="@null"
+                app:srcCompat="@drawable/ic_baseline_star_border_black_24"
+                android:tint="@color/quantum_yellow600"/>
+
+            <ImageView
+                android:id="@+id/activity_restaurant_detail_image_restaurant_stars_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/activity_restaurant_detail_image_restaurant_stars_2"
+                android:layout_alignBottom="@id/activity_restaurant_detail_text_view_restaurant_name"
+                android:contentDescription="@null"
+                app:srcCompat="@drawable/ic_baseline_star_border_black_24"
+                android:tint="@color/quantum_yellow600"/>
+
+            <TextView
+                android:id="@+id/activity_restaurant_detail_restaurant_type_and_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/activity_restaurant_detail_text_view_restaurant_name" />
+
+        </RelativeLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/activity_restaurant_detail_button_booked"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:backgroundTint="@android:color/white"
+            android:layout_alignParentEnd="true"
+            android:layout_alignBottom="@id/activity_restaurant_detail_image_restaurant"
+            android:layout_marginBottom="50dp"
+            android:layout_marginEnd="20dp"
+            app:srcCompat="@drawable/ic_baseline_check_circle_outline_black_36"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:baselineAligned="false">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="10dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_baseline_call_black_24"
+                    android:tint="@color/colorPrimary"
+                    android:contentDescription="@null"
+                    android:layout_margin="5dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/activity_restaurant_detail_text_call"
+                    android:textColor="@color/colorPrimary"
+                    android:textAllCaps="true"
+                    android:layout_margin="5dp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="10dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_baseline_star_black_24"
+                    android:tint="@color/colorPrimary"
+                    android:contentDescription="@null"
+                    android:layout_margin="5dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/activity_restaurant_detail_text_like"
+                    android:textColor="@color/colorPrimary"
+                    android:textAllCaps="true"
+                    android:layout_margin="5dp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="10dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    app:srcCompat="@drawable/ic_baseline_public_black_24"
+                    android:tint="@color/colorPrimary"
+                    android:contentDescription="@null"
+                    android:layout_margin="5dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/activity_restaurant_detail_text_website"
+                    android:textColor="@color/colorPrimary"
+                    android:textAllCaps="true"
+                    android:layout_margin="5dp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/activity_restaurant_detail_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
+
+</LinearLayout>

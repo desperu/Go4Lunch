@@ -16,11 +16,11 @@
 
     <ImageView
         android:id="@+id/custom_marker_layout_cutlery"
-        android:layout_width="20dp"
-        android:layout_height="24dp"
+        android:layout_width="@dimen/custom_marker_layout_cutlery_width"
+        android:layout_height="@dimen/custom_marker_layout_cutlery_height"
         android:layout_gravity="center"
-        android:layout_marginStart="13dp"
-        android:layout_marginBottom="15dp"
+        android:layout_marginStart="@dimen/custom_marker_layout_cutlery_margin_start"
+        android:layout_marginBottom="@dimen/custom_marker_layout_cutlery_margin_bottom"
         android:layout_alignBottom="@id/custom_marker_layout_room"
         android:contentDescription="@null"
         app:srcCompat="@drawable/ic_baseline_restaurant_black_24"/>

@@ -17,7 +17,7 @@ import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
 
 import org.desperu.go4lunch.BuildConfig;
-import org.desperu.go4lunch.view.fragments.MapsFragment;
+import org.desperu.go4lunch.view.main.fragments.MapsFragment;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;

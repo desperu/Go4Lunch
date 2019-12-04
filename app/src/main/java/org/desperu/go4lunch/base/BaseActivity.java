@@ -21,8 +21,6 @@ import butterknife.ButterKnife;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
-    private UserViewModel userViewModel;
-
     // --------------------
     // BASE METHODS
     // --------------------
@@ -85,7 +83,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Nullable
     protected FirebaseUser getCurrentUser(){
-        userViewModel = new UserViewModel(getApplicationContext());
+        UserViewModel userViewModel = new UserViewModel(getApplicationContext());
         return userViewModel.getCurrentUser();
     }
 

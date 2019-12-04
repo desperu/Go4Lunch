@@ -1,4 +1,4 @@
-package org.desperu.go4lunch.view.fragments;
+package org.desperu.go4lunch.view.main.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

@@ -24,6 +24,7 @@ public class UserViewModel {
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
     }
 
+    // --- GETTERS ---
     public FirebaseUser getCurrentUser() { return currentUser; }
 
     public String getUid() { return currentUser.getUid(); }

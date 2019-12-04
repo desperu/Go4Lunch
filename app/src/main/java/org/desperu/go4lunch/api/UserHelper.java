@@ -6,6 +6,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.desperu.go4lunch.models.User;
+import org.jetbrains.annotations.NotNull;
 
 public class UserHelper {
 
@@ -13,25 +14,46 @@ public class UserHelper {
 
     // --- COLLECTION REFERENCE ---
 
-    public static CollectionReference getUsersCollection(){
+    @NotNull
+    private static CollectionReference getUsersCollection(){
         return FirebaseFirestore.getInstance().collection(COLLECTION_NAME);
     }
 
     // --- CREATE ---
 
+    @NotNull
     public static Task<Void> createUser(String uid, String username, String urlPicture) {
-        User userToCreate = new User(uid, username, urlPicture);
+        User userToCreate = new User(uid, username, urlPicture, null);
         return UserHelper.getUsersCollection().document(uid).set(userToCreate);
     }
 
     // --- GET ---
 
+    @NotNull
     public static Task<DocumentSnapshot> getUser(String uid){
         return UserHelper.getUsersCollection().document(uid).get();
     }
 
+    // --- UPDATE ---
+
+    @NotNull
+    public static Task<Void> updateUsername(String username, String uid) {
+        return UserHelper.getUsersCollection().document(uid).update("username", username);
+    }
+
+    @NotNull
+    public static Task<Void> updateIsMentor(String uid, Boolean isMentor) {
+        return UserHelper.getUsersCollection().document(uid).update("isMentor", isMentor);
+    }
+
+    @NotNull
+    public static Task<Void> updateBookedRestaurant(String uid, String restaurantId) {
+        return UserHelper.getUsersCollection().document(uid).update("restaurantId", restaurantId);
+    }
+
     // --- DELETE ---
 
+    @NotNull
     public static Task<Void> deleteUser(String uid) {
         return UserHelper.getUsersCollection().document(uid).delete();
     }

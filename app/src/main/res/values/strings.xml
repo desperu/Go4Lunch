@@ -18,7 +18,7 @@
     <string name="activity_main_menu_bottom_workmates">Workmates</string>
     <string name="activity_main_menu_bottom_chat">Chat</string>
 
-    <!-- LOGIN ACTIVITY -->
+    <!-- MAIN ACTIVITY -->
     <!-- Layout Login -->
     <string name="activity_login_text_presentation">Find a nice restaurant and invite your co-workers for lunch!</string>
     <string name="activity_login_button_email">Sign in with Email</string>
@@ -31,12 +31,16 @@
     <string name="error_no_internet">No network connexion !</string>
     <string name="error_unknown_error">Unknown error append !</string>
     <string name="connection_succeed">Success login !</string>
-
-    <!-- MAIN ACTIVITY -->
+    <!-- Search -->
     <string name="activity_main_search_edit_text_hint">Search restaurant</string>
 
     <!-- MAP FRAGMENT -->
     <string name="popup_title_permission_location">This application need location permission.</string>
+    
+    <!-- RESTAURANT DETAIL -->
+    <string name="activity_restaurant_detail_text_call">Call</string>
+    <string name="activity_restaurant_detail_text_like">Like</string>
+    <string name="activity_restaurant_detail_text_website">Website</string>
 
     <!-- FACEBOOK PURPOSE -->
     <string name="facebook_application_id" translatable="false">2475450979175039</string>

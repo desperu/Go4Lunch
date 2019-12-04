@@ -1,4 +1,4 @@
-package org.desperu.go4lunch.view.activities;
+package org.desperu.go4lunch.view.main;
 
 import android.content.Intent;
 import android.os.Build;
@@ -31,7 +31,8 @@ import org.desperu.go4lunch.R;
 import org.desperu.go4lunch.api.UserHelper;
 import org.desperu.go4lunch.base.BaseActivity;
 import org.desperu.go4lunch.databinding.ActivityMainNavHeaderBinding;
-import org.desperu.go4lunch.view.fragments.MapsFragment;
+import org.desperu.go4lunch.view.TestBindingActivity;
+import org.desperu.go4lunch.view.main.fragments.MapsFragment;
 import org.desperu.go4lunch.viewmodel.UserViewModel;
 import org.jetbrains.annotations.NotNull;
 
@@ -349,23 +350,16 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     // --------------------
-    // REST REQUEST // TODO to put in view model
+    // REST REQUEST
     // --------------------
 
     /**
      * Create user in firestore.
      */
     private void createUserInFirestore(){
-
-        if (this.getCurrentUser() != null) {
-
-            String urlPicture = (this.getCurrentUser().getPhotoUrl() != null) ?
-                    this.getCurrentUser().getPhotoUrl().toString() : null;
-            String username = this.getCurrentUser().getDisplayName();
-            String uid = this.getCurrentUser().getUid();
-
-            UserHelper.createUser(uid, username, urlPicture).addOnFailureListener(this.onFailureListener());
-        }
+        if (this.getCurrentUser() != null)
+            UserHelper.createUser(userViewModel.getUid(), userViewModel.getUserName(), userViewModel.getUserPicture())
+                    .addOnFailureListener(this.onFailureListener());
     }
 
     // --------------------
@@ -397,6 +391,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_OK) { // SUCCESS
+                this.updateHeaderWithUserInfo();
                 this.createUserInFirestore();
                 showToast(getString(R.string.connection_succeed));
             } else { // ERRORS

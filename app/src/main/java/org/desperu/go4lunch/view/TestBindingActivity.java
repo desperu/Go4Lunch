@@ -1,4 +1,4 @@
-package org.desperu.go4lunch.view.activities;
+package org.desperu.go4lunch.view;
 
 import android.os.Bundle;
 
@@ -10,6 +10,8 @@ import org.desperu.go4lunch.databinding.ActivityMainNavHeaderBinding;
 import org.desperu.go4lunch.viewmodel.UserViewModel;
 
 public class TestBindingActivity extends BaseActivity {
+
+    // TODO to remove
 
     @Override
     protected int getActivityLayout() { return R.layout.activity_main_nav_header; }
