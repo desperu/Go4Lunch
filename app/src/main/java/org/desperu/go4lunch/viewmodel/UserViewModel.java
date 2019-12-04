@@ -24,6 +24,8 @@ public class UserViewModel {
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
     }
 
+    public FirebaseUser getCurrentUser() { return currentUser; }
+
     public String getUid() { return currentUser.getUid(); }
 
     public String getUserName() { return currentUser.getDisplayName(); }
@@ -35,6 +37,8 @@ public class UserViewModel {
     @BindingAdapter("imageUrl") public static void setImageUrl(@NotNull ImageView imageView, String url) {
         Glide.with(imageView.getContext()).load(url).circleCrop().into(imageView);
     }
+
+    // TODO add getBookedRestaurant
 
     public void userLogOut() { FirebaseAuth.getInstance().signOut(); }
 }

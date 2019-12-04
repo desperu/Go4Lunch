@@ -11,15 +11,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import org.desperu.go4lunch.R;
+import org.desperu.go4lunch.viewmodel.UserViewModel;
+import org.jetbrains.annotations.NotNull;
 
 import butterknife.ButterKnife;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
+    private UserViewModel userViewModel;
 
     // --------------------
     // BASE METHODS
@@ -68,7 +70,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NotNull MenuItem item) {
         // Respond to the action bar's Up/Home button
         if (item.getItemId() == android.R.id.home) {
             finish();
@@ -82,7 +84,10 @@ public abstract class BaseActivity extends AppCompatActivity {
     // --------------------
 
     @Nullable
-    protected FirebaseUser getCurrentUser(){ return FirebaseAuth.getInstance().getCurrentUser(); }
+    protected FirebaseUser getCurrentUser(){
+        userViewModel = new UserViewModel(getApplicationContext());
+        return userViewModel.getCurrentUser();
+    }
 
     protected Boolean isCurrentUserLogged(){ return (this.getCurrentUser() != null); }
 }

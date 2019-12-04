@@ -14,6 +14,10 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.firebase.ui.auth.AuthMethodPickerLayout;
+import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.auth.ErrorCodes;
+import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.common.api.Status;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
@@ -24,6 +28,7 @@ import com.google.android.material.navigation.NavigationView;
 
 import org.desperu.go4lunch.BuildConfig;
 import org.desperu.go4lunch.R;
+import org.desperu.go4lunch.api.UserHelper;
 import org.desperu.go4lunch.base.BaseActivity;
 import org.desperu.go4lunch.databinding.ActivityMainNavHeaderBinding;
 import org.desperu.go4lunch.view.fragments.MapsFragment;
@@ -31,6 +36,7 @@ import org.desperu.go4lunch.viewmodel.UserViewModel;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 import butterknife.BindView;
 
@@ -48,8 +54,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     // FOR DATA
     private UserViewModel userViewModel;
     private AutocompleteSupportFragment autocompleteFragment;
-
-
+    private static final int RC_SIGN_IN = 1234;
 
     // --------------
     // BASE METHODS
@@ -61,10 +66,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     protected void configureDesign() {
         this.configureToolBar();
+        this.setTitleActivity();
         this.configureDrawerLayout();
         this.configureNavigationView();
         this.configureBottomNavigationView();
-        this.configureAndShowFragment();
+        this.updateHeaderWithUserInfo();
     }
 
     // -----------------
@@ -91,7 +97,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         navigationView.setNavigationItemSelectedListener(this);
         // Disable check item
         navigationView.getMenu().setGroupCheckable(R.id.activity_main_menu_drawer_group, false, false);
-        this.updateHeaderWithUserInfo();
     }
 
     /**
@@ -170,6 +175,21 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     // METHODS OVERRIDE
     // -----------------
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (this.isCurrentUserLogged()) this.configureAndShowFragment();
+        else this.startSignInActivity();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // Handle SignIn Activity response on activity result.
+        this.handleResponseAfterSignIn(requestCode, resultCode, data);
+    }
+
     @Override
     public boolean onNavigationItemSelected(@NotNull MenuItem menuItem) {
         switch (menuItem.getItemId()) {
@@ -240,28 +260,29 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     // -----------------
 
     /**
+     * Set title activity name.
+     */
+    private void setTitleActivity() {
+        this.setTitle(R.string.title_activity_main);
+    }
+
+    /**
      * Update Navigation View Header with user info.
      */
     private void updateHeaderWithUserInfo() {
-        // Enable Data binding for user info
-        View headerView = navigationView.getHeaderView(0);
-        ActivityMainNavHeaderBinding activityMainNavHeaderBinding = ActivityMainNavHeaderBinding.bind(headerView);
-        userViewModel = new UserViewModel(getBaseContext());
-        activityMainNavHeaderBinding.setUserViewModel(userViewModel);
+        if (isCurrentUserLogged()) {
+            // Enable Data binding for user info
+            View headerView = navigationView.getHeaderView(0);
+            ActivityMainNavHeaderBinding activityMainNavHeaderBinding = ActivityMainNavHeaderBinding.bind(headerView);
+            userViewModel = new UserViewModel(getBaseContext());
+            activityMainNavHeaderBinding.setUserViewModel(userViewModel);
+        }
     }
 
     // -----------------
     // ACTIVITY
     // -----------------
 
-    /**
-     * Log out of current login, and start Login Activity.
-     */
-    private void logOut() {
-        userViewModel.userLogOut();
-        startActivity(new Intent(this, LoginActivity.class));
-        this.finish();
-    }
 //    /**
 //     * Start show article activity.
 //     *
@@ -284,4 +305,112 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 //    private void showNotificationsActivity() {
 //        startActivity(new Intent(this, NotificationsActivity.class));
 //    }
+
+    // --------------------
+    // LOGIN
+    // --------------------
+
+    /**
+     * Launch sign in activity with firesbase ui.
+     */
+    private void startSignInActivity(){
+        AuthMethodPickerLayout customLayout = new AuthMethodPickerLayout.Builder(R.layout.activity_login)
+                .setEmailButtonId(R.id.activity_login_button_email)
+                .setGoogleButtonId(R.id.activity_login_button_google)
+                .setFacebookButtonId(R.id.activity_login_button_facebook)
+                .setTwitterButtonId(R.id.activity_login_button_twitter)
+                .build();
+
+        startActivityForResult(
+                AuthUI.getInstance()
+                        .createSignInIntentBuilder()
+                        .setTheme(R.style.LoginTheme)
+                        .setAvailableProviders(Arrays.asList(
+                                // Email authentication
+                                new AuthUI.IdpConfig.EmailBuilder().build(),
+                                // Google authentication
+                                new AuthUI.IdpConfig.GoogleBuilder().build(),
+                                // Facebook authentication
+                                new AuthUI.IdpConfig.FacebookBuilder().build(),
+                                // Twitter authentication
+                                new AuthUI.IdpConfig.TwitterBuilder().build()))
+                        .setIsSmartLockEnabled(false, true)
+                        .setAuthMethodPickerLayout(customLayout)
+                        .build(),
+                RC_SIGN_IN);
+    }
+
+    /**
+     * Log out of current login, and start Login Activity.
+     */
+    private void logOut() {
+        userViewModel.userLogOut();
+        this.startSignInActivity();
+    }
+
+    // --------------------
+    // REST REQUEST // TODO to put in view model
+    // --------------------
+
+    /**
+     * Create user in firestore.
+     */
+    private void createUserInFirestore(){
+
+        if (this.getCurrentUser() != null) {
+
+            String urlPicture = (this.getCurrentUser().getPhotoUrl() != null) ?
+                    this.getCurrentUser().getPhotoUrl().toString() : null;
+            String username = this.getCurrentUser().getDisplayName();
+            String uid = this.getCurrentUser().getUid();
+
+            UserHelper.createUser(uid, username, urlPicture).addOnFailureListener(this.onFailureListener());
+        }
+    }
+
+    // --------------------
+    // UI
+    // --------------------
+
+    /**
+     * Show Toast with corresponding message.
+     * @param message Message to show.
+     */
+    private void showToast(String message){
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    // --------------------
+    // UTILS
+    // --------------------
+
+    //TODO not good not show
+    /**
+     * Method that handles response after SignIn Activity close.
+     * @param requestCode Code of the request.
+     * @param resultCode Code result from sign in activity.
+     * @param data Data from sign in activity.
+     */
+    private void handleResponseAfterSignIn(int requestCode, int resultCode, Intent data){
+
+        IdpResponse response = IdpResponse.fromResultIntent(data);
+
+        if (requestCode == RC_SIGN_IN) {
+            if (resultCode == RESULT_OK) { // SUCCESS
+                this.createUserInFirestore();
+                showToast(getString(R.string.connection_succeed));
+            } else { // ERRORS
+                if (response == null) {
+                    showToast(getString(R.string.error_authentication_canceled));
+                    this.finishAffinity();
+                } else if (Objects.requireNonNull(response.getError()).getErrorCode() == ErrorCodes.NO_NETWORK) {
+                    showToast(getString(R.string.error_no_internet));
+                    this.startSignInActivity();
+                } else if (response.getError().getErrorCode() == ErrorCodes.UNKNOWN_ERROR) {
+                    showToast(getString(R.string.error_unknown_error));
+                    this.startSignInActivity();
+                }
+            }
+        }
+    }
 }
