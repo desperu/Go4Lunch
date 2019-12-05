@@ -27,18 +27,19 @@ import java.util.List;
 public class PlaceViewModel {
 
     private Context context;
-    private MapsFragment mapsFragment;
-    private static List<PlaceLikelihood> foundPlaceList = new ArrayList<>();
+    private static MapsFragment mapsFragment;
+    private static List<PlaceLikelihood> foundPlaceList;
 
     public PlaceViewModel(Context context, MapsFragment mapsFragment) {
         this.context = context;
-        this.mapsFragment = mapsFragment;
+        PlaceViewModel.mapsFragment = mapsFragment;
     }
 
     /**
      * Get nearby restaurants.
+     * @param mapView MapView instance.
      */
-    public void getNearbyRestaurant() {
+    public void getNearbyRestaurant(MapView mapView) {
         // Clean foundPlaceList
         foundPlaceList = new ArrayList<>();
 
@@ -58,7 +59,6 @@ public class PlaceViewModel {
         FindCurrentPlaceRequest findRequest = FindCurrentPlaceRequest.builder(placeFields).build();
 
         // TODO add rect for the limit search places
-//        List<PlaceLikelihood> foundPlaceList = new ArrayList<>();
         Task<FindCurrentPlaceResponse> placeResponse = placesClient.findCurrentPlace(findRequest);
         placeResponse.addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -73,14 +73,15 @@ public class PlaceViewModel {
                     for (Place.Type type : placeLikelihood.getPlace().getTypes()) {
                         if ((type.toString().equals("RESTAURANT") || type.toString().equals("FOOD"))
                                 && placeLikelihood.getPlace().getLatLng() != null) {
-                            // Add each corresponding places at list.
+                            // Add each corresponding places in list.
                             foundPlaceList.add(i, placeLikelihood);
                             i++;
                             // Add each corresponding place at map;
-                            mapsFragment.addMarker(placeLikelihood.getPlace().getLatLng(), placeLikelihood.getPlace().getName());
+//                            mapsFragment.addMarker(placeLikelihood.getPlace().getLatLng(), placeLikelihood.getPlace().getName());
                         }
                     }
                 }
+                addPlaceMarker(mapView, foundPlaceList);
             } else {
                 Exception exception = task.getException();
                 if (exception instanceof ApiException) {
@@ -94,29 +95,13 @@ public class PlaceViewModel {
         });
     }
 
-    //TODO to perform
-    public List<PlaceLikelihood> getFoundPlaceList() {
-//        if (foundPlaceList.size() > 0) {
-//            for (int i = 0; i < foundPlaceList.size(); i++) {
-//                return foundPlaceList.get(i);
-//            }
-//        }
-//        return null;
-        return foundPlaceList;
-    }
-
-    // TODO for data binding test
-    public String getFirstPlaceName() {
-        if (!foundPlaceList.isEmpty())
-            return foundPlaceList.get(0).getPlace().getName();
-        return null;
-    }
+    public List<PlaceLikelihood> getFoundPlaceList() { return foundPlaceList; }
 
     @BindingAdapter("addMarker") public static void addPlaceMarker(MapView mapView, @NotNull List<PlaceLikelihood> foundPlaceList) {
-//        if (placeLikelihood != null) {
-//            for (PlaceLikelihood placeLikelihood : foundPlaceList)
-//                mapsFragment.addMarker(placeLikelihood.getPlace().getLatLng(), placeLikelihood.getPlace().getName());
-//        }
+        if (!foundPlaceList.isEmpty()) {
+            for (PlaceLikelihood placeLikelihood : foundPlaceList)
+                mapsFragment.addMarker(placeLikelihood.getPlace().getLatLng(), placeLikelihood.getPlace().getName());
+        }
     }
 
 //    public void getMarkerInfo() {

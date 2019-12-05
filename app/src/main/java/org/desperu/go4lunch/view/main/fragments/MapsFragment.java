@@ -206,7 +206,6 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
      * Configure data binding for the map view.
      */
     private void configureDataBindingMapsFragment() {
-//        FragmentMapsBinding fragmentMapsBinding = DataBindingUtil.setContentView(getActivity(), R.layout.fragment_maps);
         FragmentMapsBinding fragmentMapsBinding = DataBindingUtil.bind(this.getFragmentView());//mapView.getRootView());
         PlaceViewModel placeViewModel = new PlaceViewModel(getContext(), this);
         fragmentMapsBinding.setPlaceViewModel(placeViewModel);
@@ -236,7 +235,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
         mMap.clear();
 
         PlaceViewModel placeViewModel = new PlaceViewModel(getContext(), this);
-        placeViewModel.getNearbyRestaurant();
+        placeViewModel.getNearbyRestaurant(mapView);
     }
 
     /**
@@ -250,10 +249,6 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
                 getResources().getColor(R.color.colorMarkerNotBookedCutlery)));
         mMap.addMarker(new MarkerOptions().position(latLng).title(title)
                 .icon(bitmapDescriptor));
-//                .icon(BitmapDescriptorFactory.fromBitmap(createCustomMarker(
-//                        getContext(), R.drawable.ic_baseline_room_black_48, "test"))));
-//                .icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(
-//                        getActivity().getResources(), R.drawable.ic_baseline_room_black_36))));
     }
 
     /**
