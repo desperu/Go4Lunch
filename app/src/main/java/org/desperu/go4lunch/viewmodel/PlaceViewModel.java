@@ -14,6 +14,7 @@ import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
 
 import org.desperu.go4lunch.BuildConfig;
+import org.desperu.go4lunch.R;
 import org.desperu.go4lunch.view.main.fragments.MapsFragment;
 
 import java.util.Arrays;
@@ -73,8 +74,7 @@ public class PlaceViewModel {
                     // To log request error
                     ApiException apiException = (ApiException) exception;
                     Log.e(getClass().getSimpleName(), "Place not found: " + apiException.getMessage());
-                    // TODO to perform with error code
-                    Toast.makeText(context, "Google Place time out...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.view_model_toast_request_failure, Toast.LENGTH_SHORT).show();
                 }
             }
         });

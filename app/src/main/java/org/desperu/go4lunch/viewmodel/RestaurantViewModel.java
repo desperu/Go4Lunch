@@ -1,17 +1,13 @@
 package org.desperu.go4lunch.viewmodel;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.databinding.BaseObservable;
 import androidx.databinding.ObservableField;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.libraries.places.api.Places;
@@ -23,25 +19,21 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 
 import org.desperu.go4lunch.BuildConfig;
 import org.desperu.go4lunch.R;
-import org.desperu.go4lunch.view.restaurantdetail.RestaurantDetailActivity;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class RestaurantViewModel extends BaseObservable {
 
-    private RestaurantDetailActivity restaurantDetailActivity;
     private Context context;
     private String placeId;
     private PlacesClient placesClient;
 
     private ObservableField<Place> place = new ObservableField<>();
-    private ObservableField<Drawable> restaurantPhoto = new ObservableField<>();
+    private ObservableField<Drawable> picture = new ObservableField<>();
 
-    public RestaurantViewModel(@NotNull RestaurantDetailActivity restaurantDetailActivity, String placeId) {
-        this.restaurantDetailActivity = restaurantDetailActivity;
-        this.context = restaurantDetailActivity.getBaseContext();
+    public RestaurantViewModel(Context context, String placeId) {
+        this.context = context;
         this.placeId = placeId;
         this.initializePlace();
         this.getPlaceInfo();
@@ -81,6 +73,7 @@ public class RestaurantViewModel extends BaseObservable {
             if (exception instanceof ApiException) {
                 // Handle error with given status code.
                 Log.e(getClass().getSimpleName(), "Place not found: " + exception.getMessage());
+                Toast.makeText(context, R.string.view_model_toast_request_failure, Toast.LENGTH_SHORT).show();
 //                restaurantDetailActivity.hideSwipeRefresh();
             }
         });
@@ -98,20 +91,21 @@ public class RestaurantViewModel extends BaseObservable {
             FetchPhotoRequest photoRequest = FetchPhotoRequest.builder(photoMetadata).build();
 
             placesClient.fetchPhoto(photoRequest).addOnSuccessListener((fetchPhotoResponse) -> {
-                this.restaurantPhoto.set(new BitmapDrawable(context.getResources(), fetchPhotoResponse.getBitmap()));
+                this.picture.set(new BitmapDrawable(context.getResources(), fetchPhotoResponse.getBitmap()));
             }).addOnFailureListener((exception) -> {
                 if (exception instanceof ApiException) {
                     // Handle error with given status code.
                     Log.e(getClass().getSimpleName(), "Place not found: " + exception.getMessage());
+                    Toast.makeText(context, R.string.view_model_toast_request_failure, Toast.LENGTH_SHORT).show();
                 }
             });
-            if (this.restaurantPhoto.get() == null)
-                this.restaurantPhoto.set(context.getResources().getDrawable(R.drawable.im_no_image_300dp));
+            if (this.picture.get() == null)
+                this.picture.set(context.getResources().getDrawable(R.drawable.im_no_image_300dp));
         }
     }
 
     // --- GETTERS ---
     public ObservableField<Place> getPlace() { return this.place; }
 
-    public ObservableField<Drawable> getPicture() { return this.restaurantPhoto; }
+    public ObservableField<Drawable> getPicture() { return this.picture; }
 }
