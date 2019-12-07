@@ -406,7 +406,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_OK) { // SUCCESS
-                this.updateHeaderWithUserInfo();
+                if (userViewModel == null) this.configureDesign();
                 this.createUserInFirestore();
                 showToast(getString(R.string.connection_succeed));
             } else { // ERRORS
