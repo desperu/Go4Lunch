@@ -43,7 +43,7 @@ public class MarkerUtilsTest {
 
     @Test
     public void Given_markerView_When_convertViewToBitmap_Then_checkBitmap() {
-        Bitmap bitmap = MarkerUtils.createCustomMarker(mockContext, R.layout.custom_marker_layout,
+        Bitmap bitmap = MarkerUtils.createBitmapFromView(mockContext, R.layout.custom_marker_layout,
                 R.color.colorMarkerBookedFont, R.color.colorMarkerBookedCutlery);
 
 //        assertNotNull(bitmap);
