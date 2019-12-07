@@ -23,7 +23,7 @@ public class TestBindingActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActivityMainNavHeaderBinding navHeaderBinding = DataBindingUtil.setContentView(this, R.layout.activity_main_nav_header);
-        UserViewModel userViewModel = new UserViewModel(getBaseContext());
+        UserViewModel userViewModel = new UserViewModel();
         navHeaderBinding.setUserViewModel(userViewModel);
     }
 }

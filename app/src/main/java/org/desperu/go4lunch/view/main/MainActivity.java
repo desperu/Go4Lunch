@@ -33,6 +33,7 @@ import org.desperu.go4lunch.base.BaseActivity;
 import org.desperu.go4lunch.databinding.ActivityMainNavHeaderBinding;
 import org.desperu.go4lunch.view.TestBindingActivity;
 import org.desperu.go4lunch.view.main.fragments.MapsFragment;
+import org.desperu.go4lunch.view.restaurantdetail.RestaurantDetailActivity;
 import org.desperu.go4lunch.viewmodel.UserViewModel;
 import org.jetbrains.annotations.NotNull;
 
@@ -43,7 +44,7 @@ import butterknife.BindView;
 
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener,
-        BottomNavigationView.OnNavigationItemSelectedListener {
+        BottomNavigationView.OnNavigationItemSelectedListener, MapsFragment.OnMarkerClickedListener {
 
     // FOR DESIGN
     @BindView(R.id.toolbar) Toolbar toolbar;
@@ -275,9 +276,27 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             // Enable Data binding for user info
             View headerView = navigationView.getHeaderView(0);
             ActivityMainNavHeaderBinding activityMainNavHeaderBinding = ActivityMainNavHeaderBinding.bind(headerView);
-            userViewModel = new UserViewModel(getBaseContext());
+            userViewModel = new UserViewModel();
             activityMainNavHeaderBinding.setUserViewModel(userViewModel);
         }
+    }
+
+    /**
+     * Show Toast with corresponding message.
+     * @param message Message to show.
+     */
+    private void showToast(String message){
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+
+    // --------------------
+    // ACTION
+    // --------------------
+
+    @Override
+    public void onClickedMarker(String id) {
+        this.showRestaurantDetailActivity(id);
     }
 
     // -----------------
@@ -306,6 +325,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 //    private void showNotificationsActivity() {
 //        startActivity(new Intent(this, NotificationsActivity.class));
 //    }
+
+    /**
+     * Start restaurant detail activity.
+     * @param id Place id.
+     */
+    private void showRestaurantDetailActivity(String id) {
+        startActivity(new Intent(this, RestaurantDetailActivity.class).putExtra(RestaurantDetailActivity.RESTAURANT_ID, id));
+    }
 
     // --------------------
     // LOGIN
@@ -350,7 +377,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     // --------------------
-    // REST REQUEST
+    // FIRESTORE
     // --------------------
 
     /**
@@ -360,18 +387,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         if (this.getCurrentUser() != null)
             UserHelper.createUser(userViewModel.getUid(), userViewModel.getUserName(), userViewModel.getUserPicture())
                     .addOnFailureListener(this.onFailureListener());
-    }
-
-    // --------------------
-    // UI
-    // --------------------
-
-    /**
-     * Show Toast with corresponding message.
-     * @param message Message to show.
-     */
-    private void showToast(String message){
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
     // --------------------

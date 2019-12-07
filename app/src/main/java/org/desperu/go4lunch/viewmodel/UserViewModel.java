@@ -1,9 +1,7 @@
 package org.desperu.go4lunch.viewmodel;
 
-import android.content.Context;
 import android.widget.ImageView;
 
-import androidx.annotation.NonNull;
 import androidx.databinding.BindingAdapter;
 
 import com.bumptech.glide.Glide;
@@ -16,11 +14,9 @@ import java.util.Objects;
 
 public class UserViewModel {
 
-    private Context context;
     private FirebaseUser currentUser;
 
-    public UserViewModel(@NonNull Context context) {
-        this.context = context;
+    public UserViewModel() {
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
     }
 

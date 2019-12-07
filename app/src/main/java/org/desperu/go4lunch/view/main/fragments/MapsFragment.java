@@ -3,6 +3,7 @@ package org.desperu.go4lunch.view.main.fragments;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
@@ -48,8 +49,14 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
     // FOR DATA
     private SupportMapFragment mapFragment;
     private GoogleMap mMap;
-
     private boolean isLocationEnabled = false;
+
+    // CALLBACK
+    public interface OnMarkerClickedListener {
+        void onClickedMarker(String id);
+    }
+
+    private MapsFragment.OnMarkerClickedListener mCallback;
 
     // --------------
     // BASE METHODS
@@ -61,7 +68,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
     @Override
     protected void configureDesign() {
         this.configureMapFragment();
-//        this.configureDataBindingMapsFragment();
+        this.createCallbackToParentActivity();
     }
 
 
@@ -95,10 +102,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
         // Show zoom control, and reposition them.
         mMap.getUiSettings().setZoomControlsEnabled(true);
         // TODO get from shared pref on/off zoom
-//        this.repositionMapButton(GOOGLE_MAP_ZOOM_OUT_BUTTON, ZOOM_OUT_MARGIN_BOTTOM, ZOOM_OUT_MARGIN_END);
-        this.repositionMapButton(GOOGLE_MAP_ZOOM_OUT_BUTTON,
-                (int) getResources().getDimension(R.dimen.fragment_maps_zoom_button_margin_bottom),
-                (int) getResources().getDimension(R.dimen.fragment_maps_zoom_button_margin_end));
+        this.repositionMapButton(GOOGLE_MAP_ZOOM_OUT_BUTTON, (int) getResources().getDimension(R.dimen.fragment_maps_zoom_button_margin_bottom), (int) getResources().getDimension(R.dimen.fragment_maps_zoom_button_margin_end));
 
 
         mMap.getUiSettings().setAllGesturesEnabled(true);
@@ -106,9 +110,6 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
 
         // Set onMarkerClick Listener
         mMap.setOnMarkerClickListener(this);
-
-        //TODO on test Poi listener
-//        mMap.setOnPoiClickListener(this);
 
         // Set map style
         mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.map_style));
@@ -127,30 +128,37 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        // TODO open DetailRestaurantActivity
-        this.repositionMapButton(GOOGLE_MAP_TOOLBAR,
-                (int) getResources().getDimension(R.dimen.fragment_maps_toolbar_margin_bottom),
-                (int) getResources().getDimension(R.dimen.fragment_maps_toolbar_margin_end));
+        this.repositionMapButton(GOOGLE_MAP_TOOLBAR, (int) getResources().getDimension(R.dimen.fragment_maps_toolbar_margin_bottom), (int) getResources().getDimension(R.dimen.fragment_maps_toolbar_margin_end));
+        mCallback.onClickedMarker(marker.getSnippet());
         return false;
     }
 
     @Override
     public void onMapLongClick(LatLng latLng) {
-        // TODO Use fetch to get place name
+        // TODO Use fetch to get place name or remove?? create a bug
         mMap.addMarker(new MarkerOptions().position(latLng));
-//                .icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(
-//                        getActivity().getResources(), R.drawable.ic_baseline_room_black_48))));
     }
 
-    // TODO on test
-//    @Override
-//    public void onPoiClick(PointOfInterest poi) {
-//        Toast.makeText(getContext(), "Clicked: " +
-//                        poi.name + "\nPlace ID:" + poi.placeId +
-//                        "\nLatitude:" + poi.latLng.latitude +
-//                        " Longitude:" + poi.latLng.longitude,
-//                Toast.LENGTH_SHORT).show();
-//    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        this.updateMapWithNearbyRestaurant();
+    }
+
+    // --------------
+    // FRAGMENT SUPPORT
+    // --------------
+
+    /**
+     * Configure callback for parent activity to manage click on marker.
+     */
+    private void createCallbackToParentActivity(){
+        try {
+            mCallback = (MapsFragment.OnMarkerClickedListener) getActivity();
+        } catch (ClassCastException e) {
+            throw new ClassCastException(e.toString()+ " must implement OnClickedMarkerListener");
+        }
+    }
 
     // --------------
     // CONFIGURATION
@@ -232,23 +240,46 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
      */
     private void updateMapWithNearbyRestaurant() {
 //        mMap.setMyLocationEnabled(isLocationEnabled);
-        mMap.clear();
+        if (mMap != null) mMap.clear();
 
         PlaceViewModel placeViewModel = new PlaceViewModel(getContext(), this);
-        placeViewModel.getNearbyRestaurant(mapView);
+        placeViewModel.getNearbyRestaurant();
     }
 
     /**
      * Add a new marker on the map.
      * @param latLng Latitude and longitude for the marker.
      * @param title Title for the marker.
+     * @param id Place id.
      */
-    public void addMarker(LatLng latLng, String title) {
-        BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(MarkerUtils.createCustomMarker(getContext(),
-                R.layout.custom_marker_layout, getResources().getColor(R.color.colorMarkerNotBookedFont),
-                getResources().getColor(R.color.colorMarkerNotBookedCutlery)));
+    public void addMarker(LatLng latLng, String title, String id) {
         mMap.addMarker(new MarkerOptions().position(latLng).title(title)
-                .icon(bitmapDescriptor));
+                .icon(this.switchMarkerColors(this.isBookedRestaurant())).snippet(id));
+    }
+
+    // TODO in RestaurantViewModel
+    private boolean isBookedRestaurant() {
+        return false;
+    }
+
+    /**
+     * Switch marker color, if booked or not.
+     * @param isBooked Is restaurant booked.
+     * @return Marker bitmap with corresponding color.
+     */
+    private BitmapDescriptor switchMarkerColors(Boolean isBooked) {
+        Bitmap markerBitmap;
+
+        if (isBooked)
+            markerBitmap = MarkerUtils.createBitmapFromView(getContext(),
+                    R.layout.custom_marker_layout, getResources().getColor(R.color.colorMarkerBookedFont),
+                    getResources().getColor(R.color.colorMarkerBookedCutlery));
+
+        else markerBitmap = MarkerUtils.createBitmapFromView(getContext(),
+                R.layout.custom_marker_layout, getResources().getColor(R.color.colorMarkerNotBookedFont),
+                getResources().getColor(R.color.colorMarkerNotBookedCutlery));
+
+        return BitmapDescriptorFactory.fromBitmap(markerBitmap);
     }
 
     /**
@@ -257,7 +288,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
      * @param marginBottom Margin bottom value for button.
      * @param marginEnd Margin end value for button.
      */
-    private void repositionMapButton(String buttonTag, int marginBottom, int marginEnd) { // TODO perform with density and size screen
+    private void repositionMapButton(String buttonTag, int marginBottom, int marginEnd) {
         if (mapView != null && mapView.findViewWithTag(buttonTag) != null) {
             // Get the toolbar or zoom button view
             View button = mapView.findViewWithTag(buttonTag);
@@ -267,7 +298,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
                 // position to the left of custom My Location button
                 layoutParams.setMargins(0, 0, 0, marginBottom);
                 layoutParams.setMarginEnd(marginEnd);
-//                button.setBottom(marginBottom);
+                button.setBottom(marginBottom);
             } else if (buttonTag.equals(GOOGLE_MAP_ZOOM_OUT_BUTTON)) {
                 LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams)
                         button.getLayoutParams();

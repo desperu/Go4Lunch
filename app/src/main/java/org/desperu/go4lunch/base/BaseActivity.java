@@ -83,7 +83,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Nullable
     protected FirebaseUser getCurrentUser(){
-        UserViewModel userViewModel = new UserViewModel(getApplicationContext());
+        UserViewModel userViewModel = new UserViewModel();
         return userViewModel.getCurrentUser();
     }
 
