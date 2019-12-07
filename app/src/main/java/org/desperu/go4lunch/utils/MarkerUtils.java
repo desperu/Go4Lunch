@@ -18,8 +18,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class MarkerUtils {
 
-    public static Bitmap createCustomMarker(@NotNull Context context, @LayoutRes int layout,
-                                            @ColorInt int fontColor, @ColorInt int cutleryColor) {
+    public static Bitmap createBitmapFromView(@NotNull Context context, @LayoutRes int layout,
+                                              @ColorInt int fontColor, @ColorInt int cutleryColor) {
 
         View marker = LayoutInflater.from(context).inflate(layout, null);
 

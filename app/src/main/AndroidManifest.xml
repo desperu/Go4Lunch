@@ -55,7 +55,8 @@
         <activity
             android:name=".view.restaurantdetail.RestaurantDetailActivity"
             android:label=""
-            android:parentActivityName=".view.main.MainActivity" />
+            android:parentActivityName=".view.main.MainActivity"
+            android:theme="@style/RestaurantDetailTheme"/>
     </application>
 
 </manifest>
