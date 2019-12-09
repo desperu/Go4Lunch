@@ -44,4 +44,10 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!-- RATING BAR -->
+    <style name="RatingBarTheme" parent="Theme.AppCompat">
+        <item name="colorControlNormal">@color/colorLightGray</item>
+        <item name="colorControlActivated">@color/quantum_yellow600</item>
+    </style>
+
 </resources>

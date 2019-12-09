@@ -12,34 +12,44 @@
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/activity_restaurant_detail_swipe_refresh"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="-25dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:theme="@style/LoginTheme">
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="1">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintHeight_default="percent">
 
                 <ImageView
                     android:id="@+id/activity_restaurant_detail_image_restaurant"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="0dp"
                     android:contentDescription="@null"
                     android:scaleType="fitXY"
-                    android:src="@{restaurantViewModel.picture}"/>
+                    android:src="@{restaurantViewModel.picture}"
+                    app:layout_constraintHeight_percent="0.375"
+                    app:layout_constraintBottom_toTopOf="@id/activity_restaurant_detail_info_container"/>
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/activity_restaurant_detail_button_booked"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toTopOf="@+id/activity_restaurant_detail_info_container"
+                    app:layout_constraintTop_toTopOf="@id/activity_restaurant_detail_info_container"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="20dp"
+                    app:srcCompat="@drawable/ic_baseline_check_circle_outline_black_48"
+                    app:backgroundTint="@android:color/white"/>
 
                 <RelativeLayout
+                    android:id="@+id/activity_restaurant_detail_info_container"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
+                    android:layout_height="0dp"
                     android:background="@color/colorPrimary"
-                    android:padding="20dp">
+                    android:padding="20dp"
+                    app:layout_constraintHeight_percent="0.125"
+                    app:layout_constraintTop_toBottomOf="@id/activity_restaurant_detail_image_restaurant">
 
                     <TextView
                         android:id="@+id/activity_restaurant_detail_text_view_restaurant_name"
@@ -49,6 +59,16 @@
                         android:text="@{restaurantViewModel.place.name}"
                         android:textSize="20sp"/>
 
+                    <RatingBar
+                        android:id="@+id/activity_restaurant_detail_ratingBar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/activity_restaurant_detail_text_view_restaurant_name"
+                        android:layout_alignBottom="@id/activity_restaurant_detail_text_view_restaurant_name"
+                        android:numStars="3"
+                        android:theme="@style/RatingBarTheme"
+                        style="?android:attr/ratingBarStyleSmall"/>
+
                     <ImageView
                         android:id="@+id/activity_restaurant_detail_image_restaurant_stars_1"
                         android:layout_width="wrap_content"
@@ -57,7 +77,8 @@
                         android:layout_alignBottom="@id/activity_restaurant_detail_text_view_restaurant_name"
                         android:contentDescription="@null"
                         app:srcCompat="@drawable/ic_baseline_star_border_black_24"
-                        android:tint="@color/quantum_yellow600"/>
+                        android:tint="@color/quantum_yellow600"
+                        android:visibility="gone"/>
 
                     <ImageView
                         android:id="@+id/activity_restaurant_detail_image_restaurant_stars_2"
@@ -67,7 +88,8 @@
                         android:layout_alignBottom="@id/activity_restaurant_detail_text_view_restaurant_name"
                         android:contentDescription="@null"
                         app:srcCompat="@drawable/ic_baseline_star_border_black_24"
-                        android:tint="@color/quantum_yellow600"/>
+                        android:tint="@color/quantum_yellow600"
+                        android:visibility="gone"/>
 
                     <ImageView
                         android:id="@+id/activity_restaurant_detail_image_restaurant_stars_3"
@@ -77,7 +99,8 @@
                         android:layout_alignBottom="@id/activity_restaurant_detail_text_view_restaurant_name"
                         android:contentDescription="@null"
                         app:srcCompat="@drawable/ic_baseline_star_border_black_24"
-                        android:tint="@color/quantum_yellow600"/>
+                        android:tint="@color/quantum_yellow600"
+                        android:visibility="gone"/>
 
                     <TextView
                         android:id="@+id/activity_restaurant_detail_restaurant_type_and_address"
@@ -88,33 +111,18 @@
 
                 </RelativeLayout>
 
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/activity_restaurant_detail_button_booked"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:backgroundTint="@android:color/white"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignBottom="@id/activity_restaurant_detail_image_restaurant"
-                    android:layout_marginBottom="60dp"
-                    android:layout_marginEnd="20dp"
-                    app:srcCompat="@drawable/ic_baseline_check_circle_outline_black_48"/>
-
-            </RelativeLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
                 <LinearLayout
+                    android:id="@+id/activity_restaurant_detail_button_container"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:orientation="horizontal"
                     android:layout_gravity="center"
-                    android:baselineAligned="false">
+                    android:gravity="center"
+                    app:layout_constraintHeight_percent="0.125"
+                    app:layout_constraintTop_toBottomOf="@id/activity_restaurant_detail_info_container">
 
                     <LinearLayout
+                        android:id="@+id/activity_restaurant_detail_call_button"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -141,6 +149,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/activity_restaurant_detail_like_button"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -167,6 +176,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/activity_restaurant_detail_website_button"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -196,18 +206,22 @@
                 </LinearLayout>
 
                 <View
+                    android:id="@+id/activity_restaurant_detail_divider"
                     android:layout_width="match_parent"
-                    android:layout_height="0.1dp"
-                    android:background="@color/colorLightGray"/>
+                    android:layout_height="0dp"
+                    android:background="@color/colorExtraLightGrey"
+                    app:layout_constraintHeight_percent="0.001"
+                    app:layout_constraintTop_toBottomOf="@id/activity_restaurant_detail_button_container"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/activity_restaurant_detail_recycler_view"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="0dp"
+                    app:layout_constraintHeight_percent="0.375"
+                    app:layout_constraintTop_toBottomOf="@id/activity_restaurant_detail_divider"
+                    tools:layout_editor_absoluteX="0dp" />
 
-            </LinearLayout>
-
-        </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

@@ -12,4 +12,7 @@
     <color name="colorMarkerNotBookedCutlery">#c41c00</color>
     <color name="colorMarkerBookedFont">#69f0ae</color>
     <color name="colorMarkerBookedCutlery">@android:color/white</color>
+
+    <!-- Restaurant Detail divider -->
+    <color name="colorExtraLightGrey">#C4C4C4</color>
 </resources>
