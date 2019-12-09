@@ -35,7 +35,8 @@
     <string name="activity_main_search_edit_text_hint">Search restaurant</string>
 
     <!-- MAP FRAGMENT -->
-    <string name="popup_title_permission_location">This application need location permission.</string>
+    <string name="fragment_maps_popup_title_permission_location">This application need location permission.</string>
+    <string name="fragment_maps_no_place_found">No Place found !</string>
     
     <!-- RESTAURANT DETAIL -->
     <string name="activity_restaurant_detail_text_call">Call</string>

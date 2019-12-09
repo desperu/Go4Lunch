@@ -11,7 +11,7 @@
     </data>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/activity_restaurant_detail_swipe_refresh"
+        android:id="@+id/activity_restaurant_detail_swipe_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="-25dp">

@@ -10,6 +10,7 @@ import android.location.LocationManager;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -129,7 +130,9 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
     @Override
     public boolean onMarkerClick(Marker marker) {
         this.repositionMapButton(GOOGLE_MAP_TOOLBAR, (int) getResources().getDimension(R.dimen.fragment_maps_toolbar_margin_bottom), (int) getResources().getDimension(R.dimen.fragment_maps_toolbar_margin_end));
-        mCallback.onClickedMarker(marker.getSnippet());
+        if (marker.getSnippet() != null)
+            mCallback.onClickedMarker(marker.getSnippet());
+        else Toast.makeText(getContext(), R.string.fragment_maps_no_place_found, Toast.LENGTH_SHORT).show();
         return false;
     }
 
@@ -204,7 +207,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
      */
     private void checkLocationPermissionsStatus() {
         if (!EasyPermissions.hasPermissions(getContext(), PERMS))
-            EasyPermissions.requestPermissions(this, getString(R.string.popup_title_permission_location),
+            EasyPermissions.requestPermissions(this, getString(R.string.fragment_maps_popup_title_permission_location),
                     PERM_COARSE_LOCATION, PERMS);
         else isLocationEnabled = true;
     }
