@@ -11,6 +11,8 @@ import org.jetbrains.annotations.NotNull;
 public class UserHelper {
 
     private static final String COLLECTION_NAME = "users";
+    private static final String COLLECTION_USERNAME = "username";
+    private static final String COLLECTION_RESTAURANT_ID = "bookedRestaurantId";
 
     // --- COLLECTION REFERENCE ---
 
@@ -38,17 +40,12 @@ public class UserHelper {
 
     @NotNull
     public static Task<Void> updateUsername(String username, String uid) {
-        return UserHelper.getUsersCollection().document(uid).update("username", username);
+        return UserHelper.getUsersCollection().document(uid).update(COLLECTION_USERNAME, username);
     }
 
     @NotNull
-    public static Task<Void> updateIsMentor(String uid, Boolean isMentor) {
-        return UserHelper.getUsersCollection().document(uid).update("isMentor", isMentor);
-    }
-
-    @NotNull
-    public static Task<Void> updateBookedRestaurant(String uid, String restaurantId) {
-        return UserHelper.getUsersCollection().document(uid).update("restaurantId", restaurantId);
+    public static Task<Void> updateBookedRestaurant(String uid, String bookedRestaurantId) {
+        return UserHelper.getUsersCollection().document(uid).update(COLLECTION_RESTAURANT_ID, bookedRestaurantId);
     }
 
     // --- DELETE ---

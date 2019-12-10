@@ -8,15 +8,15 @@ public class User {
     private String username;
     @Nullable
     private String urlPicture;
-    private String restaurantId;
+    private String bookedRestaurantId;
 
     public User() { }
 
-    public User(String uid, String username, @Nullable String urlPicture, String restaurantId) {
+    public User(String uid, String username, @Nullable String urlPicture, String bookedRestaurantId) {
         this.uid = uid;
         this.username = username;
         this.urlPicture = urlPicture;
-        this.restaurantId = restaurantId;
+        this.bookedRestaurantId = bookedRestaurantId;
     }
 
     // --- GETTERS ---
@@ -24,11 +24,11 @@ public class User {
     public String getUsername() { return username; }
     @Nullable
     public String getUrlPicture() { return urlPicture; }
-    public String getRestaurantId() { return restaurantId; }
+    public String getBookedRestaurantId() { return bookedRestaurantId; }
 
     // --- SETTERS ---
     public void setUsername(String username) { this.username = username; }
     public void setUid(String uid) { this.uid = uid; }
     public void setUrlPicture(@Nullable String urlPicture) { this.urlPicture = urlPicture; }
-    public void setRestaurantId(String restaurantId) { this.restaurantId = restaurantId; }
+    public void setBookedRestaurantId(String bookedRestaurantId) { this.bookedRestaurantId = bookedRestaurantId; }
 }

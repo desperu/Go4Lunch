@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--<layout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:tools="http://schemas.android.com/tools">-->
+
+<!--    <data>-->
+<!--        <variable-->
+<!--            name="userViewModel"-->
+<!--            type="org.desperu.go4lunch.viewmodel.UserViewModel" />-->
+<!--    </data>-->
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <ImageView
+            android:id="@+id/fragment_restaurant_detail_item_circular_image_view"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            tools:imageUrl="@{userViewModel.userPicture}"/>
+
+        <TextView
+            android:id="@+id/fragment_restaurant_detail_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="15dp"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"/>
+
+    </LinearLayout>
+
+<!--</layout>-->
