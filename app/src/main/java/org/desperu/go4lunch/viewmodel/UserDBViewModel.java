@@ -91,6 +91,7 @@ public class UserDBViewModel {
         Glide.with(imageView.getContext()).load(url).circleCrop().into(imageView);
     }
 
+    // TODO custom getter will be better??
     @BindingAdapter("joiningName") public static void setJoiningName(@NotNull TextView textView, String userName) {
         textView.setText(textView.getContext().getResources().getString(R.string.activity_restaurant_detail_recycler_text_joining, userName));
     }

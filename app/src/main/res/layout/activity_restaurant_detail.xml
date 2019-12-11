@@ -13,13 +13,13 @@
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/activity_restaurant_detail_swipe_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="-25dp">
+        android:layout_height="match_parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layout_constraintHeight_default="percent">
+                app:layout_constraintHeight_default="percent"
+                android:layout_marginTop="@dimen/activity_restaurant_detail_constraint_margin_top">
 
                 <ImageView
                     android:id="@+id/activity_restaurant_detail_image_restaurant"
@@ -28,7 +28,7 @@
                     android:contentDescription="@null"
                     android:scaleType="fitXY"
                     android:src="@{restaurantViewModel.picture}"
-                    app:layout_constraintHeight_percent="0.375"
+                    app:layout_constraintHeight_percent="0.4"
                     app:layout_constraintBottom_toTopOf="@id/activity_restaurant_detail_info_container"/>
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -38,7 +38,7 @@
                     app:layout_constraintBottom_toTopOf="@+id/activity_restaurant_detail_info_container"
                     app:layout_constraintTop_toTopOf="@id/activity_restaurant_detail_info_container"
                     app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_marginEnd="20dp"
+                    android:layout_marginEnd="@dimen/activity_restaurant_detail_floating_button_margin_end"
                     app:srcCompat="@drawable/ic_baseline_check_circle_outline_black_48"
                     app:backgroundTint="@android:color/white"/>
 
@@ -47,7 +47,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:background="@color/colorPrimary"
-                    android:padding="20dp"
+                    android:padding="@dimen/activity_restaurant_detail_info_container_padding"
                     app:layout_constraintHeight_percent="0.125"
                     app:layout_constraintTop_toBottomOf="@id/activity_restaurant_detail_image_restaurant">
 
@@ -55,7 +55,7 @@
                         android:id="@+id/activity_restaurant_detail_text_view_restaurant_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="10dp"
+                        android:layout_marginEnd="@dimen/activity_restaurant_detail_text_restaurant_name_margin_end"
                         android:text="@{restaurantViewModel.place.name}"
                         android:textSize="20sp"/>
 
@@ -119,7 +119,8 @@
                     android:layout_gravity="center"
                     android:gravity="center"
                     app:layout_constraintHeight_percent="0.125"
-                    app:layout_constraintTop_toBottomOf="@id/activity_restaurant_detail_info_container">
+                    app:layout_constraintTop_toBottomOf="@id/activity_restaurant_detail_info_container"
+                    android:baselineAligned="false">
 
                     <LinearLayout
                         android:id="@+id/activity_restaurant_detail_call_button"
@@ -128,7 +129,7 @@
                         android:layout_weight="1"
                         android:orientation="vertical"
                         android:gravity="center"
-                        android:padding="10dp">
+                        android:padding="@dimen/activity_restaurant_detail_linear_button_padding">
 
                         <ImageView
                             android:layout_width="wrap_content"
@@ -136,7 +137,7 @@
                             app:srcCompat="@drawable/ic_baseline_call_black_24"
                             android:tint="@color/colorPrimary"
                             android:contentDescription="@null"
-                            android:layout_margin="5dp"/>
+                            android:layout_margin="@dimen/activity_restaurant_detail_image_and_text_button_margin"/>
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -144,7 +145,7 @@
                             android:text="@string/activity_restaurant_detail_text_call"
                             android:textColor="@color/colorPrimary"
                             android:textAllCaps="true"
-                            android:layout_margin="5dp"/>
+                            android:layout_margin="@dimen/activity_restaurant_detail_image_and_text_button_margin"/>
 
                     </LinearLayout>
 
@@ -155,7 +156,7 @@
                         android:layout_weight="1"
                         android:orientation="vertical"
                         android:gravity="center"
-                        android:padding="10dp">
+                        android:padding="@dimen/activity_restaurant_detail_linear_button_padding">
 
                         <ImageView
                             android:layout_width="wrap_content"
@@ -163,7 +164,7 @@
                             app:srcCompat="@drawable/ic_baseline_star_black_24"
                             android:tint="@color/colorPrimary"
                             android:contentDescription="@null"
-                            android:layout_margin="5dp"/>
+                            android:layout_margin="@dimen/activity_restaurant_detail_image_and_text_button_margin"/>
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -171,7 +172,7 @@
                             android:text="@string/activity_restaurant_detail_text_like"
                             android:textColor="@color/colorPrimary"
                             android:textAllCaps="true"
-                            android:layout_margin="5dp"/>
+                            android:layout_margin="@dimen/activity_restaurant_detail_image_and_text_button_margin"/>
 
                     </LinearLayout>
 
@@ -182,7 +183,7 @@
                         android:layout_weight="1"
                         android:orientation="vertical"
                         android:gravity="center"
-                        android:padding="10dp">
+                        android:padding="@dimen/activity_restaurant_detail_linear_button_padding">
 
                         <ImageView
                             android:layout_width="wrap_content"
@@ -191,7 +192,7 @@
                             app:srcCompat="@drawable/ic_baseline_public_black_24"
                             android:tint="@color/colorPrimary"
                             android:contentDescription="@null"
-                            android:layout_margin="5dp"/>
+                            android:layout_margin="@dimen/activity_restaurant_detail_image_and_text_button_margin"/>
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -199,7 +200,7 @@
                             android:text="@string/activity_restaurant_detail_text_website"
                             android:textColor="@color/colorPrimary"
                             android:textAllCaps="true"
-                            android:layout_margin="5dp"/>
+                            android:layout_margin="@dimen/activity_restaurant_detail_image_and_text_button_margin"/>
 
                     </LinearLayout>
 
@@ -217,7 +218,7 @@
                     android:id="@+id/activity_restaurant_detail_recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    app:layout_constraintHeight_percent="0.375"
+                    app:layout_constraintHeight_percent="0.35"
                     app:layout_constraintTop_toBottomOf="@id/activity_restaurant_detail_divider"
                     tools:layout_editor_absoluteX="0dp" />
 
