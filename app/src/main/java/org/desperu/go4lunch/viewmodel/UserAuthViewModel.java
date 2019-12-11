@@ -12,11 +12,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-public class UserViewModel {
+public class UserAuthViewModel {
 
     private FirebaseUser currentUser;
 
-    public UserViewModel() {
+    public UserAuthViewModel() {
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
     }
 

@@ -34,7 +34,7 @@ import org.desperu.go4lunch.databinding.ActivityMainNavHeaderBinding;
 import org.desperu.go4lunch.view.TestBindingActivity;
 import org.desperu.go4lunch.view.main.fragments.MapsFragment;
 import org.desperu.go4lunch.view.restaurantdetail.RestaurantDetailActivity;
-import org.desperu.go4lunch.viewmodel.UserViewModel;
+import org.desperu.go4lunch.viewmodel.UserAuthViewModel;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -54,7 +54,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @BindView(R.id.activity_main_nav_bottom) BottomNavigationView bottomNavigationView;
 
     // FOR DATA
-    private UserViewModel userViewModel;
+    private UserAuthViewModel userAuthViewModel;
     private AutocompleteSupportFragment autocompleteFragment;
     private static final int RC_SIGN_IN = 1234;
 
@@ -276,8 +276,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             // Enable Data binding for user info
             View headerView = navigationView.getHeaderView(0);
             ActivityMainNavHeaderBinding activityMainNavHeaderBinding = ActivityMainNavHeaderBinding.bind(headerView);
-            userViewModel = new UserViewModel();
-            activityMainNavHeaderBinding.setUserViewModel(userViewModel);
+            userAuthViewModel = new UserAuthViewModel();
+            activityMainNavHeaderBinding.setUserAuthViewModel(userAuthViewModel);
         }
     }
 
@@ -372,7 +372,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
      * Log out of current login, and start Login Activity.
      */
     private void logOut() {
-        userViewModel.userLogOut();
+        userAuthViewModel.userLogOut();
         this.startSignInActivity();
     }
 
@@ -385,7 +385,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
      */
     private void createUserInFirestore(){
         if (this.getCurrentUser() != null)
-            UserHelper.createUser(userViewModel.getUid(), userViewModel.getUserName(), userViewModel.getUserPicture())
+            UserHelper.createUser(userAuthViewModel.getUid(), userAuthViewModel.getUserName(), userAuthViewModel.getUserPicture())
                     .addOnFailureListener(this.onFailureListener());
     }
 
@@ -406,7 +406,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_OK) { // SUCCESS
-                if (userViewModel == null) this.configureDesign();
+                if (userAuthViewModel == null) this.configureDesign();
                 this.createUserInFirestore();
                 showToast(getString(R.string.connection_succeed));
             } else { // ERRORS

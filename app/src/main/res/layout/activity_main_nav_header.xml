@@ -4,8 +4,8 @@
 
     <data>
         <variable
-            name="userViewModel"
-            type="org.desperu.go4lunch.viewmodel.UserViewModel" />
+            name="userAuthViewModel"
+            type="org.desperu.go4lunch.viewmodel.UserAuthViewModel" />
     </data>
 
     <LinearLayout
@@ -40,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:contentDescription="@null"
-                tools:imageUrl="@{userViewModel.userPicture}"/>
+                tools:imageUrl="@{userAuthViewModel.userPicture}"/>
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -53,7 +53,7 @@
                     android:id="@+id/activity_main_nav_header_text_profile_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{userViewModel.userName}"
+                    android:text="@{userAuthViewModel.userName}"
                     android:textColor="@android:color/white"
                     android:textSize="@dimen/nav_header_text_name_text_size"
                     android:textStyle="bold"
@@ -63,7 +63,7 @@
                     android:id="@+id/activity_main_nav_header_profile_email"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{userViewModel.userMail}"
+                    android:text="@{userAuthViewModel.userMail}"
                     android:textColor="@android:color/white"
                     android:textSize="@dimen/nav_header_text_email_text_size"/>
 

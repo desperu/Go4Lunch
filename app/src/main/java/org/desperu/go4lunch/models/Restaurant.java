@@ -6,7 +6,7 @@ public class Restaurant {
 
     // TODO needed only id and bookedUsersId ??
     private String name;
-    private String id;
+    private String restaurantId;
     private List<String> bookedUsersId;
     private String openHours;
     private String restaurantType;
@@ -14,9 +14,9 @@ public class Restaurant {
 
     public Restaurant() { }
 
-    public Restaurant(String name, String id, List<String> bookedUsersId, String openHours, String restaurantType, Double stars) {
+    public Restaurant(String name, String restaurantId, List<String> bookedUsersId, String openHours, String restaurantType, Double stars) {
         this.name = name;
-        this.id = id;
+        this.restaurantId = restaurantId;
         this.bookedUsersId = bookedUsersId;
         this.openHours = openHours;
         this.restaurantType = restaurantType;
@@ -25,7 +25,7 @@ public class Restaurant {
 
     // --- GETTERS ---
     public String getName() { return name; }
-    public String getId() { return id; }
+    public String getRestaurantId() { return restaurantId; }
     public List<String> getBookedUsersId() { return bookedUsersId; }
     public String getOpenHours() { return openHours; }
     public String getRestaurantType() { return restaurantType; }
@@ -33,7 +33,7 @@ public class Restaurant {
 
     // --- SETTERS ---
     public void setName(String name) { this.name = name; }
-    public void setId(String id) { this.id = id; }
+    public void setRestaurantId(String restaurantId) { this.restaurantId = restaurantId; }
     public void setBookedUsersId(List<String> bookedUsersId) { this.bookedUsersId = bookedUsersId; }
     public void setOpenHours(String openHours) { this.openHours = openHours; }
     public void setRestaurantType(String restaurantType) { this.restaurantType = restaurantType; }

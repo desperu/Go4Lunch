@@ -14,6 +14,7 @@ import java.util.List;
 public class RestaurantHelper {
 
     private static final String COLLECTION_NAME = "restaurants";
+    private static final String FIELD_BOOKED_USERS = "bookedUsersId";
 
     // --- COLLECTION REFERENCE ---
 
@@ -25,36 +26,37 @@ public class RestaurantHelper {
     // --- CREATE ---
 
     @NotNull
-    public static Task<Void> createRestaurant(String id, String name, List<String> bookedUserId, String openHours, String restaurantType, Double stars) {
-        Restaurant restaurantToCreate = new Restaurant(name, id, bookedUserId, openHours,restaurantType, stars);
-        return RestaurantHelper.getRestaurantCollection().document(id).set(restaurantToCreate);
+    public static Task<Void> createRestaurant(String restaurantId, String name, List<String> bookedUsersId,
+                                              String openHours, String restaurantType, Double stars) {
+        Restaurant restaurantToCreate = new Restaurant(name, restaurantId, bookedUsersId, openHours,restaurantType, stars);
+        return RestaurantHelper.getRestaurantCollection().document(restaurantId).set(restaurantToCreate);
     }
 
     // --- GET ---
 
     @NotNull
-    public static Task<DocumentSnapshot> getRestaurant(String id) {
-        return RestaurantHelper.getRestaurantCollection().document(id).get();
+    public static Task<DocumentSnapshot> getRestaurant(String restaurantId) {
+        return RestaurantHelper.getRestaurantCollection().document(restaurantId).get();
     }
 
     // --- UPDATE ---
 
     @NotNull
-    public static Task<Void> updateBookedUsers(String id, String usersId) {
-        return RestaurantHelper.getRestaurantCollection().document(id).update("bookedUsersId", FieldValue.arrayUnion(usersId));
+    public static Task<Void> updateBookedUsers(String restaurantId, String usersId) {
+        return RestaurantHelper.getRestaurantCollection().document(restaurantId).update(FIELD_BOOKED_USERS, FieldValue.arrayUnion(usersId));
     }
 
     // --- REMOVE ---
 
     @NotNull
-    public static Task<Void> removeBookedUser(String id, String userId) {
-        return RestaurantHelper.getRestaurantCollection().document(id).update("bookedUsersId", FieldValue.arrayRemove(userId));
+    public static Task<Void> removeBookedUser(String restaurantId, String userId) {
+        return RestaurantHelper.getRestaurantCollection().document(restaurantId).update(FIELD_BOOKED_USERS, FieldValue.arrayRemove(userId));
     }
 
     // --- DELETE ---
 
     @NotNull
-    public static Task<Void> deleteRestaurant(String id) {
-        return RestaurantHelper.getRestaurantCollection().document(id).delete();
+    public static Task<Void> deleteRestaurant(String restaurantId) {
+        return RestaurantHelper.getRestaurantCollection().document(restaurantId).delete();
     }
 }

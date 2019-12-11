@@ -14,7 +14,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.auth.FirebaseUser;
 
 import org.desperu.go4lunch.R;
-import org.desperu.go4lunch.viewmodel.UserViewModel;
+import org.desperu.go4lunch.viewmodel.UserAuthViewModel;
 import org.jetbrains.annotations.NotNull;
 
 import butterknife.ButterKnife;
@@ -83,8 +83,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Nullable
     protected FirebaseUser getCurrentUser(){
-        UserViewModel userViewModel = new UserViewModel();
-        return userViewModel.getCurrentUser();
+        UserAuthViewModel userAuthViewModel = new UserAuthViewModel();
+        return userAuthViewModel.getCurrentUser();
     }
 
     protected Boolean isCurrentUserLogged(){ return (this.getCurrentUser() != null); }

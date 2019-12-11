@@ -7,7 +7,7 @@ import androidx.databinding.DataBindingUtil;
 import org.desperu.go4lunch.R;
 import org.desperu.go4lunch.base.BaseActivity;
 import org.desperu.go4lunch.databinding.ActivityMainNavHeaderBinding;
-import org.desperu.go4lunch.viewmodel.UserViewModel;
+import org.desperu.go4lunch.viewmodel.UserAuthViewModel;
 
 public class TestBindingActivity extends BaseActivity {
 
@@ -23,7 +23,7 @@ public class TestBindingActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActivityMainNavHeaderBinding navHeaderBinding = DataBindingUtil.setContentView(this, R.layout.activity_main_nav_header);
-        UserViewModel userViewModel = new UserViewModel();
-        navHeaderBinding.setUserViewModel(userViewModel);
+        UserAuthViewModel userAuthViewModel = new UserAuthViewModel();
+        navHeaderBinding.setUserAuthViewModel(userAuthViewModel);
     }
 }

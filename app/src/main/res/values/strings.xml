@@ -42,6 +42,7 @@
     <string name="activity_restaurant_detail_text_call">Call</string>
     <string name="activity_restaurant_detail_text_like">Like</string>
     <string name="activity_restaurant_detail_text_website">Website</string>
+    <string name="activity_restaurant_detail_no_restaurant_data">No restaurant data, swipe to refresh !</string>
 
     <!-- VIEW MODEL -->
     <string name="view_model_toast_request_failure">"Google Place time out ..."</string>

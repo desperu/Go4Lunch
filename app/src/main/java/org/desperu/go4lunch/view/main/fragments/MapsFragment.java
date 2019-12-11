@@ -253,11 +253,11 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
      * Add a new marker on the map.
      * @param latLng Latitude and longitude for the marker.
      * @param title Title for the marker.
-     * @param id Place id.
+     * @param restaurantId Restaurant place id.
      */
-    public void addMarker(LatLng latLng, String title, String id) {
+    public void addMarker(LatLng latLng, String title, String restaurantId) {
         mMap.addMarker(new MarkerOptions().position(latLng).title(title)
-                .icon(this.switchMarkerColors(this.isBookedRestaurant())).snippet(id));
+                .icon(this.switchMarkerColors(this.isBookedRestaurant())).snippet(restaurantId));
     }
 
     // TODO in RestaurantViewModel

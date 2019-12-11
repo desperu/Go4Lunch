@@ -4,8 +4,8 @@
 
 <!--    <data>-->
 <!--        <variable-->
-<!--            name="userViewModel"-->
-<!--            type="org.desperu.go4lunch.viewmodel.UserViewModel" />-->
+<!--            name="userAuthViewModel"-->
+<!--            type="org.desperu.go4lunch.viewmodel.UserAuthViewModelodel" />-->
 <!--    </data>-->
 
     <LinearLayout
@@ -20,7 +20,7 @@
             android:id="@+id/fragment_restaurant_detail_item_circular_image_view"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            tools:imageUrl="@{userViewModel.userPicture}"/>
+            tools:imageUrl="@{userAuthViewModel.userPicture}"/>
 
         <TextView
             android:id="@+id/fragment_restaurant_detail_text_view"
