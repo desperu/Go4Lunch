@@ -1,36 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--<layout xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--    xmlns:tools="http://schemas.android.com/tools">-->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-<!--    <data>-->
-<!--        <variable-->
-<!--            name="userAuthViewModel"-->
-<!--            type="org.desperu.go4lunch.viewmodel.UserAuthViewModelodel" />-->
-<!--    </data>-->
+    <data>
+        <variable
+            name="userDBViewModel"
+            type="org.desperu.go4lunch.viewmodel.UserDBViewModel" />
+    </data>
 
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp">
 
         <ImageView
-            android:id="@+id/fragment_restaurant_detail_item_circular_image_view"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            tools:imageUrl="@{userAuthViewModel.userPicture}"/>
+            android:id="@+id/fragment_restaurant_detail_item_user_image"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:contentDescription="@null"
+            tools:pictureUrl="@{userDBViewModel.pictureUrl}"/>
 
         <TextView
-            android:id="@+id/fragment_restaurant_detail_text_view"
+            android:id="@+id/fragment_restaurant_detail_item_user_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="15dp"
             android:textColor="@android:color/black"
-            android:textSize="18sp"/>
+            android:textSize="18sp"
+            tools:joiningName="@{userDBViewModel.userName}"/>
 
     </LinearLayout>
 
-<!--</layout>-->
+</layout>

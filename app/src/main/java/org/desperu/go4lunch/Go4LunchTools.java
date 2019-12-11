@@ -13,11 +13,16 @@ public final class Go4LunchTools {
         // TO REPLACE BUTTON
         // Map Toolbar
         public static final String GOOGLE_MAP_TOOLBAR = "GoogleMapToolbar";
-        public static final int TOOLBAR_MARGIN_BOTTOM = 20;
-        public static final int TOOLBAR_MARGIN_END = 18;
         // Zoom button
         public static final String GOOGLE_MAP_ZOOM_OUT_BUTTON = "GoogleMapZoomOutButton";
-        public static final int ZOOM_OUT_MARGIN_BOTTOM = 65;
-        public static final int ZOOM_OUT_MARGIN_END = 12;
+    }
+
+    public static final class CodeResponse {
+
+        // Code response for booking restaurant.
+        public static final int BOOKED = 0;
+        public static final int UNBOOKED = 1;
+        public static final int ERROR = 2;
+        public static final int NO_DATA = 3;
     }
 }

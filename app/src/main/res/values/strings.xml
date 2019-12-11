@@ -43,6 +43,9 @@
     <string name="activity_restaurant_detail_text_like">Like</string>
     <string name="activity_restaurant_detail_text_website">Website</string>
     <string name="activity_restaurant_detail_no_restaurant_data">No restaurant data, swipe to refresh !</string>
+    <string name="activity_restaurant_detail_restaurant_booked">Booked restaurant !</string>
+    <string name="activity_restaurant_detail_restaurant_unbooked">Unbooked restaurant !</string>
+    <string name="activity_restaurant_detail_recycler_text_joining">%1$s is joining !</string>
 
     <!-- VIEW MODEL -->
     <string name="view_model_toast_request_failure">"Google Place time out ..."</string>

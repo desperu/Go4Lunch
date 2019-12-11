@@ -7,22 +7,23 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.bumptech.glide.Glide;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.desperu.go4lunch.R;
 import org.desperu.go4lunch.base.BaseActivity;
 import org.desperu.go4lunch.databinding.ActivityRestaurantDetailBinding;
-import org.desperu.go4lunch.viewmodel.RestaurantDataBaseViewModel;
+import org.desperu.go4lunch.viewmodel.RestaurantDBViewModel;
 import org.desperu.go4lunch.viewmodel.RestaurantViewModel;
-import org.desperu.go4lunch.viewmodel.UserDataBaseViewModel;
+import org.desperu.go4lunch.viewmodel.UserDBViewModel;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static org.desperu.go4lunch.Go4LunchTools.CodeResponse.*;
 
 public class RestaurantDetailActivity extends BaseActivity {
 
@@ -84,9 +85,9 @@ public class RestaurantDetailActivity extends BaseActivity {
      * Get restaurant's bookedUsers from firestore.
      */
     private void getRestaurantBookedUsers() {
-        RestaurantDataBaseViewModel restaurantDataBaseViewModel =
-                new RestaurantDataBaseViewModel(this, this.getIdFromIntentData());
-        restaurantDataBaseViewModel.getRestaurantBookedUsers();
+        RestaurantDBViewModel restaurantDBViewModel =
+                new RestaurantDBViewModel(this, this.getIdFromIntentData());
+        restaurantDBViewModel.getRestaurantBookedUsers();
     }
 
     /**
@@ -104,7 +105,7 @@ public class RestaurantDetailActivity extends BaseActivity {
      */
     private void configureRecyclerView() {
         // Create adapter passing in the sample user data
-        this.adapter = new RestaurantAdapter(this.bookedUserId, Glide.with(this), this);
+        this.adapter = new RestaurantAdapter(this.bookedUserId);
         // Attach the adapter to the recyclerView to populate items
         this.recyclerView.setAdapter(this.adapter);
         // Set layout manager to position the items
@@ -166,10 +167,10 @@ public class RestaurantDetailActivity extends BaseActivity {
         Place currentRestaurant = restaurantViewModel.getPlace().get();
 
         if (currentRestaurant != null && currentRestaurant.getId() != null) {
-            UserDataBaseViewModel userDataBaseViewModel = new UserDataBaseViewModel(this.getCurrentUser().getUid());
-            userDataBaseViewModel.updateBookedRestaurant(currentRestaurant);
+            UserDBViewModel userDBViewModel = new UserDBViewModel(this.getCurrentUser().getUid());
+            userDBViewModel.updateBookedRestaurant(this, currentRestaurant);
             this.getRestaurantBookedUsers();
-        } else Snackbar.make(swipeRefreshLayout, R.string.activity_restaurant_detail_no_restaurant_data, Snackbar.LENGTH_SHORT).show();
+        } else this.handleResponseAfterBooking(NO_DATA);
     }
 
     // --------------
@@ -190,6 +191,41 @@ public class RestaurantDetailActivity extends BaseActivity {
             if (this.adapter == null) this.configureRecyclerView();
             else this.adapter.notifyDataSetChanged();
         } else this.recyclerView.setVisibility(View.GONE);
+    }
+
+    /**
+     * Show Snackbar with corresponding message.
+     * @param message Message to show.
+     */
+    private void showSnackbar(String message){
+        Snackbar.make(swipeRefreshLayout, message, Snackbar.LENGTH_SHORT).show();
+    }
+
+    // --------------
+    // UTILS
+    // --------------
+
+    /**
+     * Handle response after booked button clicked.
+     * @param resultCode Code result from request method.
+     */
+    public void handleResponseAfterBooking(int resultCode) {
+        switch (resultCode) {
+            case BOOKED:
+                this.showSnackbar(getString(R.string.activity_restaurant_detail_restaurant_booked));
+                break;
+            case UNBOOKED:
+                this.showSnackbar(getString(R.string.activity_restaurant_detail_restaurant_unbooked));
+                break;
+            case ERROR:
+                this.showSnackbar(getString(R.string.error_unknown_error));
+                break;
+            case NO_DATA:
+                this.showSnackbar(getString(R.string.activity_restaurant_detail_no_restaurant_data));
+                break;
+            default:
+                break;
+        }
     }
 
     // --- SETTERS ---

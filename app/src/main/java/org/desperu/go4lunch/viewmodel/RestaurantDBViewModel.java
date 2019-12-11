@@ -6,26 +6,33 @@ import org.desperu.go4lunch.api.RestaurantHelper;
 import org.desperu.go4lunch.models.Restaurant;
 import org.desperu.go4lunch.view.restaurantdetail.RestaurantDetailActivity;
 
-public class RestaurantDataBaseViewModel {
+public class RestaurantDBViewModel {
 
     private String restaurantId;
     private RestaurantDetailActivity restaurantDetailActivity;
     private ObservableField<Restaurant> restaurant = new ObservableField<>();
 
-    public RestaurantDataBaseViewModel(String restaurantId) {
+    public RestaurantDBViewModel(String restaurantId) {
         this.restaurantId = restaurantId;
     }
 
-    public RestaurantDataBaseViewModel(RestaurantDetailActivity restaurantDetailActivity, String restaurantId) {
+    public RestaurantDBViewModel(RestaurantDetailActivity restaurantDetailActivity, String restaurantId) {
         this.restaurantDetailActivity = restaurantDetailActivity;
         this.restaurantId = restaurantId;
     }
+
+    // --------------
+    // REQUEST
+    // --------------
 
     public void fetchRestaurant() {
         RestaurantHelper.getRestaurant(restaurantId).addOnSuccessListener(documentSnapshot ->
                 restaurant.set(documentSnapshot.toObject(Restaurant.class)));
     }
 
+    /**
+     * Get restaurants booked users.
+     */
     public void getRestaurantBookedUsers() {
         RestaurantHelper.getRestaurant(restaurantId).addOnSuccessListener(documentSnapshot -> {
             Restaurant restaurant = documentSnapshot.toObject(Restaurant.class);
