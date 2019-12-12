@@ -1,7 +1,7 @@
 package org.desperu.go4lunch.viewmodel;
 
+import android.content.Context;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.databinding.BindingAdapter;
 import androidx.databinding.ObservableField;
@@ -23,12 +23,22 @@ import static org.desperu.go4lunch.Go4LunchTools.CodeResponse.*;
 
 public class UserDBViewModel {
 
+    private RestaurantDetailActivity restaurantDetailActivity;
+    private Context context;
     private String uid;
     private ObservableField<User> user = new ObservableField<>();
     private ObservableField<String> pictureUrl = new ObservableField<>();
     private ObservableField<String> userName = new ObservableField<>();
+    private ObservableField<String> joiningName = new ObservableField<>();
 
-    public UserDBViewModel(String uid) {
+    public UserDBViewModel(Context context, String uid) {
+        this.context = context;
+        this.uid = uid;
+    }
+
+    public UserDBViewModel(@NotNull RestaurantDetailActivity restaurantDetailActivity, String uid) {
+        this.restaurantDetailActivity = restaurantDetailActivity;
+        this.context = restaurantDetailActivity.getBaseContext();
         this.uid = uid;
     }
 
@@ -44,6 +54,7 @@ public class UserDBViewModel {
             user.set(documentSnapshot.toObject(User.class));
             pictureUrl.set(user.get().getUrlPicture());
             userName.set(user.get().getUsername());
+            joiningName.set(context.getResources().getString(R.string.activity_restaurant_detail_recycler_text_joining, this.userName.get()));
         });
     }
 
@@ -51,7 +62,7 @@ public class UserDBViewModel {
      * Update bookedRestaurant and bookedUser in firestore.
      * @param newBookedRestaurant New booked restaurant id.
      */
-    public void updateBookedRestaurant(RestaurantDetailActivity activity, Place newBookedRestaurant) {
+    public void updateBookedRestaurant(Place newBookedRestaurant) {
         UserHelper.getUser(uid).addOnSuccessListener(documentSnapshot -> {
             // Get old booked restaurant before update.
             String olBookedRestaurant = documentSnapshot.toObject(User.class).getBookedRestaurantId();
@@ -63,7 +74,7 @@ public class UserDBViewModel {
             if (olBookedRestaurant != null && olBookedRestaurant.equals(newBookedRestaurant.getId())) {
                 // If clicked when already booked, remove booked restaurant.
                 UserHelper.updateBookedRestaurant(uid, null); // TODO modify floating button
-                activity.handleResponseAfterBooking(UNBOOKED);
+                restaurantDetailActivity.handleResponseAfterBooking(UNBOOKED);
             } else {
                 // Update user's bookedRestaurantId in firestore.
                 UserHelper.updateBookedRestaurant(uid, newBookedRestaurant.getId());
@@ -75,24 +86,17 @@ public class UserDBViewModel {
                         newBookedRestaurant.getOpeningHours().toString(), newBookedRestaurant.getTypes().toString(), // TODO can be null object...
                         newBookedRestaurant.getRating());
                 RestaurantHelper.updateBookedUsers(newBookedRestaurant.getId(), uid);
-                activity.handleResponseAfterBooking(BOOKED);
+                restaurantDetailActivity.handleResponseAfterBooking(BOOKED);
             }
-        }).addOnFailureListener(e -> activity.handleResponseAfterBooking(ERROR));
+        }).addOnFailureListener(e -> restaurantDetailActivity.handleResponseAfterBooking(ERROR));
     }
 
     // --- GETTERS ---
     public ObservableField<User> getUser() { return this.user; }
 
-    public ObservableField<String> getPictureUrl() { return this.pictureUrl; }
-
-    public ObservableField<String> getUserName() { return this.userName; }
+    public ObservableField<String> getJoiningName() { return this.joiningName; }
 
     @BindingAdapter("pictureUrl") public static void setImageUrl(@NotNull ImageView imageView, String url) {
         Glide.with(imageView.getContext()).load(url).circleCrop().into(imageView);
-    }
-
-    // TODO custom getter will be better??
-    @BindingAdapter("joiningName") public static void setJoiningName(@NotNull TextView textView, String userName) {
-        textView.setText(textView.getContext().getResources().getString(R.string.activity_restaurant_detail_recycler_text_joining, userName));
     }
 }

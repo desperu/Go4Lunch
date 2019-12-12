@@ -31,7 +31,6 @@ import org.desperu.go4lunch.R;
 import org.desperu.go4lunch.api.UserHelper;
 import org.desperu.go4lunch.base.BaseActivity;
 import org.desperu.go4lunch.databinding.ActivityMainNavHeaderBinding;
-import org.desperu.go4lunch.view.TestBindingActivity;
 import org.desperu.go4lunch.view.main.fragments.MapsFragment;
 import org.desperu.go4lunch.view.restaurantdetail.RestaurantDetailActivity;
 import org.desperu.go4lunch.viewmodel.UserAuthViewModel;
@@ -216,7 +215,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             case R.id.activity_main_menu_bottom_workmates:
 //                this.showHelpDocumentation();
                 // TODO for test only
-                startActivity(new Intent(this, TestBindingActivity.class));
+//                startActivity(new Intent(this, TestBindingActivity.class));
                 break;
             case R.id.activity_main_menu_bottom_chat:
                 Toast.makeText(this, "test chat", Toast.LENGTH_SHORT).show();

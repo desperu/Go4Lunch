@@ -1,5 +1,6 @@
 package org.desperu.go4lunch.view.restaurantdetail;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -15,10 +16,12 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
 
     // FOR DATA
     private List<String> userId;
+    private Context context;
 
     // CONSTRUCTOR
-    public RestaurantAdapter(List<String> userId) {
+    public RestaurantAdapter(List<String> userId, Context context) {
         this.userId = userId;
+        this.context = context;
     }
 
     @Override
@@ -31,7 +34,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
 
     // UPDATE VIEW HOLDER WITH A USER
     public void onBindViewHolder(@NotNull RestaurantViewHolder holder, int position) {
-        UserDBViewModel viewModel = new UserDBViewModel(this.userId.get(position));
+        UserDBViewModel viewModel = new UserDBViewModel(this.context, this.userId.get(position));
         viewModel.fetchUser();
         holder.bind(viewModel);
     }

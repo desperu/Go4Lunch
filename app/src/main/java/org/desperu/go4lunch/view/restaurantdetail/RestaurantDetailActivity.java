@@ -1,5 +1,8 @@
 package org.desperu.go4lunch.view.restaurantdetail;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.View;
 
 import androidx.databinding.DataBindingUtil;
@@ -105,7 +108,7 @@ public class RestaurantDetailActivity extends BaseActivity {
      */
     private void configureRecyclerView() {
         // Create adapter passing in the sample user data
-        this.adapter = new RestaurantAdapter(this.bookedUserId);
+        this.adapter = new RestaurantAdapter(this.bookedUserId, this);
         // Attach the adapter to the recyclerView to populate items
         this.recyclerView.setAdapter(this.adapter);
         // Set layout manager to position the items
@@ -126,51 +129,47 @@ public class RestaurantDetailActivity extends BaseActivity {
     // ACTION
     // --------------
 
-//    @OnClick(R.id.activity_restaurant_detail_button_booked)
-//    protected void onClickBookRestaurant() {
-//        ObservableField<Place> placeRestaurant = restaurantViewModel.getPlace();
-//
-//        if (placeRestaurant.get() != null && placeRestaurant.get().getId() != null) {
-//            // Get old booked restaurant before update.
-//            UserHelper.getUser(this.getCurrentUser().getUid()).addOnSuccessListener(documentSnapshot -> {
-//                String oldBookedRestaurant = documentSnapshot.toObject(User.class).getBookedRestaurantId();
-//                if (!oldBookedRestaurant.equals(placeRestaurant.get().getId())) {// TODO and not already booked + toast or snackbar
-//                    // Remove user id of old booked restaurant.
-//                    RestaurantHelper.removeBookedUser(oldBookedRestaurant, getCurrentUser().getUid());
-//
-//                    // If restaurant isn't booked, remove from firestore.
-//                    RestaurantHelper.getRestaurant(oldBookedRestaurant).addOnSuccessListener(documentSnapshot1 -> {
-//                        if (documentSnapshot1.toObject(Restaurant.class).getBookedUsersId().isEmpty())
-//                            RestaurantHelper.deleteRestaurant(oldBookedRestaurant);
-//                    });
-//                }
-//            });
-//
-//            // Update user's bookedRestaurantId in firestore.
-//            UserHelper.updateBookedRestaurant(this.getCurrentUser().getUid(), placeRestaurant.get().getId());
-//
-//            // Update restaurant in firestore.
-//            List<String> userList = new ArrayList<>();
-//            userList.add(this.getCurrentUser().getUid());
-//
-//            if (restaurant == null)
-//                RestaurantHelper.createRestaurant(placeRestaurant.get().getId(), placeRestaurant.get().getName(), userList,
-//                        placeRestaurant.get().getOpeningHours().toString(), placeRestaurant.get().getTypes().toString(),
-//                        placeRestaurant.get().getRating());
-//            else
-//                RestaurantHelper.updateBookedUsers(restaurant.getId(), this.getCurrentUser().getUid());
-//        }
-//    }
-
     @OnClick(R.id.activity_restaurant_detail_button_booked)
     protected void onClickBookRestaurant() {
         Place currentRestaurant = restaurantViewModel.getPlace().get();
 
         if (currentRestaurant != null && currentRestaurant.getId() != null) {
-            UserDBViewModel userDBViewModel = new UserDBViewModel(this.getCurrentUser().getUid());
-            userDBViewModel.updateBookedRestaurant(this, currentRestaurant);
+            UserDBViewModel userDBViewModel = new UserDBViewModel(this, this.getCurrentUser().getUid());
+            userDBViewModel.updateBookedRestaurant(currentRestaurant);
             this.getRestaurantBookedUsers();
         } else this.handleResponseAfterBooking(NO_DATA);
+    }
+
+    @OnClick(R.id.activity_restaurant_detail_call_button)
+    protected void onClickCallRestaurant() { this.startCallIntent(restaurantViewModel.getPlace().get().getPhoneNumber()); }
+
+    @OnClick(R.id.activity_restaurant_detail_like_button)
+    protected void onClickLikeRestaurant() {
+        //TODO send like to google...
+    }
+
+    @OnClick(R.id.activity_restaurant_detail_website_button)
+    protected void onClickWebsiteRestaurant() { this.showWebsite(restaurantViewModel.getPlace().get().getWebsiteUri().toString()); }
+
+    // --------------
+    // ACTIVITIES
+    // --------------
+
+    /**
+     * Start call action.
+     * @param phone Phone number.
+     */
+    @SuppressLint("MissingPermission") // TODO remove and ask for permission...
+    private void startCallIntent(String phone) {
+        startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phone)));
+    }
+
+    /**
+     * Show website.
+     * @param url Web url.
+     */
+    private void showWebsite(String url) {
+        startActivity(new Intent(Intent.ACTION_VIEW).setDataAndType(Uri.parse(url), "text/html"));
     }
 
     // --------------

@@ -2,13 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="org.desperu.go4lunch">
-    <!--
-         The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
-         Google Maps Android API v2, but you must specify either coarse or fine
-         location permissions for the 'MyLocation' functionality.
-    -->
+
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <!-- TODO needed?? -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -21,16 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <!-- TODO only for test binding data -->
-        <activity android:name=".view.TestBindingActivity" />
-        <!--
-             The API key for Google Maps-based APIs is defined as a string resource.
-             (See the file "res/values/google_maps_api.xml").
-             Note that the API key is linked to the encryption key used to sign the APK.
-             You need a different API key for each encryption key, including the release key that is used to
-             sign the APK for publishing.
-             You can define the keys for the debug and release targets in src/debug/ and src/release/.
-        -->
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_api_key" />
@@ -56,7 +44,11 @@
             android:name=".view.restaurantdetail.RestaurantDetailActivity"
             android:label=""
             android:parentActivityName=".view.main.MainActivity"
-            android:theme="@style/RestaurantDetailTheme"/>
+            android:theme="@style/RestaurantDetailTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.CALL"/>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

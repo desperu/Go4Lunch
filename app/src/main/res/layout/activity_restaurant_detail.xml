@@ -35,10 +35,12 @@
                     android:id="@+id/activity_restaurant_detail_button_booked"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/activity_restaurant_detail_floating_button_margin_end"
+                    android:scaleType="center"
+                    app:maxImageSize="@dimen/activity_restaurant_detail_floating_button_max_image_size"
                     app:layout_constraintBottom_toTopOf="@+id/activity_restaurant_detail_info_container"
                     app:layout_constraintTop_toTopOf="@id/activity_restaurant_detail_info_container"
                     app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_marginEnd="@dimen/activity_restaurant_detail_floating_button_margin_end"
                     app:srcCompat="@drawable/ic_baseline_check_circle_outline_black_48"
                     app:backgroundTint="@android:color/white"/>
 
@@ -48,7 +50,7 @@
                     android:layout_height="0dp"
                     android:background="@color/colorPrimary"
                     android:padding="@dimen/activity_restaurant_detail_info_container_padding"
-                    app:layout_constraintHeight_percent="0.125"
+                    app:layout_constraintHeight_percent="0.13"
                     app:layout_constraintTop_toBottomOf="@id/activity_restaurant_detail_image_restaurant">
 
                     <TextView
@@ -57,17 +59,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/activity_restaurant_detail_text_restaurant_name_margin_end"
                         android:text="@{restaurantViewModel.place.name}"
-                        android:textSize="20sp"/>
-
-                    <RatingBar
-                        android:id="@+id/activity_restaurant_detail_ratingBar"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_toEndOf="@id/activity_restaurant_detail_text_view_restaurant_name"
-                        android:layout_alignBottom="@id/activity_restaurant_detail_text_view_restaurant_name"
-                        android:numStars="3"
-                        android:theme="@style/RatingBarTheme"
-                        style="?android:attr/ratingBarStyleSmall"/>
+                        android:textSize="@dimen/activity_restaurant_detail_text_restaurant_name_text_size"
+                        android:textColor="@android:color/white"
+                        android:maxLines="1"
+                        android:maxLength="25"/>
 
                     <ImageView
                         android:id="@+id/activity_restaurant_detail_image_restaurant_stars_1"
@@ -76,8 +71,8 @@
                         android:layout_toEndOf="@id/activity_restaurant_detail_text_view_restaurant_name"
                         android:layout_alignBottom="@id/activity_restaurant_detail_text_view_restaurant_name"
                         android:contentDescription="@null"
-                        app:srcCompat="@drawable/ic_baseline_star_border_black_24"
-                        android:tint="@color/quantum_yellow600"
+                        app:srcCompat="@drawable/ic_baseline_star_black_24"
+                        android:tint="@color/colorStar"
                         android:visibility="gone"/>
 
                     <ImageView
@@ -87,8 +82,8 @@
                         android:layout_toEndOf="@id/activity_restaurant_detail_image_restaurant_stars_1"
                         android:layout_alignBottom="@id/activity_restaurant_detail_text_view_restaurant_name"
                         android:contentDescription="@null"
-                        app:srcCompat="@drawable/ic_baseline_star_border_black_24"
-                        android:tint="@color/quantum_yellow600"
+                        app:srcCompat="@drawable/ic_baseline_star_black_24"
+                        android:tint="@color/colorStar"
                         android:visibility="gone"/>
 
                     <ImageView
@@ -98,8 +93,8 @@
                         android:layout_toEndOf="@id/activity_restaurant_detail_image_restaurant_stars_2"
                         android:layout_alignBottom="@id/activity_restaurant_detail_text_view_restaurant_name"
                         android:contentDescription="@null"
-                        app:srcCompat="@drawable/ic_baseline_star_border_black_24"
-                        android:tint="@color/quantum_yellow600"
+                        app:srcCompat="@drawable/ic_baseline_star_black_24"
+                        android:tint="@color/colorStar"
                         android:visibility="gone"/>
 
                     <TextView
@@ -107,18 +102,18 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/activity_restaurant_detail_text_view_restaurant_name"
-                        android:text="@{String.valueOf(restaurantViewModel.place.rating)}"/>
+                        android:text="@{String.valueOf(restaurantViewModel.place.address)}"
+                        android:textColor="@android:color/white"/>
 
                 </RelativeLayout>
 
                 <LinearLayout
                     android:id="@+id/activity_restaurant_detail_button_container"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    app:layout_constraintHeight_percent="0.125"
                     app:layout_constraintTop_toBottomOf="@id/activity_restaurant_detail_info_container"
                     android:baselineAligned="false">
 
@@ -145,6 +140,7 @@
                             android:text="@string/activity_restaurant_detail_text_call"
                             android:textColor="@color/colorPrimary"
                             android:textAllCaps="true"
+                            android:textStyle="bold"
                             android:layout_margin="@dimen/activity_restaurant_detail_image_and_text_button_margin"/>
 
                     </LinearLayout>
@@ -172,6 +168,7 @@
                             android:text="@string/activity_restaurant_detail_text_like"
                             android:textColor="@color/colorPrimary"
                             android:textAllCaps="true"
+                            android:textStyle="bold"
                             android:layout_margin="@dimen/activity_restaurant_detail_image_and_text_button_margin"/>
 
                     </LinearLayout>
@@ -200,6 +197,7 @@
                             android:text="@string/activity_restaurant_detail_text_website"
                             android:textColor="@color/colorPrimary"
                             android:textAllCaps="true"
+                            android:textStyle="bold"
                             android:layout_margin="@dimen/activity_restaurant_detail_image_and_text_button_margin"/>
 
                     </LinearLayout>
@@ -217,8 +215,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/activity_restaurant_detail_recycler_view"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    app:layout_constraintHeight_percent="0.35"
+                    android:layout_height="wrap_content"
                     app:layout_constraintTop_toBottomOf="@id/activity_restaurant_detail_divider"
                     tools:layout_editor_absoluteX="0dp" />
 
