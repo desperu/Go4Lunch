@@ -12,6 +12,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <!-- Menu Search -->
     <string name="menu_item_search">Search</string>
+    <string name="activity_main_search_edit_text_hint">Search restaurant</string>
     <!-- Nav bottom -->
     <string name="activity_main_menu_bottom_map">Map View</string>
     <string name="activity_main_menu_bottom_list">List View</string>
@@ -31,8 +32,8 @@
     <string name="error_no_internet">No network connexion !</string>
     <string name="error_unknown_error">Unknown error append !</string>
     <string name="connection_succeed">Success login !</string>
-    <!-- Search -->
-    <string name="activity_main_search_edit_text_hint">Search restaurant</string>
+    <!-- Your Lunch -->
+    <string name="activity_main_message_no_booked_restaurant">You haven\'t booked restaurant !</string>
 
     <!-- MAP FRAGMENT -->
     <string name="fragment_maps_popup_title_permission_location">This application need location permission.</string>

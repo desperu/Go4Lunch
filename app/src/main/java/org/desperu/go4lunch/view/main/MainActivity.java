@@ -25,15 +25,16 @@ import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.desperu.go4lunch.BuildConfig;
 import org.desperu.go4lunch.R;
-import org.desperu.go4lunch.api.UserHelper;
 import org.desperu.go4lunch.base.BaseActivity;
 import org.desperu.go4lunch.databinding.ActivityMainNavHeaderBinding;
 import org.desperu.go4lunch.view.main.fragments.MapsFragment;
 import org.desperu.go4lunch.view.restaurantdetail.RestaurantDetailActivity;
 import org.desperu.go4lunch.viewmodel.UserAuthViewModel;
+import org.desperu.go4lunch.viewmodel.UserDBViewModel;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -54,6 +55,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     // FOR DATA
     private UserAuthViewModel userAuthViewModel;
+    private UserDBViewModel userDBViewModel;
     private AutocompleteSupportFragment autocompleteFragment;
     private static final int RC_SIGN_IN = 1234;
 
@@ -71,7 +73,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         this.configureDrawerLayout();
         this.configureNavigationView();
         this.configureBottomNavigationView();
-        this.updateHeaderWithUserInfo();
+        this.configureDataBindingForHeader();
     }
 
     // -----------------
@@ -129,6 +131,19 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     /**
+     * Configure data binding for Navigation View Header with user info.
+     */
+    private void configureDataBindingForHeader() {
+        if (isCurrentUserLogged()) {
+            // Enable Data binding for user info
+            View headerView = navigationView.getHeaderView(0);
+            ActivityMainNavHeaderBinding activityMainNavHeaderBinding = ActivityMainNavHeaderBinding.bind(headerView);
+            userAuthViewModel = new UserAuthViewModel();
+            activityMainNavHeaderBinding.setUserAuthViewModel(userAuthViewModel);
+        }
+    }
+
+    /**
      * Configure places autocomplete search.
      */
     private void configureAutocomplete() {
@@ -180,7 +195,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     protected void onResume() {
         super.onResume();
-        if (this.isCurrentUserLogged()) this.configureAndShowFragment();
+        if (this.isCurrentUserLogged()) {
+            this.configureAndShowFragment();
+            this.loadUserDataFromFirestore();
+        }
         else this.startSignInActivity();
     }
 
@@ -196,7 +214,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         switch (menuItem.getItemId()) {
                 // Menu drawer
             case R.id.activity_main_menu_drawer_your_lunch:
-//                this.showSearchArticlesActivity();
+                this.onClickYourLunch();
                 break;
             case R.id.activity_main_menu_drawer_settings:
 //                this.showNotificationsActivity();
@@ -256,39 +274,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         return super.onOptionsItemSelected(item);
     }
 
-    // -----------------
-    // UI
-    // -----------------
-
-    /**
-     * Set title activity name.
-     */
-    private void setTitleActivity() {
-        this.setTitle(R.string.title_activity_main);
-    }
-
-    /**
-     * Update Navigation View Header with user info.
-     */
-    private void updateHeaderWithUserInfo() {
-        if (isCurrentUserLogged()) {
-            // Enable Data binding for user info
-            View headerView = navigationView.getHeaderView(0);
-            ActivityMainNavHeaderBinding activityMainNavHeaderBinding = ActivityMainNavHeaderBinding.bind(headerView);
-            userAuthViewModel = new UserAuthViewModel();
-            activityMainNavHeaderBinding.setUserAuthViewModel(userAuthViewModel);
-        }
-    }
-
-    /**
-     * Show Toast with corresponding message.
-     * @param message Message to show.
-     */
-    private void showToast(String message){
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-    }
-
-
     // --------------------
     // ACTION
     // --------------------
@@ -296,6 +281,16 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     public void onClickedMarker(String id) {
         this.showRestaurantDetailActivity(id);
+    }
+
+    /**
+     * Manage click on Your Lunch button.
+     */
+    private void onClickYourLunch() {
+        if (userDBViewModel.getUser().get() != null
+                && userDBViewModel.getUser().get().getBookedRestaurantId() != null)
+            this.showRestaurantDetailActivity(userDBViewModel.getUser().get().getBookedRestaurantId());
+        else Snackbar.make(drawerLayout, R.string.activity_main_message_no_booked_restaurant, Snackbar.LENGTH_SHORT).show();
     }
 
     // -----------------
@@ -383,16 +378,44 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
      * Create user in firestore.
      */
     private void createUserInFirestore(){
-        if (this.getCurrentUser() != null)
-            UserHelper.createUser(userAuthViewModel.getUid(), userAuthViewModel.getUserName(), userAuthViewModel.getUserPicture())
-                    .addOnFailureListener(this.onFailureListener());
+        if (this.getCurrentUser() != null) {
+            userDBViewModel = new UserDBViewModel(this, userAuthViewModel.getUid());
+            userDBViewModel.createUserInFirestore(userAuthViewModel.getUid(), userAuthViewModel.getUserName(), userAuthViewModel.getUserPicture());
+        }
+    }
+
+    /**
+     * Load user data from firestore.
+     */
+    private void loadUserDataFromFirestore() {
+        if (userDBViewModel == null)
+            userDBViewModel = new UserDBViewModel(this, userAuthViewModel.getUid());
+        userDBViewModel.fetchUser();
+    }
+
+    // -----------------
+    // UI
+    // -----------------
+
+    /**
+     * Set title activity name.
+     */
+    private void setTitleActivity() {
+        this.setTitle(R.string.title_activity_main);
+    }
+
+    /**
+     * Show Toast with corresponding message.
+     * @param message Message to show.
+     */
+    private void showToast(String message){
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
     // --------------------
     // UTILS
     // --------------------
 
-    //TODO not good not show
     /**
      * Method that handles response after SignIn Activity close.
      * @param requestCode Code of the request.

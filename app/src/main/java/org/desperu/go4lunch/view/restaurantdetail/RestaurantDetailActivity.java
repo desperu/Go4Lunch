@@ -141,7 +141,11 @@ public class RestaurantDetailActivity extends BaseActivity {
     }
 
     @OnClick(R.id.activity_restaurant_detail_call_button)
-    protected void onClickCallRestaurant() { this.startCallIntent(restaurantViewModel.getPlace().get().getPhoneNumber()); }
+    protected void onClickCallRestaurant() {
+        if (restaurantViewModel.getPlace().get() != null)
+            this.startCallIntent(restaurantViewModel.getPlace().get().getPhoneNumber());
+        else this.handleResponseAfterBooking(NO_DATA);
+    }
 
     @OnClick(R.id.activity_restaurant_detail_like_button)
     protected void onClickLikeRestaurant() {
@@ -149,7 +153,11 @@ public class RestaurantDetailActivity extends BaseActivity {
     }
 
     @OnClick(R.id.activity_restaurant_detail_website_button)
-    protected void onClickWebsiteRestaurant() { this.showWebsite(restaurantViewModel.getPlace().get().getWebsiteUri().toString()); }
+    protected void onClickWebsiteRestaurant() {
+        if (restaurantViewModel.getPlace().get() != null)
+            this.showWebsite(restaurantViewModel.getPlace().get().getWebsiteUri().toString());
+        else this.handleResponseAfterBooking(NO_DATA);
+    }
 
     // --------------
     // ACTIVITIES

@@ -35,7 +35,5 @@ public class UserAuthViewModel {
         Glide.with(imageView.getContext()).load(url).circleCrop().into(imageView);
     }
 
-    // TODO add getBookedRestaurant
-
     public void userLogOut() { FirebaseAuth.getInstance().signOut(); }
 }

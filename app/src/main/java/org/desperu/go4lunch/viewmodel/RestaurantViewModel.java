@@ -67,7 +67,7 @@ public class RestaurantViewModel extends BaseObservable {
         // Specify the fields to return.
         List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.TYPES,
                 Place.Field.LAT_LNG, Place.Field.OPENING_HOURS, Place.Field.WEBSITE_URI, Place.Field.PHONE_NUMBER,
-                Place.Field.RATING, Place.Field.PHOTO_METADATAS, Place.Field.PLUS_CODE);
+                Place.Field.RATING, Place.Field.PHOTO_METADATAS, Place.Field.ADDRESS);
 
         // Construct a request object, passing the place ID and fields array.
         FetchPlaceRequest request = FetchPlaceRequest.newInstance(placeId, placeFields);

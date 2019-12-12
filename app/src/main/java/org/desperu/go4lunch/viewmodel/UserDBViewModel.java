@@ -47,6 +47,13 @@ public class UserDBViewModel {
     // --------------
 
     /**
+     * Create user in firestore.
+     */
+    public void createUserInFirestore(String uid, String userName, String urlPicture) {
+        UserHelper.createUser(uid, userName, urlPicture);
+    }
+
+    /**
      * Fetch user from firestore.
      */
     public void fetchUser() {
