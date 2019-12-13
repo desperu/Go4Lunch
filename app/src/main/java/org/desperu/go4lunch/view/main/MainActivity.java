@@ -13,6 +13,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 
 import com.firebase.ui.auth.AuthMethodPickerLayout;
 import com.firebase.ui.auth.AuthUI;
@@ -31,7 +32,9 @@ import org.desperu.go4lunch.BuildConfig;
 import org.desperu.go4lunch.R;
 import org.desperu.go4lunch.base.BaseActivity;
 import org.desperu.go4lunch.databinding.ActivityMainNavHeaderBinding;
+import org.desperu.go4lunch.view.main.fragments.RestaurantListFragment;
 import org.desperu.go4lunch.view.main.fragments.MapsFragment;
+import org.desperu.go4lunch.view.main.fragments.WorkmatesFragment;
 import org.desperu.go4lunch.view.restaurantdetail.RestaurantDetailActivity;
 import org.desperu.go4lunch.viewmodel.UserAuthViewModel;
 import org.desperu.go4lunch.viewmodel.UserDBViewModel;
@@ -41,6 +44,8 @@ import java.util.Arrays;
 import java.util.Objects;
 
 import butterknife.BindView;
+
+import static org.desperu.go4lunch.Go4LunchTools.FragmentKey.*;
 
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener,
@@ -59,6 +64,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private AutocompleteSupportFragment autocompleteFragment;
     private static final int RC_SIGN_IN = 1234;
 
+    private int currentFragment = -1;
+
     // --------------
     // BASE METHODS
     // --------------
@@ -69,7 +76,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     protected void configureDesign() {
         this.configureToolBar();
-        this.setTitleActivity();
         this.configureDrawerLayout();
         this.configureNavigationView();
         this.configureBottomNavigationView();
@@ -112,22 +118,35 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     /**
      * Configure and show corresponding fragment.
+     * @param fragmentKey Key for fragment.
      */
-    private void configureAndShowFragment() {
-//        Fragment fragment = frag;
+    private void configureAndShowFragment(int fragmentKey) {
+        String titleActivity = getString(R.string.title_activity_main);
 
-        MapsFragment fragment = (MapsFragment) getSupportFragmentManager()
+        Fragment fragment = (Fragment) getSupportFragmentManager()
                 .findFragmentById(R.id.activity_main_frame_layout);
 
-        if (fragment == null) {
-            fragment = MapsFragment.newInstance();
-//            Bundle bundle = new Bundle();
-//            bundle.putInt(KEY_FRAGMENT, NOTIFICATION_FRAGMENT);
-//            fragment.setArguments(bundle);
+        if (currentFragment != fragmentKey) {
+            switch (fragmentKey) {
+                case MAP_FRAGMENT:
+                    fragment = MapsFragment.newInstance();
+                    break;
+                case LIST_FRAGMENT:
+                    fragment = RestaurantListFragment.newInstance();
+                    break;
+                case WORKMATES_FRAGMENT:
+//                    fragment = WorkmatesFragment.newInstance();
+                    titleActivity = getString(R.string.title_fragment_workmates);
+                    break;
+            }
+
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.activity_main_frame_layout, fragment)
+                    .replace(R.id.activity_main_frame_layout, fragment)
                     .commit();
+
+            this.setTitleActivity(titleActivity);
         }
+        currentFragment = fragmentKey;
     }
 
     /**
@@ -196,7 +215,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     protected void onResume() {
         super.onResume();
         if (this.isCurrentUserLogged()) {
-            this.configureAndShowFragment();
+            this.configureAndShowFragment(MAP_FRAGMENT);
             this.loadUserDataFromFirestore();
         }
         else this.startSignInActivity();
@@ -224,16 +243,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 break;
                 // Bottom Navigation
             case R.id.activity_main_menu_bottom_map:
-                this.configureAndShowFragment();
+                this.configureAndShowFragment(MAP_FRAGMENT);
                 break;
             case R.id.activity_main_menu_bottom_list:
-                Toast.makeText(this, "test list", Toast.LENGTH_SHORT).show();
-//                this.showAboutDialog();
+                this.configureAndShowFragment(LIST_FRAGMENT);
                 break;
             case R.id.activity_main_menu_bottom_workmates:
-//                this.showHelpDocumentation();
-                // TODO for test only
-//                startActivity(new Intent(this, TestBindingActivity.class));
+                this.configureAndShowFragment(WORKMATES_FRAGMENT);
                 break;
             case R.id.activity_main_menu_bottom_chat:
                 Toast.makeText(this, "test chat", Toast.LENGTH_SHORT).show();
@@ -399,10 +415,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     /**
      * Set title activity name.
+     * @param titleActivity Fragment title.
      */
-    private void setTitleActivity() {
-        this.setTitle(R.string.title_activity_main);
-    }
+    private void setTitleActivity(String titleActivity) { this.setTitle(titleActivity); }
 
     /**
      * Show Toast with corresponding message.

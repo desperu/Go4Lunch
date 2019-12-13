@@ -135,7 +135,7 @@ public class RestaurantDetailActivity extends BaseActivity {
 
         if (currentRestaurant != null && currentRestaurant.getId() != null) {
             UserDBViewModel userDBViewModel = new UserDBViewModel(this, this.getCurrentUser().getUid());
-            userDBViewModel.updateBookedRestaurant(currentRestaurant);
+            userDBViewModel.updateBookedRestaurant(this, currentRestaurant);
             this.getRestaurantBookedUsers();
         } else this.handleResponseAfterBooking(NO_DATA);
     }
