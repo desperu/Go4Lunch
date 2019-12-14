@@ -19,7 +19,9 @@ import org.desperu.go4lunch.databinding.ActivityRestaurantDetailBinding;
 import org.desperu.go4lunch.viewmodel.RestaurantDBViewModel;
 import org.desperu.go4lunch.viewmodel.RestaurantViewModel;
 import org.desperu.go4lunch.viewmodel.UserDBViewModel;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -38,8 +40,8 @@ public class RestaurantDetailActivity extends BaseActivity {
     public static final String RESTAURANT_ID = "restaurant id";
 
     private RestaurantViewModel restaurantViewModel;
-    private RestaurantAdapter adapter;
-    private List<String> bookedUserId;
+    private RestaurantDetailAdapter adapter;
+    private List<UserDBViewModel> joiningUsers = new ArrayList<>();
 
     // --------------
     // BASE METHODS
@@ -53,15 +55,7 @@ public class RestaurantDetailActivity extends BaseActivity {
         this.configureDataBinding();
         this.configureSwipeRefreshLayout();
         this.drawBelowStatusBar();
-    }
-
-    // --------------
-    // METHODS OVERRIDE
-    // --------------
-
-    @Override
-    protected void onResume() {
-        super.onResume();
+        this.configureRecyclerView();
         this.getRestaurantBookedUsers();
     }
 
@@ -108,7 +102,7 @@ public class RestaurantDetailActivity extends BaseActivity {
      */
     private void configureRecyclerView() {
         // Create adapter passing in the sample user data
-        this.adapter = new RestaurantAdapter(this.bookedUserId, this);
+        this.adapter = new RestaurantDetailAdapter(R.layout.fragment_restaurant_detail_item, joiningUsers);
         // Attach the adapter to the recyclerView to populate items
         this.recyclerView.setAdapter(this.adapter);
         // Set layout manager to position the items
@@ -185,19 +179,18 @@ public class RestaurantDetailActivity extends BaseActivity {
     // --------------
 
     /**
-     * Stop swipe refresh animation.
+     * Update recycler view when received data.
+     * @param bookedUsers List of booked users, from firestore.
      */
-    public void hideSwipeRefresh() { this.swipeRefreshLayout.setRefreshing(false); }
-
-    /**
-     * Update recycler view.
-     */
-    public void updateRecyclerView() {
-        if (!bookedUserId.isEmpty()) {
-            this.recyclerView.setVisibility(View.VISIBLE);
-            if (this.adapter == null) this.configureRecyclerView();
-            else this.adapter.notifyDataSetChanged();
-        } else this.recyclerView.setVisibility(View.GONE);
+    public void updateRecyclerView(@NotNull List<String> bookedUsers) {
+        joiningUsers.clear();
+        for (String user : bookedUsers) {
+            UserDBViewModel userDBViewModel = new UserDBViewModel(this, user);
+            userDBViewModel.fetchUser();
+            joiningUsers.add(userDBViewModel);
+        }
+        adapter.notifyDataSetChanged();
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     /**
@@ -233,15 +226,5 @@ public class RestaurantDetailActivity extends BaseActivity {
             default:
                 break;
         }
-    }
-
-    // --- SETTERS ---
-
-    /**
-     * Setter for booked users of restaurant.
-     * @param bookedUsersId List of booked users id.
-     */
-    public void setBookedUserId(List<String> bookedUsersId) {
-        this.bookedUserId = bookedUsersId;
     }
 }

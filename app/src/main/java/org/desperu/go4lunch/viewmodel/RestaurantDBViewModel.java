@@ -34,13 +34,8 @@ public class RestaurantDBViewModel {
      * Get restaurants booked users.
      */
     public void getRestaurantBookedUsers() {
-        RestaurantHelper.getRestaurant(restaurantId).addOnSuccessListener(documentSnapshot -> {
-            Restaurant restaurant = documentSnapshot.toObject(Restaurant.class);
-            if (restaurant != null) {
-                restaurantDetailActivity.setBookedUserId(restaurant.getBookedUsersId());
-                restaurantDetailActivity.updateRecyclerView();
-            }
-        });
+        RestaurantHelper.getRestaurant(restaurantId).addOnSuccessListener(documentSnapshot ->
+                restaurantDetailActivity.updateRecyclerView(documentSnapshot.toObject(Restaurant.class).getBookedUsersId()));
     }
 
     public void deleteNotBookedRestaurant() {

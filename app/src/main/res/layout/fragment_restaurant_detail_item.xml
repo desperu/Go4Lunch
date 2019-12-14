@@ -4,7 +4,7 @@
 
     <data>
         <variable
-            name="userDBViewModel"
+            name="obj"
             type="org.desperu.go4lunch.viewmodel.UserDBViewModel" />
     </data>
 
@@ -19,7 +19,7 @@
             android:layout_width="@dimen/fragment_restaurant_detail_item_image_user_width"
             android:layout_height="@dimen/fragment_restaurant_detail_item_image_user_height"
             android:contentDescription="@null"
-            tools:pictureUrl="@{userDBViewModel.user.urlPicture}"/>
+            tools:pictureUrl="@{obj.user.urlPicture}"/>
 
         <TextView
             android:id="@+id/fragment_restaurant_detail_item_text_user"
@@ -29,7 +29,7 @@
             android:layout_margin="@dimen/fragment_restaurant_detail_item_text_user_margin"
             android:textColor="@android:color/black"
             android:textSize="@dimen/fragment_restaurant_detail_item_text_user_size"
-            android:text="@{userDBViewModel.joiningName}"/>
+            android:text="@{obj.joiningName}"/>
 
     </LinearLayout>
 

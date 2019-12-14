@@ -84,6 +84,7 @@ public class WorkmatesFragment extends BaseFragment {
      * @param allUsers List of all apk users, from firestore.
      */
     public void updateRecyclerView(@NotNull List<User> allUsers) {
+        workmatesList.clear();
         for (User user : allUsers) {
             UserDBViewModel userDBViewModel = new UserDBViewModel(getContext(), user.getUid());
             userDBViewModel.fetchUser();

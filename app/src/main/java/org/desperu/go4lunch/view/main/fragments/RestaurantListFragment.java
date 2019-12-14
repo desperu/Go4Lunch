@@ -85,6 +85,7 @@ public class RestaurantListFragment extends BaseFragment {
      * @param placeList List of nearby places.
      */
     public void updateRecyclerView(@NotNull List<Place> placeList) {
+        restaurantList.clear();
         for (Place place : placeList)
             restaurantList.add(new RestaurantViewModel(getContext(), place.getId()));
         adapter.notifyDataSetChanged();

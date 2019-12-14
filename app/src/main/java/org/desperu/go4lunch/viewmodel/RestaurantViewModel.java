@@ -19,15 +19,12 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 
 import org.desperu.go4lunch.BuildConfig;
 import org.desperu.go4lunch.R;
-import org.desperu.go4lunch.view.restaurantdetail.RestaurantDetailActivity;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class RestaurantViewModel extends BaseObservable {
 
-    private RestaurantDetailActivity restaurantDetailActivity;
     private Context context;
     private String placeId;
     private PlacesClient placesClient;
@@ -37,14 +34,6 @@ public class RestaurantViewModel extends BaseObservable {
 
     public RestaurantViewModel(Context context, String placeId) {
         this.context = context;
-        this.placeId = placeId;
-        this.initializePlace();
-        this.getPlaceInfo();
-    }
-
-    public RestaurantViewModel(@NotNull RestaurantDetailActivity restaurantDetailActivity, String placeId) {
-        this.restaurantDetailActivity = restaurantDetailActivity;
-        this.context = restaurantDetailActivity.getBaseContext();
         this.placeId = placeId;
         this.initializePlace();
         this.getPlaceInfo();
@@ -82,14 +71,12 @@ public class RestaurantViewModel extends BaseObservable {
         placesClient.fetchPlace(request).addOnSuccessListener((response) -> {
             this.place.set(response.getPlace());
             this.setPicture();
-            if(restaurantDetailActivity != null) restaurantDetailActivity.hideSwipeRefresh();
             Log.i(getClass().getSimpleName(), "Place found: " + place.get().getName());
         }).addOnFailureListener((exception) -> {
             if (exception instanceof ApiException) {
                 // Handle error with given status code.
                 Log.e(getClass().getSimpleName(), "Place not found: " + exception.getMessage());
                 Toast.makeText(context, R.string.view_model_toast_request_failure, Toast.LENGTH_SHORT).show();
-                if (restaurantDetailActivity != null) restaurantDetailActivity.hideSwipeRefresh();
             }
         });
     }
