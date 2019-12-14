@@ -29,7 +29,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.libraries.places.api.model.RectangularBounds;
 
 import org.desperu.go4lunch.R;
-import org.desperu.go4lunch.base.BaseFragment;
+import org.desperu.go4lunch.view.base.BaseFragment;
 import org.desperu.go4lunch.databinding.FragmentMapsBinding;
 import org.desperu.go4lunch.utils.MarkerUtils;
 import org.desperu.go4lunch.viewmodel.PlaceViewModel;

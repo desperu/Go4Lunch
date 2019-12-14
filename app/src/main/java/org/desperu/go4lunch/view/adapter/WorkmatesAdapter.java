@@ -1,6 +1,6 @@
-package org.desperu.go4lunch.view.main.fragments;
+package org.desperu.go4lunch.view.adapter;
 
-import org.desperu.go4lunch.base.BaseAdapter;
+import org.desperu.go4lunch.view.base.BaseAdapter;
 import org.desperu.go4lunch.viewmodel.UserDBViewModel;
 
 import java.util.List;

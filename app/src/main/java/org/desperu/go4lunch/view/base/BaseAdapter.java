@@ -1,4 +1,4 @@
-package org.desperu.go4lunch.base;
+package org.desperu.go4lunch.view.base;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -7,7 +7,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.desperu.go4lunch.view.MyViewHolder;
+import org.desperu.go4lunch.view.adapter.MyViewHolder;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class BaseAdapter extends RecyclerView.Adapter<MyViewHolder> {

@@ -5,8 +5,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import org.desperu.go4lunch.R;
-import org.desperu.go4lunch.base.BaseFragment;
+import org.desperu.go4lunch.view.base.BaseFragment;
 import org.desperu.go4lunch.models.User;
+import org.desperu.go4lunch.view.adapter.WorkmatesAdapter;
 import org.desperu.go4lunch.viewmodel.UserDBViewModel;
 import org.jetbrains.annotations.NotNull;
 

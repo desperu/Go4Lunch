@@ -30,7 +30,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import org.desperu.go4lunch.BuildConfig;
 import org.desperu.go4lunch.R;
-import org.desperu.go4lunch.base.BaseActivity;
+import org.desperu.go4lunch.view.base.BaseActivity;
 import org.desperu.go4lunch.databinding.ActivityMainNavHeaderBinding;
 import org.desperu.go4lunch.view.main.fragments.RestaurantListFragment;
 import org.desperu.go4lunch.view.main.fragments.MapsFragment;

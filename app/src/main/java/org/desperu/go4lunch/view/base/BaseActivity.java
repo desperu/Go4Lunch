@@ -1,4 +1,4 @@
-package org.desperu.go4lunch.base;
+package org.desperu.go4lunch.view.base;
 
 import android.os.Bundle;
 import android.view.MenuItem;

@@ -3,6 +3,7 @@ package org.desperu.go4lunch.view.restaurantdetail;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Handler;
 import android.view.View;
 
 import androidx.databinding.DataBindingUtil;
@@ -14,8 +15,9 @@ import com.google.android.libraries.places.api.model.Place;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.desperu.go4lunch.R;
-import org.desperu.go4lunch.base.BaseActivity;
+import org.desperu.go4lunch.view.base.BaseActivity;
 import org.desperu.go4lunch.databinding.ActivityRestaurantDetailBinding;
+import org.desperu.go4lunch.view.adapter.RestaurantDetailAdapter;
 import org.desperu.go4lunch.viewmodel.RestaurantDBViewModel;
 import org.desperu.go4lunch.viewmodel.RestaurantViewModel;
 import org.desperu.go4lunch.viewmodel.UserDBViewModel;
@@ -130,7 +132,8 @@ public class RestaurantDetailActivity extends BaseActivity {
         if (currentRestaurant != null && currentRestaurant.getId() != null) {
             UserDBViewModel userDBViewModel = new UserDBViewModel(this, this.getCurrentUser().getUid());
             userDBViewModel.updateBookedRestaurant(this, currentRestaurant);
-            this.getRestaurantBookedUsers();
+            // Wait before reload actualised data from firestore.
+            new Handler().postDelayed(this::getRestaurantBookedUsers, 1500);
         } else this.handleResponseAfterBooking(NO_DATA);
     }
 

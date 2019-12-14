@@ -7,7 +7,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.android.libraries.places.api.model.Place;
 
 import org.desperu.go4lunch.R;
-import org.desperu.go4lunch.base.BaseFragment;
+import org.desperu.go4lunch.view.base.BaseFragment;
+import org.desperu.go4lunch.view.adapter.RestaurantListAdapter;
 import org.desperu.go4lunch.viewmodel.PlaceViewModel;
 import org.desperu.go4lunch.viewmodel.RestaurantViewModel;
 import org.jetbrains.annotations.NotNull;

@@ -1,4 +1,4 @@
-package org.desperu.go4lunch.view;
+package org.desperu.go4lunch.view.adapter;
 
 import androidx.databinding.ViewDataBinding;
 import androidx.recyclerview.widget.RecyclerView;
