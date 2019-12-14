@@ -2,22 +2,19 @@ package org.desperu.go4lunch.viewmodel;
 
 import androidx.databinding.ObservableField;
 
+import com.google.android.libraries.places.api.model.Place;
+
 import org.desperu.go4lunch.api.RestaurantHelper;
 import org.desperu.go4lunch.models.Restaurant;
+import org.desperu.go4lunch.view.main.fragments.MapsFragment;
 import org.desperu.go4lunch.view.restaurantdetail.RestaurantDetailActivity;
 
 public class RestaurantDBViewModel {
 
     private String restaurantId;
-    private RestaurantDetailActivity restaurantDetailActivity;
     private ObservableField<Restaurant> restaurant = new ObservableField<>();
 
     public RestaurantDBViewModel(String restaurantId) {
-        this.restaurantId = restaurantId;
-    }
-
-    public RestaurantDBViewModel(RestaurantDetailActivity restaurantDetailActivity, String restaurantId) {
-        this.restaurantDetailActivity = restaurantDetailActivity;
         this.restaurantId = restaurantId;
     }
 
@@ -31,11 +28,19 @@ public class RestaurantDBViewModel {
     }
 
     /**
-     * Get restaurants booked users.
+     * Get restaurants booked users from restaurant detail activity.
      */
-    public void getRestaurantBookedUsers() {
+    public void getRestaurant(RestaurantDetailActivity activity) {
         RestaurantHelper.getRestaurant(restaurantId).addOnSuccessListener(documentSnapshot ->
-                restaurantDetailActivity.updateRecyclerView(documentSnapshot.toObject(Restaurant.class).getBookedUsersId()));
+                activity.updateRecyclerView(documentSnapshot.toObject(Restaurant.class)));
+    }
+
+    /**
+     * Get restaurants booked users from maps fragment.
+     */
+    public void getRestaurant(MapsFragment fragment, Place place) {
+        RestaurantHelper.getRestaurant(restaurantId).addOnSuccessListener(documentSnapshot ->
+                fragment.addMarker(documentSnapshot.toObject(Restaurant.class), place));
     }
 
     public void deleteNotBookedRestaurant() {

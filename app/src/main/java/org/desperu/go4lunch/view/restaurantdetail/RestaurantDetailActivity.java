@@ -15,6 +15,7 @@ import com.google.android.libraries.places.api.model.Place;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.desperu.go4lunch.R;
+import org.desperu.go4lunch.models.Restaurant;
 import org.desperu.go4lunch.view.base.BaseActivity;
 import org.desperu.go4lunch.databinding.ActivityRestaurantDetailBinding;
 import org.desperu.go4lunch.view.adapter.RestaurantDetailAdapter;
@@ -85,8 +86,8 @@ public class RestaurantDetailActivity extends BaseActivity {
      */
     private void getRestaurantBookedUsers() {
         RestaurantDBViewModel restaurantDBViewModel =
-                new RestaurantDBViewModel(this, this.getIdFromIntentData());
-        restaurantDBViewModel.getRestaurantBookedUsers();
+                new RestaurantDBViewModel(this.getIdFromIntentData());
+        restaurantDBViewModel.getRestaurant(this);
     }
 
     /**
@@ -183,14 +184,16 @@ public class RestaurantDetailActivity extends BaseActivity {
 
     /**
      * Update recycler view when received data.
-     * @param bookedUsers List of booked users, from firestore.
+     * @param restaurant Restaurant from firestore.
      */
-    public void updateRecyclerView(@NotNull List<String> bookedUsers) {
+    public void updateRecyclerView(Restaurant restaurant) {
         joiningUsers.clear();
-        for (String user : bookedUsers) {
-            UserDBViewModel userDBViewModel = new UserDBViewModel(this, user);
-            userDBViewModel.fetchUser();
-            joiningUsers.add(userDBViewModel);
+        if (restaurant != null) {
+            for (String user : restaurant.getBookedUsersId()) {
+                UserDBViewModel userDBViewModel = new UserDBViewModel(this, user);
+                userDBViewModel.fetchUser();
+                joiningUsers.add(userDBViewModel);
+            }
         }
         adapter.notifyDataSetChanged();
         swipeRefreshLayout.setRefreshing(false);

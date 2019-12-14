@@ -44,7 +44,7 @@ public class PlaceViewModel {
     /**
      * Get nearby restaurants.
      */
-    public void getNearbyRestaurant() {
+    public void getNearbyRestaurant() { // TODO get only NEARBY places not screen rect show...
         // Initialize Place API.
         Places.initialize(context, BuildConfig.google_maps_api_key);
         PlacesClient placesClient = Places.createClient(context);
@@ -95,9 +95,7 @@ public class PlaceViewModel {
         if (fragment.getClass() == MapsFragment.class && placeLikelihood != null) {
             MapsFragment mapsFragment = (MapsFragment) this.fragment;
             // Add each corresponding place at map;
-            mapsFragment.addMarker(placeLikelihood.getPlace().getLatLng(),
-                    placeLikelihood.getPlace().getName(),
-                    placeLikelihood.getPlace().getId());
+            mapsFragment.getRestaurantBookedUsers(placeLikelihood.getPlace());
         }
         else if (fragment.getClass() == RestaurantListFragment.class) {
             if (isRequestFinished) {

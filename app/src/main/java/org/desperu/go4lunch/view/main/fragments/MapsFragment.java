@@ -3,7 +3,6 @@ package org.desperu.go4lunch.view.main.fragments;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
@@ -13,7 +12,6 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.databinding.DataBindingUtil;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -26,13 +24,15 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.model.RectangularBounds;
 
 import org.desperu.go4lunch.R;
-import org.desperu.go4lunch.view.base.BaseFragment;
-import org.desperu.go4lunch.databinding.FragmentMapsBinding;
+import org.desperu.go4lunch.models.Restaurant;
 import org.desperu.go4lunch.utils.MarkerUtils;
+import org.desperu.go4lunch.view.base.BaseFragment;
 import org.desperu.go4lunch.viewmodel.PlaceViewModel;
+import org.desperu.go4lunch.viewmodel.RestaurantDBViewModel;
 import org.jetbrains.annotations.NotNull;
 
 import butterknife.BindView;
@@ -42,7 +42,7 @@ import pub.devrel.easypermissions.EasyPermissions;
 import static org.desperu.go4lunch.Go4LunchTools.GoogleMap.*;
 
 public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
-        GoogleMap.OnMarkerClickListener, GoogleMap.OnMapLongClickListener {
+        GoogleMap.OnMarkerClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnCameraIdleListener {
 
     // FOR DESIGN
     @BindView(R.id.map) MapView mapView;
@@ -94,20 +94,15 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
         if (isLocationEnabled) this.setMapWithLocation();
 
-        // Hide map toolbar.
-//        mMap.getUiSettings().setMapToolbarEnabled(true);
-
-        // Configure data binding after google map is configured.
-        this.configureDataBindingMapsFragment();
-
         // Show zoom control, and reposition them.
         mMap.getUiSettings().setZoomControlsEnabled(true);
         // TODO get from shared pref on/off zoom
         this.repositionMapButton(GOOGLE_MAP_ZOOM_OUT_BUTTON, (int) getResources().getDimension(R.dimen.fragment_maps_zoom_button_margin_bottom), (int) getResources().getDimension(R.dimen.fragment_maps_zoom_button_margin_end));
 
-
+        // Set gestures for google map.
         mMap.getUiSettings().setAllGesturesEnabled(true);
         mMap.setOnMapLongClickListener(this);
+        mMap.setOnCameraIdleListener(this);
 
         // Set onMarkerClick Listener
         mMap.setOnMarkerClickListener(this);
@@ -116,7 +111,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
         mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.map_style));
 
         // Update map with restaurant
-        this.updateMapWithNearbyRestaurant();
+        this.getNearbyRestaurant();
     }
 
     @Override
@@ -133,19 +128,17 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
         if (marker.getSnippet() != null)
             mCallback.onClickedMarker(marker.getSnippet());
         else Toast.makeText(getContext(), R.string.fragment_maps_no_place_found, Toast.LENGTH_SHORT).show();
-        return false;
+        return true;
     }
 
     @Override
     public void onMapLongClick(LatLng latLng) {
-        // TODO Use fetch to get place name or remove?? create a bug
         mMap.addMarker(new MarkerOptions().position(latLng));
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        this.updateMapWithNearbyRestaurant();
+    public void onCameraIdle() {
+        this.getNearbyRestaurant();
     }
 
     // --------------
@@ -197,7 +190,6 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
 
         if (myLocation != null) {
             LatLng userLocation = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
-            // TODO enable disable zoom button with sharedPreferences
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 18), 1500, null);
         }
     }
@@ -212,16 +204,6 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
         else isLocationEnabled = true;
     }
 
-    // TODO to perform
-    /**
-     * Configure data binding for the map view.
-     */
-    private void configureDataBindingMapsFragment() {
-        FragmentMapsBinding fragmentMapsBinding = DataBindingUtil.bind(this.getFragmentView());//mapView.getRootView());
-        PlaceViewModel placeViewModel = new PlaceViewModel(this);
-        fragmentMapsBinding.setPlaceViewModel(placeViewModel);
-    }
-
     // --------------
     // ACTION
     // --------------
@@ -231,7 +213,30 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
         mMap.setMyLocationEnabled(isLocationEnabled);
         if (isLocationEnabled) this.setMapWithLocation();
         else this.checkLocationPermissionsStatus();
-        this.updateMapWithNearbyRestaurant();
+        this.getNearbyRestaurant();
+    }
+
+    // --------------
+    // REQUEST
+    // --------------
+
+    /**
+     * Update map with nearby restaurants.
+     */
+    private void getNearbyRestaurant() {
+        if (mMap != null) mMap.clear();
+
+        PlaceViewModel placeViewModel = new PlaceViewModel(this);
+        placeViewModel.getNearbyRestaurant();
+    }
+
+    /**
+     * Get restaurant booked users list.
+     * @param place restaurant place object.
+     */
+    public void getRestaurantBookedUsers(@NotNull Place place) {
+        RestaurantDBViewModel restaurantDBViewModel = new RestaurantDBViewModel(place.getId());
+        restaurantDBViewModel.getRestaurant(this, place);
     }
 
     // --------------
@@ -239,50 +244,13 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
     // --------------
 
     /**
-     * Update map with nearby restaurants.
-     */
-    private void updateMapWithNearbyRestaurant() {
-//        mMap.setMyLocationEnabled(isLocationEnabled);
-        if (mMap != null) mMap.clear();
-
-        PlaceViewModel placeViewModel = new PlaceViewModel(this); // TODO use fields
-        placeViewModel.getNearbyRestaurant();
-    }
-
-    /**
      * Add a new marker on the map.
-     * @param latLng Latitude and longitude for the marker.
-     * @param title Title for the marker.
-     * @param restaurantId Restaurant place id.
+     * @param restaurant Restaurant object with data from firestore.
+     * @param place Current place object found.
      */
-    public void addMarker(LatLng latLng, String title, String restaurantId) {
-        mMap.addMarker(new MarkerOptions().position(latLng).title(title)
-                .icon(this.switchMarkerColors(this.isBookedRestaurant())).snippet(restaurantId));
-    }
-
-    // TODO in RestaurantViewModel
-    private boolean isBookedRestaurant() {
-        return false;
-    }
-
-    /**
-     * Switch marker color, if booked or not.
-     * @param isBooked Is restaurant booked.
-     * @return Marker bitmap with corresponding color.
-     */
-    private BitmapDescriptor switchMarkerColors(boolean isBooked) {
-        Bitmap markerBitmap;
-
-        if (isBooked)
-            markerBitmap = MarkerUtils.createBitmapFromView(getContext(),
-                    R.layout.custom_marker_layout, getResources().getColor(R.color.colorMarkerBookedFont),
-                    getResources().getColor(R.color.colorMarkerBookedCutlery));
-
-        else markerBitmap = MarkerUtils.createBitmapFromView(getContext(),
-                R.layout.custom_marker_layout, getResources().getColor(R.color.colorMarkerNotBookedFont),
-                getResources().getColor(R.color.colorMarkerNotBookedCutlery));
-
-        return BitmapDescriptorFactory.fromBitmap(markerBitmap);
+    public void addMarker(Restaurant restaurant, @NotNull Place place) {
+        mMap.addMarker(new MarkerOptions().position(place.getLatLng()).title(place.getName())
+                .icon(this.switchMarkerColors(this.isBookedRestaurant(restaurant))).snippet(place.getId()));
     }
 
     /**
@@ -309,6 +277,37 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
                 layoutParams.setMargins(0, 0, marginEnd, marginBottom);
             }
         }
+    }
+
+    // --------------
+    // UTILS
+    // --------------
+
+    /**
+     * Check if restaurant is booked.
+     * @param restaurant Restaurant object.
+     * @return Boolean value if is booked.
+     */
+    private boolean isBookedRestaurant(Restaurant restaurant) {
+        if (restaurant != null) return !restaurant.getBookedUsersId().isEmpty();
+        else return false;
+    }
+
+    /**
+     * Switch marker color, if booked or not.
+     * @param isBooked Is restaurant booked.
+     * @return Marker bitmap with corresponding color.
+     */
+    @NotNull
+    private BitmapDescriptor switchMarkerColors(boolean isBooked) {
+        if (isBooked)
+            return BitmapDescriptorFactory.fromBitmap(MarkerUtils.createBitmapFromView(getContext(),
+                    R.layout.custom_marker_layout, getResources().getColor(R.color.colorMarkerBookedFont),
+                    getResources().getColor(R.color.colorMarkerBookedCutlery)));
+
+        else return BitmapDescriptorFactory.fromBitmap(MarkerUtils.createBitmapFromView(getContext(),
+                R.layout.custom_marker_layout, getResources().getColor(R.color.colorMarkerNotBookedFont),
+                getResources().getColor(R.color.colorMarkerNotBookedCutlery)));
     }
 
     // --------------
