@@ -4,6 +4,8 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.fragment.app.Fragment;
+
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
@@ -16,18 +18,23 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 import org.desperu.go4lunch.BuildConfig;
 import org.desperu.go4lunch.R;
 import org.desperu.go4lunch.view.main.fragments.MapsFragment;
+import org.desperu.go4lunch.view.main.fragments.RestaurantListFragment;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class PlaceViewModel {
 
+    private Fragment fragment;
     private Context context;
-    private MapsFragment mapsFragment;
+    private List<Place> placeList;
 
-    public PlaceViewModel(Context context, MapsFragment mapsFragment) {
-        this.context = context;
-        this.mapsFragment = mapsFragment;
+    public PlaceViewModel(@NotNull Fragment fragment) {
+        this.fragment = fragment;
+        this.context = fragment.getContext();
+        this.placeList = new ArrayList<>();
     }
 
     // --------------
@@ -61,13 +68,11 @@ public class PlaceViewModel {
                     for (Place.Type type : placeLikelihood.getPlace().getTypes()) {
                         if ((type.toString().equals("RESTAURANT") || type.toString().equals("FOOD"))
                                 && placeLikelihood.getPlace().getLatLng() != null) {
-                            // Add each corresponding place at map;
-                            mapsFragment.addMarker(placeLikelihood.getPlace().getLatLng(),
-                                    placeLikelihood.getPlace().getName(),
-                                    placeLikelihood.getPlace().getId());
+                            this.returnDataToFragment(placeLikelihood, false);
                         }
                     }
                 }
+                this.returnDataToFragment(null, true);
             } else {
                 Exception exception = task.getException();
                 if (exception instanceof ApiException) {
@@ -75,8 +80,31 @@ public class PlaceViewModel {
                     ApiException apiException = (ApiException) exception;
                     Log.e(getClass().getSimpleName(), "Place not found: " + apiException.getMessage());
                     Toast.makeText(context, R.string.view_model_toast_request_failure, Toast.LENGTH_SHORT).show();
+                    this.returnDataToFragment(null, true);
                 }
             }
         });
+    }
+
+    /**
+     * Return data to corresponding fragment.
+     * @param placeLikelihood Found place.
+     * @param isRequestFinished Is request finished.
+     */
+    private void returnDataToFragment(PlaceLikelihood placeLikelihood, boolean isRequestFinished) {
+        if (fragment.getClass() == MapsFragment.class && placeLikelihood != null) {
+            MapsFragment mapsFragment = (MapsFragment) this.fragment;
+            // Add each corresponding place at map;
+            mapsFragment.addMarker(placeLikelihood.getPlace().getLatLng(),
+                    placeLikelihood.getPlace().getName(),
+                    placeLikelihood.getPlace().getId());
+        }
+        else if (fragment.getClass() == RestaurantListFragment.class) {
+            if (isRequestFinished) {
+                RestaurantListFragment restaurantListFragment = (RestaurantListFragment) this.fragment;
+                restaurantListFragment.updateRecyclerView(placeList);
+            } else
+                placeList.add(placeLikelihood.getPlace());
+        }
     }
 }

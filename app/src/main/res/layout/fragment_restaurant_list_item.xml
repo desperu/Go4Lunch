@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="obj"
+            type="org.desperu.go4lunch.viewmodel.RestaurantViewModel" />
+    </data>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/fragment_restaurant_detail_item_linear_root_padding">
+
+        <ImageView
+            android:id="@+id/fragment_restaurant_list_item_image_restaurant"
+            android:layout_width="@dimen/fragment_restaurant_detail_item_image_user_width"
+            android:layout_height="@dimen/fragment_restaurant_detail_item_image_user_height"
+            android:contentDescription="@null"
+            android:src="@{obj.picture}"/>
+
+        <TextView
+            android:id="@+id/fragment_restaurant_list_item_text_restaurant_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/fragment_restaurant_detail_item_text_user_margin"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/fragment_restaurant_detail_item_text_user_size"
+            android:text="@{obj.place.name}"/>
+
+    </LinearLayout>
+
+</layout>

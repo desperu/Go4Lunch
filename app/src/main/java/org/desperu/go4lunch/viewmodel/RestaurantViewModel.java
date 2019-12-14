@@ -35,6 +35,13 @@ public class RestaurantViewModel extends BaseObservable {
     private ObservableField<Place> place = new ObservableField<>();
     private ObservableField<Drawable> picture = new ObservableField<>();
 
+    public RestaurantViewModel(Context context, String placeId) {
+        this.context = context;
+        this.placeId = placeId;
+        this.initializePlace();
+        this.getPlaceInfo();
+    }
+
     public RestaurantViewModel(@NotNull RestaurantDetailActivity restaurantDetailActivity, String placeId) {
         this.restaurantDetailActivity = restaurantDetailActivity;
         this.context = restaurantDetailActivity.getBaseContext();
@@ -75,14 +82,14 @@ public class RestaurantViewModel extends BaseObservable {
         placesClient.fetchPlace(request).addOnSuccessListener((response) -> {
             this.place.set(response.getPlace());
             this.setPicture();
-            restaurantDetailActivity.hideSwipeRefresh();
+            if(restaurantDetailActivity != null) restaurantDetailActivity.hideSwipeRefresh();
             Log.i(getClass().getSimpleName(), "Place found: " + place.get().getName());
         }).addOnFailureListener((exception) -> {
             if (exception instanceof ApiException) {
                 // Handle error with given status code.
                 Log.e(getClass().getSimpleName(), "Place not found: " + exception.getMessage());
                 Toast.makeText(context, R.string.view_model_toast_request_failure, Toast.LENGTH_SHORT).show();
-                restaurantDetailActivity.hideSwipeRefresh();
+                if (restaurantDetailActivity != null) restaurantDetailActivity.hideSwipeRefresh();
             }
         });
     }

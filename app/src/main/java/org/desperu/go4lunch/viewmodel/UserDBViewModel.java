@@ -20,9 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.desperu.go4lunch.Go4LunchTools.CodeResponse.BOOKED;
-import static org.desperu.go4lunch.Go4LunchTools.CodeResponse.ERROR;
-import static org.desperu.go4lunch.Go4LunchTools.CodeResponse.UNBOOKED;
+import static org.desperu.go4lunch.Go4LunchTools.CodeResponse.*;
 
 public class UserDBViewModel {
 

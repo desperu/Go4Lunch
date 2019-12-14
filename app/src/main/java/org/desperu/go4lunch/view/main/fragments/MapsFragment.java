@@ -218,7 +218,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
      */
     private void configureDataBindingMapsFragment() {
         FragmentMapsBinding fragmentMapsBinding = DataBindingUtil.bind(this.getFragmentView());//mapView.getRootView());
-        PlaceViewModel placeViewModel = new PlaceViewModel(getContext(), this);
+        PlaceViewModel placeViewModel = new PlaceViewModel(this);
         fragmentMapsBinding.setPlaceViewModel(placeViewModel);
     }
 
@@ -245,7 +245,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
 //        mMap.setMyLocationEnabled(isLocationEnabled);
         if (mMap != null) mMap.clear();
 
-        PlaceViewModel placeViewModel = new PlaceViewModel(getContext(), this);
+        PlaceViewModel placeViewModel = new PlaceViewModel(this); // TODO use fields
         placeViewModel.getNearbyRestaurant();
     }
 
@@ -270,7 +270,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
      * @param isBooked Is restaurant booked.
      * @return Marker bitmap with corresponding color.
      */
-    private BitmapDescriptor switchMarkerColors(Boolean isBooked) {
+    private BitmapDescriptor switchMarkerColors(boolean isBooked) {
         Bitmap markerBitmap;
 
         if (isBooked)

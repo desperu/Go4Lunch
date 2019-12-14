@@ -135,7 +135,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     fragment = RestaurantListFragment.newInstance();
                     break;
                 case WORKMATES_FRAGMENT:
-//                    fragment = WorkmatesFragment.newInstance();
+                    fragment = WorkmatesFragment.newInstance();
                     titleActivity = getString(R.string.title_fragment_workmates);
                     break;
             }
