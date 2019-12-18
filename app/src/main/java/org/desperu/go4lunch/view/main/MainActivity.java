@@ -2,14 +2,13 @@ package org.desperu.go4lunch.view.main;
 
 import android.content.Intent;
 import android.os.Build;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -19,23 +18,18 @@ import com.firebase.ui.auth.AuthMethodPickerLayout;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
-import com.google.android.gms.common.api.Status;
-import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
-import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
-import org.desperu.go4lunch.BuildConfig;
 import org.desperu.go4lunch.R;
-import org.desperu.go4lunch.view.base.BaseActivity;
 import org.desperu.go4lunch.databinding.ActivityMainNavHeaderBinding;
-import org.desperu.go4lunch.view.main.fragments.RestaurantListFragment;
+import org.desperu.go4lunch.view.base.BaseActivity;
 import org.desperu.go4lunch.view.main.fragments.MapsFragment;
+import org.desperu.go4lunch.view.main.fragments.RestaurantListFragment;
 import org.desperu.go4lunch.view.main.fragments.WorkmatesFragment;
 import org.desperu.go4lunch.view.restaurantdetail.RestaurantDetailActivity;
+import org.desperu.go4lunch.viewmodel.AutocompleteViewModel;
 import org.desperu.go4lunch.viewmodel.UserAuthViewModel;
 import org.desperu.go4lunch.viewmodel.UserDBViewModel;
 import org.jetbrains.annotations.NotNull;
@@ -54,16 +48,15 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     // FOR DESIGN
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.activity_main_drawer_layout) DrawerLayout drawerLayout;
-    @BindView(R.id.toolbar_autocomplete) RelativeLayout autoCompleteContainer;
+    @BindView(R.id.toolbar_search_view) SearchView searchView;
     @BindView(R.id.activity_main_nav_view) NavigationView navigationView;
     @BindView(R.id.activity_main_nav_bottom) BottomNavigationView bottomNavigationView;
 
     // FOR DATA
     private UserAuthViewModel userAuthViewModel;
     private UserDBViewModel userDBViewModel;
-    private AutocompleteSupportFragment autocompleteFragment;
+    private Fragment fragment;
     private static final int RC_SIGN_IN = 1234;
-
     private int currentFragment = -1;
 
     // --------------
@@ -123,7 +116,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private void configureAndShowFragment(int fragmentKey) {
         String titleActivity = getString(R.string.title_activity_main);
 
-        Fragment fragment = (Fragment) getSupportFragmentManager()
+        fragment = getSupportFragmentManager()
                 .findFragmentById(R.id.activity_main_frame_layout);
 
         if (currentFragment != fragmentKey) {
@@ -160,50 +153,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             userAuthViewModel = new UserAuthViewModel();
             activityMainNavHeaderBinding.setUserAuthViewModel(userAuthViewModel);
         }
-    }
-
-    /**
-     * Configure places autocomplete search.
-     */
-    private void configureAutocomplete() {
-        // Initialize the AutocompleteSupportFragment.
-        autocompleteFragment = (AutocompleteSupportFragment)
-                getSupportFragmentManager().findFragmentById(R.id.toolbar_autocomplete);
-
-        if (autocompleteFragment == null) {
-            autocompleteFragment = AutocompleteSupportFragment.newInstance();
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.toolbar_autocomplete, autocompleteFragment)
-                    .commit();
-        }
-
-//        TypeFilter typeFilter = TypeFilter.Creator<Place.Type.RESTAURANT>;
-//        autocompleteFragment.setTypeFilter(typeFilter);
-
-        // TODO put int a ViewModel
-        Places.initialize(this, BuildConfig.google_maps_api_key);
-
-//        PlacesClient placesClient = Places.createClient(this);
-        autocompleteFragment.setHint(getString(R.string.activity_main_search_edit_text_hint));
-        // Specify the types of place data to return.
-        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME));
-
-        // Set up a PlaceSelectionListener to handle the response.
-        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-            @Override
-            public void onPlaceSelected(@NotNull Place place) {
-                // TODO: Get info about the selected place.
-                Toast.makeText(getBaseContext(),"place" + place.getName(), Toast.LENGTH_SHORT).show();
-                Log.i("MainActivity", "Place: " + place.getName() + ", " + place.getId());
-            }
-
-            @Override
-            public void onError(@NotNull Status status) {
-                // TODO: Handle the error.
-                Toast.makeText(getBaseContext(), "Error" + status.getStatusMessage(), Toast.LENGTH_SHORT).show();
-                Log.i("MainActivity", "An error occurred: " + status);
-            }
-        });
     }
 
     // -----------------
@@ -265,11 +214,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     public void onBackPressed() {
         if (this.drawerLayout.isDrawerOpen(GravityCompat.START))
             this.drawerLayout.closeDrawer(GravityCompat.START);
-        else if (autoCompleteContainer != null && autoCompleteContainer.isShown()) {
-            if (autocompleteFragment != null && autocompleteFragment.isVisible())
-                getSupportFragmentManager().beginTransaction().remove(autocompleteFragment).commit();
-            autoCompleteContainer.setVisibility(View.GONE);
-        }
+        else if (this.searchView != null && this.searchView.isShown())
+            this.searchView.setVisibility(View.GONE);
         else
             super.onBackPressed();
     }
@@ -277,14 +223,35 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_main_menu, menu);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                AutocompleteViewModel autocompleteViewModel = new AutocompleteViewModel(getApplicationContext(), fragment);
+                if (fragment.getClass() == MapsFragment.class) {
+                    MapsFragment mapsFragment = (MapsFragment) fragment;
+                    autocompleteViewModel.fetchAutocompletePrediction(query, mapsFragment.getRectangularBounds());
+                }
+                return false;
+            }
+            @Override
+            public boolean onQueryTextChange(String s) {
+                AutocompleteViewModel autocompleteViewModel = new AutocompleteViewModel(getApplicationContext(), fragment);
+                if (fragment.getClass() == MapsFragment.class) {
+                    MapsFragment mapsFragment = (MapsFragment) fragment;
+                    autocompleteViewModel.fetchAutocompletePrediction(s, mapsFragment.getRectangularBounds());
+                }
+                return false;
+            }
+        });
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NotNull MenuItem item) {
         if (item.getItemId() == R.id.activity_main_menu_search) {
-            autoCompleteContainer.setVisibility(View.VISIBLE);
-            this.configureAutocomplete();
+            searchView.setVisibility(View.VISIBLE);
+            searchView.onActionViewExpanded();
             return true;
         }
         return super.onOptionsItemSelected(item);

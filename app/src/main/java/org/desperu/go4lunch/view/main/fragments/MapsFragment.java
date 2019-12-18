@@ -31,8 +31,10 @@ import org.desperu.go4lunch.R;
 import org.desperu.go4lunch.models.Restaurant;
 import org.desperu.go4lunch.utils.MarkerUtils;
 import org.desperu.go4lunch.view.base.BaseFragment;
-import org.desperu.go4lunch.viewmodel.PlaceViewModel;
+import org.desperu.go4lunch.viewmodel.AutocompleteViewModel;
+import org.desperu.go4lunch.viewmodel.NearbyPlaceViewModel;
 import org.desperu.go4lunch.viewmodel.RestaurantDBViewModel;
+import org.desperu.go4lunch.viewmodel.RestaurantInfoViewModel;
 import org.jetbrains.annotations.NotNull;
 
 import butterknife.BindView;
@@ -137,8 +139,9 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
     }
 
     @Override
-    public void onCameraIdle() {
-        this.getNearbyRestaurant();
+    public void onCameraIdle() { // TODO on test and set listener on map object
+        AutocompleteViewModel autocompleteViewModel = new AutocompleteViewModel(getContext(), this);
+        autocompleteViewModel.fetchAutocompletePrediction("e", getRectangularBounds());
     }
 
     // --------------
@@ -226,8 +229,8 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
     private void getNearbyRestaurant() {
         if (mMap != null) mMap.clear();
 
-        PlaceViewModel placeViewModel = new PlaceViewModel(this);
-        placeViewModel.getNearbyRestaurant();
+        NearbyPlaceViewModel nearbyPlaceViewModel = new NearbyPlaceViewModel(this);
+        nearbyPlaceViewModel.fetchNearbyRestaurant();
     }
 
     /**
@@ -237,6 +240,14 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
     public void getRestaurantBookedUsers(@NotNull Place place) {
         RestaurantDBViewModel restaurantDBViewModel = new RestaurantDBViewModel(place.getId());
         restaurantDBViewModel.getRestaurant(this, place);
+    }
+
+    /**
+     * Get restaurant info from place api.
+     * @param restaurantId Restaurant id.
+     */
+    public void getRestaurantInfo(String restaurantId) {
+        new RestaurantInfoViewModel(this, restaurantId);
     }
 
     // --------------
@@ -319,7 +330,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
      * @return Rectangular bounds for current screen.
      */
     @NotNull
-    private RectangularBounds getRectangularBounds() {
+    public RectangularBounds getRectangularBounds() {
         return RectangularBounds.newInstance(mMap.getProjection().getVisibleRegion().latLngBounds);
     }
     // TODO add on map move Listener

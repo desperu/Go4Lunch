@@ -15,14 +15,13 @@
         android:theme="@style/ToolbarTheme"
         app:titleTextColor="@android:color/white" />
 
-    <RelativeLayout
-        android:id="@+id/toolbar_autocomplete"
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/toolbar_search_view"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/toolbar_container_autocomplete_height"
+        android:layout_height="@dimen/toolbar_search_view_height"
         android:background="@android:color/white"
+        android:layout_margin="@dimen/toolbar_search_view_margin"
         android:visibility="gone"
-        android:layout_margin="@dimen/toolbar_container_autocomplete_margin">
-
-    </RelativeLayout>
+        app:queryHint="@string/activity_main_search_edit_text_hint"/>
 
 </RelativeLayout>

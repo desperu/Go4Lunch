@@ -5,7 +5,7 @@
     <data>
         <variable
             name="obj"
-            type="org.desperu.go4lunch.viewmodel.RestaurantViewModel" />
+            type="org.desperu.go4lunch.viewmodel.RestaurantInfoViewModel" />
     </data>
 
     <LinearLayout

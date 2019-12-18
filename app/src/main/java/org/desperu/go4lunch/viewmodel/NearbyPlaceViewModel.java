@@ -25,16 +25,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class PlaceViewModel {
+public class NearbyPlaceViewModel {
 
     private Fragment fragment;
     private Context context;
-    private List<Place> placeList;
+    private List<String> placeList = new ArrayList<>();
 
-    public PlaceViewModel(@NotNull Fragment fragment) {
+    public NearbyPlaceViewModel(@NotNull Fragment fragment) {
         this.fragment = fragment;
         this.context = fragment.getContext();
-        this.placeList = new ArrayList<>();
+        this.placeList.clear();
     }
 
     // --------------
@@ -42,9 +42,9 @@ public class PlaceViewModel {
     // --------------
 
     /**
-     * Get nearby restaurants.
+     * Fetch nearby restaurants.
      */
-    public void getNearbyRestaurant() { // TODO get only NEARBY places not screen rect show...
+    public void fetchNearbyRestaurant() { // TODO get only NEARBY places not screen rect show...
         // Initialize Place API.
         Places.initialize(context, BuildConfig.google_maps_api_key);
         PlacesClient placesClient = Places.createClient(context);
@@ -102,7 +102,7 @@ public class PlaceViewModel {
                 RestaurantListFragment restaurantListFragment = (RestaurantListFragment) this.fragment;
                 restaurantListFragment.updateRecyclerView(placeList);
             } else
-                placeList.add(placeLikelihood.getPlace());
+                placeList.add(placeLikelihood.getPlace().getId());
         }
     }
 }

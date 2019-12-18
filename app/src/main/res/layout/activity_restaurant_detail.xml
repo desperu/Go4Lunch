@@ -6,8 +6,8 @@
 
     <data>
         <variable
-            name="restaurantViewModel"
-            type="org.desperu.go4lunch.viewmodel.RestaurantViewModel" />
+            name="restaurantInfoViewModel"
+            type="org.desperu.go4lunch.viewmodel.RestaurantInfoViewModel" />
     </data>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -27,7 +27,7 @@
                     android:layout_height="0dp"
                     android:contentDescription="@null"
                     android:scaleType="fitXY"
-                    android:src="@{restaurantViewModel.picture}"
+                    android:src="@{restaurantInfoViewModel.picture}"
                     app:layout_constraintHeight_percent="0.4"
                     app:layout_constraintBottom_toTopOf="@id/activity_restaurant_detail_info_container"/>
 
@@ -58,7 +58,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/activity_restaurant_detail_text_restaurant_name_margin_end"
-                        android:text="@{restaurantViewModel.place.name}"
+                        android:text="@{restaurantInfoViewModel.place.name}"
                         android:textSize="@dimen/activity_restaurant_detail_text_restaurant_name_text_size"
                         android:textColor="@android:color/white"
                         android:maxLines="1"
@@ -103,7 +103,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/activity_restaurant_detail_text_view_restaurant_name"
                         android:layout_marginTop="@dimen/activity_restaurant_detail_text_restaurant_address_margin_top"
-                        android:text="@{String.valueOf(restaurantViewModel.place.address)}"
+                        android:text="@{String.valueOf(restaurantInfoViewModel.place.address)}"
                         android:textColor="@android:color/white"/>
 
                 </RelativeLayout>

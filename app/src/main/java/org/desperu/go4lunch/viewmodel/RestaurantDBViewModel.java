@@ -39,8 +39,10 @@ public class RestaurantDBViewModel {
      * Get restaurants booked users from maps fragment.
      */
     public void getRestaurant(MapsFragment fragment, Place place) {
-        RestaurantHelper.getRestaurant(restaurantId).addOnSuccessListener(documentSnapshot ->
-                fragment.addMarker(documentSnapshot.toObject(Restaurant.class), place));
+        RestaurantHelper.getRestaurant(restaurantId)
+                .addOnSuccessListener(documentSnapshot ->
+                fragment.addMarker(documentSnapshot.toObject(Restaurant.class), place))
+                .addOnFailureListener(e -> fragment.addMarker(null, place));
     }
 
     public void deleteNotBookedRestaurant() {

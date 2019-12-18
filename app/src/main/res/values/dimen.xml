@@ -74,8 +74,8 @@
     <dimen name="nav_bottom_height">56dp</dimen>
 
     <!-- Toolbar -->
-    <dimen name="toolbar_container_autocomplete_height">36dp</dimen>
-    <dimen name="toolbar_container_autocomplete_margin">10dp</dimen>
+    <dimen name="toolbar_search_view_height">36dp</dimen>
+    <dimen name="toolbar_search_view_margin">10dp</dimen>
     
     <!-- Custom Marker -->
     <dimen name="custom_marker_layout_cutlery_width">20dp</dimen>

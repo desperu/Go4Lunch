@@ -5,8 +5,8 @@
 
     <data>
         <variable
-            name="placeViewModel"
-            type="org.desperu.go4lunch.viewmodel.PlaceViewModel" />
+            name="nearbyPlaceViewModel"
+            type="org.desperu.go4lunch.viewmodel.NearbyPlaceViewModel" />
     </data>
 
     <RelativeLayout
@@ -18,7 +18,7 @@
             android:id="@+id/map"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
-<!--            tools:addMarker="@{placeViewModel.foundPlaceList}"/>-->
+<!--            tools:addMarker="@{nearbyPlaceViewModel.foundPlaceList}"/>-->
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fragment_maps_floating_button_location"

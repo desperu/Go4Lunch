@@ -19,12 +19,14 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 
 import org.desperu.go4lunch.BuildConfig;
 import org.desperu.go4lunch.R;
+import org.desperu.go4lunch.view.main.fragments.MapsFragment;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class RestaurantViewModel extends BaseObservable {
+public class RestaurantInfoViewModel extends BaseObservable {
 
+    private MapsFragment mapsFragment;
     private Context context;
     private String placeId;
     private PlacesClient placesClient;
@@ -32,8 +34,16 @@ public class RestaurantViewModel extends BaseObservable {
     private ObservableField<Place> place = new ObservableField<>();
     private ObservableField<Drawable> picture = new ObservableField<>();
 
-    public RestaurantViewModel(Context context, String placeId) {
+    public RestaurantInfoViewModel(Context context, String placeId) {
         this.context = context;
+        this.placeId = placeId;
+        this.initializePlace();
+        this.getPlaceInfo();
+    }
+
+    public RestaurantInfoViewModel(MapsFragment mapsFragment, String placeId) {
+        this.mapsFragment = mapsFragment;
+        this.context = mapsFragment.getContext();
         this.placeId = placeId;
         this.initializePlace();
         this.getPlaceInfo();
@@ -71,6 +81,7 @@ public class RestaurantViewModel extends BaseObservable {
         placesClient.fetchPlace(request).addOnSuccessListener((response) -> {
             this.place.set(response.getPlace());
             this.setPicture();
+            if (this.mapsFragment != null) mapsFragment.getRestaurantBookedUsers(response.getPlace());
             Log.i(getClass().getSimpleName(), "Place found: " + place.get().getName());
         }).addOnFailureListener((exception) -> {
             if (exception instanceof ApiException) {

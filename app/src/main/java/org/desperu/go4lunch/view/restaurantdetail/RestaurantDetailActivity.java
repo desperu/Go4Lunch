@@ -20,9 +20,8 @@ import org.desperu.go4lunch.view.base.BaseActivity;
 import org.desperu.go4lunch.databinding.ActivityRestaurantDetailBinding;
 import org.desperu.go4lunch.view.adapter.RestaurantDetailAdapter;
 import org.desperu.go4lunch.viewmodel.RestaurantDBViewModel;
-import org.desperu.go4lunch.viewmodel.RestaurantViewModel;
+import org.desperu.go4lunch.viewmodel.RestaurantInfoViewModel;
 import org.desperu.go4lunch.viewmodel.UserDBViewModel;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +41,7 @@ public class RestaurantDetailActivity extends BaseActivity {
     // FOR DATA
     public static final String RESTAURANT_ID = "restaurant id";
 
-    private RestaurantViewModel restaurantViewModel;
+    private RestaurantInfoViewModel restaurantInfoViewModel;
     private RestaurantDetailAdapter adapter;
     private List<UserDBViewModel> joiningUsers = new ArrayList<>();
 
@@ -95,8 +94,8 @@ public class RestaurantDetailActivity extends BaseActivity {
      */
     private void configureDataBinding() {
         ActivityRestaurantDetailBinding restaurantDetailBinding = DataBindingUtil.setContentView(this, this.getActivityLayout());
-        restaurantViewModel = new RestaurantViewModel(this, this.getIdFromIntentData());
-        restaurantDetailBinding.setRestaurantViewModel(restaurantViewModel);
+        restaurantInfoViewModel = new RestaurantInfoViewModel(this, this.getIdFromIntentData());
+        restaurantDetailBinding.setRestaurantInfoViewModel(restaurantInfoViewModel);
         ButterKnife.bind(this);
     }
 
@@ -117,7 +116,7 @@ public class RestaurantDetailActivity extends BaseActivity {
      */
     private void configureSwipeRefreshLayout() {
         swipeRefreshLayout.setOnRefreshListener(() -> {
-            restaurantViewModel.restartRequest();
+            restaurantInfoViewModel.restartRequest();
             this.getRestaurantBookedUsers();
         });
     }
@@ -128,7 +127,7 @@ public class RestaurantDetailActivity extends BaseActivity {
 
     @OnClick(R.id.activity_restaurant_detail_button_booked)
     protected void onClickBookRestaurant() {
-        Place currentRestaurant = restaurantViewModel.getPlace().get();
+        Place currentRestaurant = restaurantInfoViewModel.getPlace().get();
 
         if (currentRestaurant != null && currentRestaurant.getId() != null) {
             UserDBViewModel userDBViewModel = new UserDBViewModel(this, this.getCurrentUser().getUid());
@@ -140,8 +139,8 @@ public class RestaurantDetailActivity extends BaseActivity {
 
     @OnClick(R.id.activity_restaurant_detail_call_button)
     protected void onClickCallRestaurant() {
-        if (restaurantViewModel.getPlace().get() != null)
-            this.startCallIntent(restaurantViewModel.getPlace().get().getPhoneNumber());
+        if (restaurantInfoViewModel.getPlace().get() != null)
+            this.startCallIntent(restaurantInfoViewModel.getPlace().get().getPhoneNumber());
         else this.handleResponseAfterBooking(NO_DATA);
     }
 
@@ -152,8 +151,8 @@ public class RestaurantDetailActivity extends BaseActivity {
 
     @OnClick(R.id.activity_restaurant_detail_website_button)
     protected void onClickWebsiteRestaurant() {
-        if (restaurantViewModel.getPlace().get() != null)
-            this.showWebsite(restaurantViewModel.getPlace().get().getWebsiteUri().toString());
+        if (restaurantInfoViewModel.getPlace().get() != null)
+            this.showWebsite(restaurantInfoViewModel.getPlace().get().getWebsiteUri().toString());
         else this.handleResponseAfterBooking(NO_DATA);
     }
 
