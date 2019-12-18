@@ -36,6 +36,9 @@ import org.desperu.go4lunch.viewmodel.NearbyPlaceViewModel;
 import org.desperu.go4lunch.viewmodel.RestaurantDBViewModel;
 import org.desperu.go4lunch.viewmodel.RestaurantInfoViewModel;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -49,17 +52,20 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
     // FOR DESIGN
     @BindView(R.id.map) MapView mapView;
 
+    public static final String QUERY_TERM = "queryTerm";
+
     // FOR DATA
     private SupportMapFragment mapFragment;
     private GoogleMap mMap;
     private boolean isLocationEnabled = false;
 
-    // CALLBACK
-    public interface OnMarkerClickedListener {
+    // CALLBACKS
+    public interface MapsFragmentDataOrClickListener {
         void onClickedMarker(String id);
+        void onNewPlaceList(ArrayList<String> placeIdList);
     }
 
-    private MapsFragment.OnMarkerClickedListener mCallback;
+    private MapsFragment.MapsFragmentDataOrClickListener mCallback;
 
     // --------------
     // BASE METHODS
@@ -141,7 +147,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
     @Override
     public void onCameraIdle() { // TODO on test and set listener on map object
         AutocompleteViewModel autocompleteViewModel = new AutocompleteViewModel(getContext(), this);
-        autocompleteViewModel.fetchAutocompletePrediction("e", getRectangularBounds());
+        autocompleteViewModel.fetchAutocompletePrediction(this.getQueryTerms(), getRectangularBounds());
     }
 
     // --------------
@@ -153,9 +159,9 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
      */
     private void createCallbackToParentActivity(){
         try {
-            mCallback = (MapsFragment.OnMarkerClickedListener) getActivity();
+            mCallback = (MapsFragmentDataOrClickListener) getActivity();
         } catch (ClassCastException e) {
-            throw new ClassCastException(e.toString()+ " must implement OnClickedMarkerListener");
+            throw new ClassCastException(e.toString()+ " must implement MapsFragmentDataOrClickListener");
         }
     }
 
@@ -207,6 +213,23 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
         else isLocationEnabled = true;
     }
 
+    /**
+     * Get query term from bundle argument.
+     * @return Query term.
+     */
+    @Nullable
+    private String getQueryTerms() {
+            return getArguments() != null ? getArguments().getString(QUERY_TERM) : null;
+    }
+
+    /**
+     * Set place list when request finish.
+     * @param placeIdList Found place id list.
+     */
+    public void setPlaceList(ArrayList<String> placeIdList) {
+        mCallback.onNewPlaceList(placeIdList);
+    }
+
     // --------------
     // ACTION
     // --------------
@@ -228,7 +251,6 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
      */
     private void getNearbyRestaurant() {
         if (mMap != null) mMap.clear();
-
         NearbyPlaceViewModel nearbyPlaceViewModel = new NearbyPlaceViewModel(this);
         nearbyPlaceViewModel.fetchNearbyRestaurant();
     }
@@ -311,14 +333,18 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
      */
     @NotNull
     private BitmapDescriptor switchMarkerColors(boolean isBooked) {
-        if (isBooked)
-            return BitmapDescriptorFactory.fromBitmap(MarkerUtils.createBitmapFromView(getContext(),
-                    R.layout.custom_marker_layout, getResources().getColor(R.color.colorMarkerBookedFont),
-                    getResources().getColor(R.color.colorMarkerBookedCutlery)));
+        if (getContext() != null) {
+            if (isBooked)
+                return BitmapDescriptorFactory.fromBitmap(MarkerUtils.createBitmapFromView(getContext(),
+                        R.layout.custom_marker_layout, getResources().getColor(R.color.colorMarkerBookedFont),
+                        getResources().getColor(R.color.colorMarkerBookedCutlery)));
 
-        else return BitmapDescriptorFactory.fromBitmap(MarkerUtils.createBitmapFromView(getContext(),
-                R.layout.custom_marker_layout, getResources().getColor(R.color.colorMarkerNotBookedFont),
-                getResources().getColor(R.color.colorMarkerNotBookedCutlery)));
+            else
+                return BitmapDescriptorFactory.fromBitmap(MarkerUtils.createBitmapFromView(getContext(),
+                        R.layout.custom_marker_layout, getResources().getColor(R.color.colorMarkerNotBookedFont),
+                        getResources().getColor(R.color.colorMarkerNotBookedCutlery)));
+        }
+        return BitmapDescriptorFactory.defaultMarker();
     }
 
     // --------------

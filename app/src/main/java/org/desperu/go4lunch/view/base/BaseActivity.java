@@ -18,6 +18,7 @@ import org.desperu.go4lunch.viewmodel.UserAuthViewModel;
 import org.jetbrains.annotations.NotNull;
 
 import butterknife.ButterKnife;
+import icepick.Icepick;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
@@ -36,8 +37,15 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(this.getActivityLayout());
+        Icepick.restoreInstanceState(this, savedInstanceState);
         ButterKnife.bind(this); //Configure ButterKnife
         this.configureDesign();
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Icepick.saveInstanceState(this, outState);
     }
 
     // --------------------

@@ -29,7 +29,7 @@ public class NearbyPlaceViewModel {
 
     private Fragment fragment;
     private Context context;
-    private List<String> placeList = new ArrayList<>();
+    private ArrayList<String> placeList = new ArrayList<>();
 
     public NearbyPlaceViewModel(@NotNull Fragment fragment) {
         this.fragment = fragment;
@@ -66,7 +66,7 @@ public class NearbyPlaceViewModel {
                             placeLikelihood.getLikelihood()));
 
                     for (Place.Type type : placeLikelihood.getPlace().getTypes()) {
-                        if ((type.toString().equals("RESTAURANT") || type.toString().equals("FOOD"))
+                        if ((type.toString().equals("RESTAURANT"))// || type.toString().equals("FOOD"))
                                 && placeLikelihood.getPlace().getLatLng() != null) {
                             this.returnDataToFragment(placeLikelihood, false);
                         }
@@ -92,17 +92,19 @@ public class NearbyPlaceViewModel {
      * @param isRequestFinished Is request finished.
      */
     private void returnDataToFragment(PlaceLikelihood placeLikelihood, boolean isRequestFinished) {
-        if (fragment.getClass() == MapsFragment.class && placeLikelihood != null) {
+        if (placeLikelihood != null) placeList.add(placeLikelihood.getPlace().getId());
+        if (fragment.getClass() == MapsFragment.class) {
             MapsFragment mapsFragment = (MapsFragment) this.fragment;
-            // Add each corresponding place at map;
-            mapsFragment.getRestaurantBookedUsers(placeLikelihood.getPlace());
+            if (isRequestFinished) mapsFragment.setPlaceList(placeList);
+            else if (placeLikelihood != null)
+                // Add each corresponding place at map;
+                mapsFragment.getRestaurantBookedUsers(placeLikelihood.getPlace());
         }
         else if (fragment.getClass() == RestaurantListFragment.class) {
             if (isRequestFinished) {
                 RestaurantListFragment restaurantListFragment = (RestaurantListFragment) this.fragment;
                 restaurantListFragment.updateRecyclerView(placeList);
-            } else
-                placeList.add(placeLikelihood.getPlace().getId());
+            }
         }
     }
 }

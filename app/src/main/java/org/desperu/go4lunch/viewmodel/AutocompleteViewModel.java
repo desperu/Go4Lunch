@@ -62,7 +62,7 @@ public class AutocompleteViewModel {
         placesClient.findAutocompletePredictions(request).addOnSuccessListener((response) -> {
             for (AutocompletePrediction prediction : response.getAutocompletePredictions()) {
                 for (Place.Type type : prediction.getPlaceTypes()) {
-                    if ((type.toString().equals("RESTAURANT") || type.toString().equals("FOOD"))) {
+                    if ((type.toString().equals("RESTAURANT"))){ // || type.toString().equals("FOOD"))) {
                         Log.i(getClass().getSimpleName(), prediction.getPlaceId());
                         Log.i(getClass().getSimpleName(), prediction.getPrimaryText(null).toString());
                         this.returnDataToFragment(prediction.getPlaceId(), false);

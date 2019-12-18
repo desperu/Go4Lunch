@@ -59,6 +59,9 @@ dependencies {
     testImplementation 'org.powermock:powermock-module-junit4-rule:1.6.2'
     testImplementation 'org.powermock:powermock-module-junit4:1.6.2'
 
+    // Leak Canary // TODO uncomment to check leaks
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-beta-3'
+
     //EASY PERMISSIONS
     implementation 'pub.devrel:easypermissions:1.1.1'
 

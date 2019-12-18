@@ -2,6 +2,7 @@ package org.desperu.go4lunch.view.main;
 
 import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,16 +35,19 @@ import org.desperu.go4lunch.viewmodel.UserAuthViewModel;
 import org.desperu.go4lunch.viewmodel.UserDBViewModel;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
 import butterknife.BindView;
+import icepick.State;
 
 import static org.desperu.go4lunch.Go4LunchTools.FragmentKey.*;
+import static org.desperu.go4lunch.view.main.fragments.RestaurantListFragment.PLACE_ID_LIST;
 
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener,
-        BottomNavigationView.OnNavigationItemSelectedListener, MapsFragment.OnMarkerClickedListener {
+        BottomNavigationView.OnNavigationItemSelectedListener, MapsFragment.MapsFragmentDataOrClickListener {
 
     // FOR DESIGN
     @BindView(R.id.toolbar) Toolbar toolbar;
@@ -55,6 +59,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     // FOR DATA
     private UserAuthViewModel userAuthViewModel;
     private UserDBViewModel userDBViewModel;
+    @State ArrayList<String> placeList;
     private Fragment fragment;
     private static final int RC_SIGN_IN = 1234;
     private int currentFragment = -1;
@@ -126,6 +131,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     break;
                 case LIST_FRAGMENT:
                     fragment = RestaurantListFragment.newInstance();
+                    Bundle bundle = new Bundle();
+                    bundle.putStringArrayList(PLACE_ID_LIST, placeList);
+                    fragment.setArguments(bundle);
                     break;
                 case WORKMATES_FRAGMENT:
                     fragment = WorkmatesFragment.newInstance();
@@ -227,20 +235,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                AutocompleteViewModel autocompleteViewModel = new AutocompleteViewModel(getApplicationContext(), fragment);
-                if (fragment.getClass() == MapsFragment.class) {
-                    MapsFragment mapsFragment = (MapsFragment) fragment;
-                    autocompleteViewModel.fetchAutocompletePrediction(query, mapsFragment.getRectangularBounds());
-                }
+                onSearchTextChange(query);
                 return false;
             }
             @Override
             public boolean onQueryTextChange(String s) {
-                AutocompleteViewModel autocompleteViewModel = new AutocompleteViewModel(getApplicationContext(), fragment);
-                if (fragment.getClass() == MapsFragment.class) {
-                    MapsFragment mapsFragment = (MapsFragment) fragment;
-                    autocompleteViewModel.fetchAutocompletePrediction(s, mapsFragment.getRectangularBounds());
-                }
+                onSearchTextChange(s);
                 return false;
             }
         });
@@ -262,9 +262,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     // --------------------
 
     @Override
-    public void onClickedMarker(String id) {
-        this.showRestaurantDetailActivity(id);
-    }
+    public void onClickedMarker(String id) { this.showRestaurantDetailActivity(id); }
+
+    @Override
+    public void onNewPlaceList(ArrayList<String> placeList) { this.placeList = placeList; }
 
     /**
      * Manage click on Your Lunch button.
@@ -274,6 +275,18 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 && userDBViewModel.getUser().get().getBookedRestaurantId() != null)
             this.showRestaurantDetailActivity(userDBViewModel.getUser().get().getBookedRestaurantId());
         else Snackbar.make(drawerLayout, R.string.activity_main_message_no_booked_restaurant, Snackbar.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Fetch restaurant on search text change.
+     * @param query Query term to search.
+     */
+    private void onSearchTextChange(String query) {
+        AutocompleteViewModel autocompleteViewModel = new AutocompleteViewModel(getApplicationContext(), fragment);
+        if (fragment.getClass() == MapsFragment.class) {
+            MapsFragment mapsFragment = (MapsFragment) fragment;
+            autocompleteViewModel.fetchAutocompletePrediction(query, mapsFragment.getRectangularBounds());
+        }
     }
 
     // -----------------

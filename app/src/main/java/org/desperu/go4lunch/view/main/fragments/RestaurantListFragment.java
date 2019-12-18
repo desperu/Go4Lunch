@@ -4,14 +4,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.google.android.libraries.places.api.model.Place;
-
 import org.desperu.go4lunch.R;
-import org.desperu.go4lunch.view.base.BaseFragment;
 import org.desperu.go4lunch.view.adapter.RestaurantListAdapter;
+import org.desperu.go4lunch.view.base.BaseFragment;
 import org.desperu.go4lunch.viewmodel.NearbyPlaceViewModel;
 import org.desperu.go4lunch.viewmodel.RestaurantInfoViewModel;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +22,7 @@ public class RestaurantListFragment extends BaseFragment {
     @BindView(R.id.fragment_recycler_view_swipe_refresh) SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.fragment_recycler_view) RecyclerView recyclerView;
 
+    public static final String PLACE_ID_LIST = "placeIdList";
     private RestaurantListAdapter adapter;
     private List<RestaurantInfoViewModel> restaurantList = new ArrayList<>();
 
@@ -36,8 +36,8 @@ public class RestaurantListFragment extends BaseFragment {
     @Override
     protected void configureDesign() {
         this.configureRecyclerView();
-        this.loadNearbyRestaurantList();
         this.configureSwipeRefresh();
+        this.updateRecyclerView();
     }
 
 
@@ -50,6 +50,15 @@ public class RestaurantListFragment extends BaseFragment {
     // --------------
     // CONFIGURATION
     // --------------
+
+    /**
+     * Get place Id list from bundle.
+     * @return Place Id String List.
+     */
+    @Nullable
+    private List<String> getPlaceListFromBundle() {
+        return getArguments() != null ? getArguments().getStringArrayList(PLACE_ID_LIST) : null;
+    }
 
     /**
      * Configure recycler view.
@@ -81,17 +90,18 @@ public class RestaurantListFragment extends BaseFragment {
     // UI
     // --------------
 
-//    /**
-//     * Update recycler view when received data.
-//     * @param placeList List of nearby places.
-//     */
-//    public void updateRecyclerView(@NotNull List<Place> placeList) {
-//        restaurantList.clear();
-//        for (Place place : placeList)
-//            restaurantList.add(new RestaurantInfoViewModel(getContext(), place.getId()));
-//        adapter.notifyDataSetChanged();
-//        swipeRefreshLayout.setRefreshing(false);
-//    }
+    /**
+     * Update recycler view when received data.
+     */
+    private void updateRecyclerView() {
+        if (getPlaceListFromBundle() != null) {
+            restaurantList.clear();
+            for (String placeId : getPlaceListFromBundle())
+                restaurantList.add(new RestaurantInfoViewModel(getContext(), placeId));
+            adapter.notifyDataSetChanged();
+            swipeRefreshLayout.setRefreshing(false);
+        }
+    }
 
     /**
      * Update recycler view when received data.
