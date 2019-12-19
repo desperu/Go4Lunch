@@ -2,10 +2,12 @@ package org.desperu.go4lunch.view.restaurantdetail;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Handler;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,8 +31,10 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import pub.devrel.easypermissions.EasyPermissions;
 
 import static org.desperu.go4lunch.Go4LunchTools.CodeResponse.*;
+import static org.desperu.go4lunch.Go4LunchTools.RestaurantDetail.*;
 
 public class RestaurantDetailActivity extends BaseActivity {
 
@@ -44,6 +48,7 @@ public class RestaurantDetailActivity extends BaseActivity {
     private RestaurantInfoViewModel restaurantInfoViewModel;
     private RestaurantDetailAdapter adapter;
     private List<UserDBViewModel> joiningUsers = new ArrayList<>();
+    private boolean isCallPermissionEnabled = false;
 
     // --------------
     // BASE METHODS
@@ -59,6 +64,7 @@ public class RestaurantDetailActivity extends BaseActivity {
         this.drawBelowStatusBar();
         this.configureRecyclerView();
         this.getRestaurantBookedUsers();
+        this.checkCallPhonePermissionsStatus();
     }
 
     // --------------
@@ -87,6 +93,16 @@ public class RestaurantDetailActivity extends BaseActivity {
         RestaurantDBViewModel restaurantDBViewModel =
                 new RestaurantDBViewModel(this.getIdFromIntentData());
         restaurantDBViewModel.getRestaurant(this);
+    }
+
+    /**
+     * Check if call phone is granted, if not, ask for them.
+     */
+    private void checkCallPhonePermissionsStatus() {
+        if (!EasyPermissions.hasPermissions(this, PERMS))
+            EasyPermissions.requestPermissions(this, getString(R.string.activity_restaurant_detail_popup_title_permission_call),
+                    PERM_CALL_PHONE, PERMS);
+        else isCallPermissionEnabled = true;
     }
 
     /**
@@ -122,6 +138,18 @@ public class RestaurantDetailActivity extends BaseActivity {
     }
 
     // --------------
+    // METHODS OVERRIDE
+    // --------------
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        // Forward results to EasyPermissions
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+        this.isCallPermissionEnabled = grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED;
+    }
+
+    // --------------
     // ACTION
     // --------------
 
@@ -140,7 +168,9 @@ public class RestaurantDetailActivity extends BaseActivity {
     @OnClick(R.id.activity_restaurant_detail_call_button)
     protected void onClickCallRestaurant() {
         if (restaurantInfoViewModel.getPlace().get() != null)
-            this.startCallIntent(restaurantInfoViewModel.getPlace().get().getPhoneNumber());
+            if (isCallPermissionEnabled)
+                this.startCallIntent(restaurantInfoViewModel.getPlace().get().getPhoneNumber());
+            else this.checkCallPhonePermissionsStatus();
         else this.handleResponseAfterBooking(NO_DATA);
     }
 

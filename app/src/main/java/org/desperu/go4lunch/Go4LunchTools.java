@@ -32,4 +32,11 @@ public final class Go4LunchTools {
         public static final int LIST_FRAGMENT = 1;
         public static final int WORKMATES_FRAGMENT = 2;
     }
+
+    public static final class RestaurantDetail {
+
+        // FOR PERMISSION
+        public static final String[] PERMS = {Manifest.permission.CALL_PHONE};
+        public static final int PERM_CALL_PHONE = 200;
+    }
 }
