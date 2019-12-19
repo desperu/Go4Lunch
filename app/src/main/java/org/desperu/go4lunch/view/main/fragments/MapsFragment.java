@@ -20,6 +20,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
@@ -52,7 +53,10 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
     // FOR DESIGN
     @BindView(R.id.map) MapView mapView;
 
-    public static final String QUERY_TERM = "queryTerm";
+    // FOR BUNDLE
+    public static final String QUERY_TERM_MAPS = "queryTerm";
+    public static final String PLACE_ID_LIST_MAPS = "placeIdList";
+    public static final String CAMERA_POSITION = "cameraPosition";
 
     // FOR DATA
     private SupportMapFragment mapFragment;
@@ -62,7 +66,9 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
     // CALLBACKS
     public interface MapsFragmentDataOrClickListener {
         void onClickedMarker(String id);
-        void onNewPlaceList(ArrayList<String> placeIdList);
+        void onNewPlaceIdList(ArrayList<String> placeIdList);
+        void onNewBounds(RectangularBounds bounds);
+        void onNewCameraPosition(CameraPosition cameraPosition);
     }
 
     private MapsFragment.MapsFragmentDataOrClickListener mCallback;
@@ -118,8 +124,8 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
         // Set map style
         mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.map_style));
 
-        // Update map with restaurant
-        this.getNearbyRestaurant();
+        // Restore map state, or update map with restaurant
+        if (!this.restoreState()) this.getNearbyRestaurant();
     }
 
     @Override
@@ -131,7 +137,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
     }
 
     @Override
-    public boolean onMarkerClick(Marker marker) {
+    public boolean onMarkerClick(@NotNull Marker marker) {
         this.repositionMapButton(GOOGLE_MAP_TOOLBAR, (int) getResources().getDimension(R.dimen.fragment_maps_toolbar_margin_bottom), (int) getResources().getDimension(R.dimen.fragment_maps_toolbar_margin_end));
         if (marker.getSnippet() != null)
             mCallback.onClickedMarker(marker.getSnippet());
@@ -146,8 +152,10 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
 
     @Override
     public void onCameraIdle() { // TODO on test and set listener on map object
-        AutocompleteViewModel autocompleteViewModel = new AutocompleteViewModel(getContext(), this);
-        autocompleteViewModel.fetchAutocompletePrediction(this.getQueryTerms(), getRectangularBounds());
+        AutocompleteViewModel autocompleteViewModel = new AutocompleteViewModel(this);
+        autocompleteViewModel.fetchAutocompletePrediction(this.getQueryTerm(), getRectangularBounds());
+        mCallback.onNewBounds(getRectangularBounds());
+        mCallback.onNewCameraPosition(mMap.getCameraPosition());
     }
 
     // --------------
@@ -180,6 +188,20 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
         getChildFragmentManager().beginTransaction()
                 .add(R.id.map, mapFragment)
                 .commit();
+    }
+
+    /**
+     * Restore last map state (position and restaurants).
+     * @return If a previous state is restored.
+     */
+    private boolean restoreState() {
+        if (this.getPlaceIdList() != null && this.getCameraPosition() != null) {
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(this.getCameraPosition()));
+            for (String restaurantId : this.getPlaceIdList())
+                this.getRestaurantInfo(restaurantId);
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -218,8 +240,26 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
      * @return Query term.
      */
     @Nullable
-    private String getQueryTerms() {
-            return getArguments() != null ? getArguments().getString(QUERY_TERM) : null;
+    private String getQueryTerm() {
+        return getArguments() != null ? getArguments().getString(QUERY_TERM_MAPS) : null;
+    }
+
+    /**
+     * Get place id list from bundle.
+     * @return List of place id.
+     */
+    @Nullable
+    private ArrayList<String> getPlaceIdList() {
+        return getArguments() != null ? getArguments().getStringArrayList(PLACE_ID_LIST_MAPS) : null;
+    }
+
+    /**
+     * Get last camera position from bundle.
+     * @return Camera position.
+     */
+    @Nullable
+    private CameraPosition getCameraPosition() {
+        return getArguments() != null ? getArguments().getParcelable(CAMERA_POSITION) : null;
     }
 
     /**
@@ -227,7 +267,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
      * @param placeIdList Found place id list.
      */
     public void setPlaceList(ArrayList<String> placeIdList) {
-        mCallback.onNewPlaceList(placeIdList);
+        mCallback.onNewPlaceIdList(placeIdList);
     }
 
     // --------------
@@ -268,7 +308,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
      * Get restaurant info from place api.
      * @param restaurantId Restaurant id.
      */
-    public void getRestaurantInfo(String restaurantId) {
+    private void getRestaurantInfo(String restaurantId) {
         new RestaurantInfoViewModel(this, restaurantId);
     }
 
@@ -284,6 +324,13 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
     public void addMarker(Restaurant restaurant, @NotNull Place place) {
         mMap.addMarker(new MarkerOptions().position(place.getLatLng()).title(place.getName())
                 .icon(this.switchMarkerColors(this.isBookedRestaurant(restaurant))).snippet(place.getId()));
+    }
+
+    public void updateMap(@NotNull ArrayList<String> placeIdList) {
+        mMap.clear();
+        mCallback.onNewPlaceIdList(placeIdList);
+        for (String restaurantId : placeIdList)
+            this.getRestaurantInfo(restaurantId);
     }
 
     /**
@@ -356,7 +403,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
      * @return Rectangular bounds for current screen.
      */
     @NotNull
-    public RectangularBounds getRectangularBounds() {
+    private RectangularBounds getRectangularBounds() {
         return RectangularBounds.newInstance(mMap.getProjection().getVisibleRegion().latLngBounds);
     }
     // TODO add on map move Listener

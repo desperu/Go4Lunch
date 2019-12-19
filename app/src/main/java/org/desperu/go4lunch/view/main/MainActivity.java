@@ -19,6 +19,8 @@ import com.firebase.ui.auth.AuthMethodPickerLayout;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.libraries.places.api.model.RectangularBounds;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
@@ -43,11 +45,13 @@ import butterknife.BindView;
 import icepick.State;
 
 import static org.desperu.go4lunch.Go4LunchTools.FragmentKey.*;
-import static org.desperu.go4lunch.view.main.fragments.RestaurantListFragment.PLACE_ID_LIST;
+import static org.desperu.go4lunch.view.main.fragments.MapsFragment.*;
+import static org.desperu.go4lunch.view.main.fragments.RestaurantListFragment.*;
 
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener,
-        BottomNavigationView.OnNavigationItemSelectedListener, MapsFragment.MapsFragmentDataOrClickListener {
+        BottomNavigationView.OnNavigationItemSelectedListener, MapsFragment.MapsFragmentDataOrClickListener,
+        RestaurantListFragment.RestaurantListFragmentListener {
 
     // FOR DESIGN
     @BindView(R.id.toolbar) Toolbar toolbar;
@@ -60,6 +64,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private UserAuthViewModel userAuthViewModel;
     private UserDBViewModel userDBViewModel;
     @State ArrayList<String> placeList;
+    @State RectangularBounds bounds;
+    @State CameraPosition cameraPosition;
+    @State String queryTerm;
     private Fragment fragment;
     private static final int RC_SIGN_IN = 1234;
     private int currentFragment = -1;
@@ -120,6 +127,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
      */
     private void configureAndShowFragment(int fragmentKey) {
         String titleActivity = getString(R.string.title_activity_main);
+        Bundle bundle = new Bundle();
 
         fragment = getSupportFragmentManager()
                 .findFragmentById(R.id.activity_main_frame_layout);
@@ -128,11 +136,17 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             switch (fragmentKey) {
                 case MAP_FRAGMENT:
                     fragment = MapsFragment.newInstance();
+                    bundle.putStringArrayList(PLACE_ID_LIST_MAPS, placeList);
+                    if (this.queryTerm != null && !this.queryTerm.isEmpty())
+                        bundle.putParcelable(CAMERA_POSITION, cameraPosition);
+                    fragment.setArguments(bundle);
                     break;
                 case LIST_FRAGMENT:
                     fragment = RestaurantListFragment.newInstance();
-                    Bundle bundle = new Bundle();
-                    bundle.putStringArrayList(PLACE_ID_LIST, placeList);
+                    bundle.putStringArrayList(PLACE_ID_LIST_RESTAURANT_LIST, placeList);
+                    bundle.putParcelable(BOUNDS, bounds);
+                    if (this.queryTerm != null && !this.queryTerm.isEmpty())
+                        bundle.putString(QUERY_TERM_LIST, queryTerm);
                     fragment.setArguments(bundle);
                     break;
                 case WORKMATES_FRAGMENT:
@@ -249,7 +263,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     public boolean onOptionsItemSelected(@NotNull MenuItem item) {
-        if (item.getItemId() == R.id.activity_main_menu_search) {
+        if (item.getItemId() == R.id.activity_main_menu_search && !fragment.getClass().equals(WorkmatesFragment.class)) {
             searchView.setVisibility(View.VISIBLE);
             searchView.onActionViewExpanded();
             return true;
@@ -265,7 +279,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     public void onClickedMarker(String id) { this.showRestaurantDetailActivity(id); }
 
     @Override
-    public void onNewPlaceList(ArrayList<String> placeList) { this.placeList = placeList; }
+    public void onNewPlaceIdList(ArrayList<String> placeList) { this.placeList = placeList; }
+
+    @Override
+    public void onNewBounds(RectangularBounds bounds) { this.bounds = bounds; }
+
+    @Override
+    public void onNewCameraPosition(CameraPosition cameraPosition) { this.cameraPosition = cameraPosition; }
 
     /**
      * Manage click on Your Lunch button.
@@ -278,14 +298,22 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     /**
-     * Fetch restaurant on search text change.
+     * Fetch restaurant on search text change, and send query term to corresponding fragment.
      * @param query Query term to search.
      */
     private void onSearchTextChange(String query) {
-        AutocompleteViewModel autocompleteViewModel = new AutocompleteViewModel(getApplicationContext(), fragment);
+        this.queryTerm = query;
+        AutocompleteViewModel autocompleteViewModel = new AutocompleteViewModel(fragment);
+        autocompleteViewModel.fetchAutocompletePrediction(query, this.bounds);
+        Bundle bundle = new Bundle();
         if (fragment.getClass() == MapsFragment.class) {
-            MapsFragment mapsFragment = (MapsFragment) fragment;
-            autocompleteViewModel.fetchAutocompletePrediction(query, mapsFragment.getRectangularBounds());
+            MapsFragment mapsFragment = (MapsFragment) this.fragment;
+            bundle.putString(QUERY_TERM_MAPS, query);
+            mapsFragment.setArguments(bundle);
+        } else if (fragment.getClass() == RestaurantListFragment.class) {
+            RestaurantListFragment restaurantListFragment = (RestaurantListFragment) this.fragment;
+            bundle.putString(QUERY_TERM_LIST, query);
+            restaurantListFragment.setArguments(bundle);
         }
     }
 

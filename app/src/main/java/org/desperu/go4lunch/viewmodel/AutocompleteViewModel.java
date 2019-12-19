@@ -18,18 +18,18 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 import org.desperu.go4lunch.BuildConfig;
 import org.desperu.go4lunch.view.main.fragments.MapsFragment;
 import org.desperu.go4lunch.view.main.fragments.RestaurantListFragment;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class AutocompleteViewModel {
 
     private Context context;
     private Fragment fragment;
-    private List<String> placeIdList = new ArrayList<>();
+    private ArrayList<String> placeIdList = new ArrayList<>();
 
-    public AutocompleteViewModel(Context context, Fragment fragment) {
-        this.context = context;
+    public AutocompleteViewModel(@NotNull Fragment fragment) {
+        this.context = fragment.getContext();
         this.fragment = fragment;
         placeIdList.clear();
     }
@@ -40,7 +40,7 @@ public class AutocompleteViewModel {
      * @param bounds Bounds of current maps screen.
      */
     public void fetchAutocompletePrediction(String query, RectangularBounds bounds) {
-        // Initialize Place API.
+        // Initialize Place API. // TODO use serialize to don't initialize too much and create outOfMemory bug apk!!!!!!
         Places.initialize(context, BuildConfig.google_maps_api_key);
         PlacesClient placesClient = Places.createClient(context);
 
@@ -85,17 +85,17 @@ public class AutocompleteViewModel {
      * @param isRequestFinished Is request finished.
      */
     private void returnDataToFragment(String placeId, boolean isRequestFinished) {
+        if (!isRequestFinished) placeIdList.add(placeId);
         if (fragment.getClass() == MapsFragment.class && placeId != null) {
             MapsFragment mapsFragment = (MapsFragment) this.fragment;
             // Add each corresponding place at map;
-            mapsFragment.getRestaurantInfo(placeId);
+            mapsFragment.updateMap(placeIdList);
         }
         else if (fragment.getClass() == RestaurantListFragment.class) {
             if (isRequestFinished) {
                 RestaurantListFragment restaurantListFragment = (RestaurantListFragment) this.fragment;
-                restaurantListFragment.updateRecyclerView(placeIdList);
-            } else
-                placeIdList.add(placeId);
+                restaurantListFragment.updateRecyclerViewWithAutocomplete(placeIdList);
+            }
         }
     }
 }

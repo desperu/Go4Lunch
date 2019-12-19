@@ -35,9 +35,12 @@
     <!-- Your Lunch -->
     <string name="activity_main_message_no_booked_restaurant">You haven\'t booked restaurant !</string>
 
-    <!-- MAP FRAGMENT -->
+    <!-- MAPS FRAGMENT -->
     <string name="fragment_maps_popup_title_permission_location">This application need location permission.</string>
     <string name="fragment_maps_no_place_found">No Place found !</string>
+
+    <!-- RESTAURANT LIST FRAGMENT -->
+    <string name="fragment_restaurant_list_snackbar_refresh_nearby_restaurant">Only restaurant nearby your position !</string>
     
     <!-- RESTAURANT DETAIL -->
     <string name="activity_restaurant_detail_text_call">Call</string>

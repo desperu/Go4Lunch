@@ -103,7 +103,7 @@ public class NearbyPlaceViewModel {
         else if (fragment.getClass() == RestaurantListFragment.class) {
             if (isRequestFinished) {
                 RestaurantListFragment restaurantListFragment = (RestaurantListFragment) this.fragment;
-                restaurantListFragment.updateRecyclerView(placeList);
+                restaurantListFragment.updateRecyclerViewWithNearbyRestaurants(placeList);
             }
         }
     }
