@@ -33,15 +33,16 @@ public class RestaurantListFragment extends BaseFragment {
 
     // FOR DATA
     private ArrayList<String> placeIdList;
+    private RectangularBounds bounds;
     private RestaurantListAdapter adapter;
     private ArrayList<RestaurantInfoViewModel> restaurantList = new ArrayList<>();
 
     // CALLBACK
-    public interface RestaurantListFragmentListener {
+    public interface OnNewDataListener {
         void onNewPlaceIdList(ArrayList<String> placeIdList);
     }
 
-    private RestaurantListFragment.RestaurantListFragmentListener mCallback;
+    private OnNewDataListener mCallback;
 
     // --------------
     // BASE METHODS
@@ -54,6 +55,7 @@ public class RestaurantListFragment extends BaseFragment {
     protected void configureDesign() {
         this.createCallbackToParentActivity();
         this.setPlaceIdListFromBundle();
+        this.setBoundsFromBundle();
         this.configureRecyclerView();
         this.configureSwipeRefresh();
         this.updateRecyclerView();
@@ -74,8 +76,14 @@ public class RestaurantListFragment extends BaseFragment {
      * Set place Id list from bundle.
      */
     private void setPlaceIdListFromBundle() {
-        assert getArguments() != null;
-        this.placeIdList = getArguments().getStringArrayList(PLACE_ID_LIST_RESTAURANT_LIST);
+        this.placeIdList = getArguments() != null ? getArguments().getStringArrayList(PLACE_ID_LIST_RESTAURANT_LIST) : null;
+    }
+
+    /**
+     * Set rectangular bounds from bundle.
+     */
+    private void setBoundsFromBundle() {
+        this.bounds = getArguments() != null ? getArguments().getParcelable(BOUNDS): null;
     }
 
     /**
@@ -85,15 +93,6 @@ public class RestaurantListFragment extends BaseFragment {
     @Nullable
     private String getQueryTerm() {
         return getArguments() != null ? getArguments().getString(QUERY_TERM_LIST) : null;
-    }
-
-    /**
-     * Get rectangular bounds from bundle.
-     * @return Rectangular bounds.
-     */
-    @Nullable
-    private RectangularBounds getBounds() {
-        return getArguments() != null ? getArguments().getParcelable(BOUNDS): null;
     }
 
     /**
@@ -124,9 +123,9 @@ public class RestaurantListFragment extends BaseFragment {
      */
     private void createCallbackToParentActivity(){
         try {
-            mCallback = (RestaurantListFragmentListener) getActivity();
+            mCallback = (OnNewDataListener) getActivity();
         } catch (ClassCastException e) {
-            throw new ClassCastException(e.toString()+ " must implement RestaurantListFragmentListener");
+            throw new ClassCastException(e.toString()+ " must implement OnNewDataListener");
         }
     }
 
@@ -138,9 +137,9 @@ public class RestaurantListFragment extends BaseFragment {
      * Reload restaurant list.
      */
     private void reloadRestaurantList() {
-        if (getQueryTerm() != null && !getQueryTerm().isEmpty()) { // TODO a pb when refresh search
+        if (getQueryTerm() != null && !getQueryTerm().isEmpty()) {
             AutocompleteViewModel autocompleteViewModel = new AutocompleteViewModel(this);
-            autocompleteViewModel.fetchAutocompletePrediction(getQueryTerm(), this.getBounds());
+            autocompleteViewModel.fetchAutocompletePrediction(getQueryTerm(), this.bounds);
         } else {
             NearbyPlaceViewModel nearbyPlaceViewModel = new NearbyPlaceViewModel(this);
             nearbyPlaceViewModel.fetchNearbyRestaurant();

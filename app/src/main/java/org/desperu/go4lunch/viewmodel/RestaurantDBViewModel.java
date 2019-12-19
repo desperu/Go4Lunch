@@ -4,7 +4,7 @@ import androidx.databinding.ObservableField;
 
 import com.google.android.libraries.places.api.model.Place;
 
-import org.desperu.go4lunch.api.RestaurantHelper;
+import org.desperu.go4lunch.api.firestore.RestaurantHelper;
 import org.desperu.go4lunch.models.Restaurant;
 import org.desperu.go4lunch.view.main.fragments.MapsFragment;
 import org.desperu.go4lunch.view.restaurantdetail.RestaurantDetailActivity;

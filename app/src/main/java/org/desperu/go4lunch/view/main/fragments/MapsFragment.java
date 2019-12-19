@@ -64,14 +64,14 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
     private boolean isLocationEnabled = false;
 
     // CALLBACKS
-    public interface MapsFragmentDataOrClickListener {
+    public interface OnNewDataOrClickListener {
         void onClickedMarker(String id);
         void onNewPlaceIdList(ArrayList<String> placeIdList);
         void onNewBounds(RectangularBounds bounds);
         void onNewCameraPosition(CameraPosition cameraPosition);
     }
 
-    private MapsFragment.MapsFragmentDataOrClickListener mCallback;
+    private OnNewDataOrClickListener mCallback;
 
     // --------------
     // BASE METHODS
@@ -151,7 +151,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
     }
 
     @Override
-    public void onCameraIdle() { // TODO on test and set listener on map object
+    public void onCameraIdle() {
         AutocompleteViewModel autocompleteViewModel = new AutocompleteViewModel(this);
         autocompleteViewModel.fetchAutocompletePrediction(this.getQueryTerm(), getRectangularBounds());
         mCallback.onNewBounds(getRectangularBounds());
@@ -167,9 +167,9 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
      */
     private void createCallbackToParentActivity(){
         try {
-            mCallback = (MapsFragmentDataOrClickListener) getActivity();
+            mCallback = (OnNewDataOrClickListener) getActivity();
         } catch (ClassCastException e) {
-            throw new ClassCastException(e.toString()+ " must implement MapsFragmentDataOrClickListener");
+            throw new ClassCastException(e.toString()+ " must implement OnNewDataOrClickListener");
         }
     }
 

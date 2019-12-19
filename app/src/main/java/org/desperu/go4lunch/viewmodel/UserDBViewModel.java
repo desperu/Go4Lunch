@@ -10,8 +10,8 @@ import com.bumptech.glide.Glide;
 import com.google.android.libraries.places.api.model.Place;
 
 import org.desperu.go4lunch.R;
-import org.desperu.go4lunch.api.RestaurantHelper;
-import org.desperu.go4lunch.api.UserHelper;
+import org.desperu.go4lunch.api.firestore.RestaurantHelper;
+import org.desperu.go4lunch.api.firestore.UserHelper;
 import org.desperu.go4lunch.models.User;
 import org.desperu.go4lunch.view.main.fragments.WorkmatesFragment;
 import org.desperu.go4lunch.view.restaurantdetail.RestaurantDetailActivity;

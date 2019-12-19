@@ -6,7 +6,6 @@ import android.util.Log;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.AutocompletePrediction;
 import com.google.android.libraries.places.api.model.AutocompleteSessionToken;
 import com.google.android.libraries.places.api.model.Place;
@@ -15,7 +14,7 @@ import com.google.android.libraries.places.api.model.TypeFilter;
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
 
-import org.desperu.go4lunch.BuildConfig;
+import org.desperu.go4lunch.api.places.PlacesApi;
 import org.desperu.go4lunch.view.main.fragments.MapsFragment;
 import org.desperu.go4lunch.view.main.fragments.RestaurantListFragment;
 import org.jetbrains.annotations.NotNull;
@@ -40,9 +39,8 @@ public class AutocompleteViewModel {
      * @param bounds Bounds of current maps screen.
      */
     public void fetchAutocompletePrediction(String query, RectangularBounds bounds) {
-        // Initialize Place API. // TODO use serialize to don't initialize too much and create outOfMemory bug apk!!!!!!
-        Places.initialize(context, BuildConfig.google_maps_api_key);
-        PlacesClient placesClient = Places.createClient(context);
+        // Get Place API instance.
+        PlacesClient placesClient = PlacesApi.getPlaceClient(context);
 
         // Create a new token for the autocomplete session. Pass this to FindAutocompletePredictionsRequest,
         // and once again when the user makes a selection (for example when calling fetchPlace()).

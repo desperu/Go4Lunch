@@ -1,4 +1,4 @@
-package org.desperu.go4lunch.api;
+package org.desperu.go4lunch.api.firestore;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;

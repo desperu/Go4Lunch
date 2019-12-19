@@ -50,8 +50,8 @@ import static org.desperu.go4lunch.view.main.fragments.RestaurantListFragment.*;
 
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener,
-        BottomNavigationView.OnNavigationItemSelectedListener, MapsFragment.MapsFragmentDataOrClickListener,
-        RestaurantListFragment.RestaurantListFragmentListener {
+        BottomNavigationView.OnNavigationItemSelectedListener, OnNewDataOrClickListener,
+        OnNewDataListener {
 
     // FOR DESIGN
     @BindView(R.id.toolbar) Toolbar toolbar;

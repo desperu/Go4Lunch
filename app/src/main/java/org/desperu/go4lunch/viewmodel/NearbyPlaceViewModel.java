@@ -8,15 +8,14 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
-import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.model.PlaceLikelihood;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
 
-import org.desperu.go4lunch.BuildConfig;
 import org.desperu.go4lunch.R;
+import org.desperu.go4lunch.api.places.PlacesApi;
 import org.desperu.go4lunch.view.main.fragments.MapsFragment;
 import org.desperu.go4lunch.view.main.fragments.RestaurantListFragment;
 import org.jetbrains.annotations.NotNull;
@@ -44,17 +43,15 @@ public class NearbyPlaceViewModel {
     /**
      * Fetch nearby restaurants.
      */
-    public void fetchNearbyRestaurant() { // TODO get only NEARBY places not screen rect show...
-        // Initialize Place API.
-        Places.initialize(context, BuildConfig.google_maps_api_key);
-        PlacesClient placesClient = Places.createClient(context);
+    public void fetchNearbyRestaurant() {
+        // Get Place API instance.
+        PlacesClient placesClient = PlacesApi.getPlaceClient(context);
 
         // Specify the fields to return.
         List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME,
                 Place.Field.TYPES, Place.Field.LAT_LNG);
         FindCurrentPlaceRequest findRequest = FindCurrentPlaceRequest.builder(placeFields).build();
 
-        // TODO add rect for the limit search places
         Task<FindCurrentPlaceResponse> placeResponse = placesClient.findCurrentPlace(findRequest);
         placeResponse.addOnCompleteListener(task -> {
             if (task.isSuccessful()) {

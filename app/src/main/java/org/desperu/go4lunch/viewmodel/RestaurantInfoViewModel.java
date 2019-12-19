@@ -10,16 +10,16 @@ import androidx.databinding.BaseObservable;
 import androidx.databinding.ObservableField;
 
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.PhotoMetadata;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.FetchPhotoRequest;
 import com.google.android.libraries.places.api.net.FetchPlaceRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
 
-import org.desperu.go4lunch.BuildConfig;
 import org.desperu.go4lunch.R;
+import org.desperu.go4lunch.api.places.PlacesApi;
 import org.desperu.go4lunch.view.main.fragments.MapsFragment;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.List;
@@ -37,30 +37,21 @@ public class RestaurantInfoViewModel extends BaseObservable {
     public RestaurantInfoViewModel(Context context, String placeId) {
         this.context = context;
         this.placeId = placeId;
-        this.initializePlace();
+        this.placesClient = PlacesApi.getPlaceClient(this.context);
         this.getPlaceInfo();
     }
 
-    public RestaurantInfoViewModel(MapsFragment mapsFragment, String placeId) {
+    public RestaurantInfoViewModel(@NotNull MapsFragment mapsFragment, String placeId) {
         this.mapsFragment = mapsFragment;
         this.context = mapsFragment.getContext();
         this.placeId = placeId;
-        this.initializePlace();
+        this.placesClient = PlacesApi.getPlaceClient(this.context);
         this.getPlaceInfo();
     }
 
     // --------------
     // REQUEST
     // --------------
-
-    /**
-     * Initialize google place api.
-     */
-    private void initializePlace() {
-        // Initialize Place API.
-        Places.initialize(context, BuildConfig.google_maps_api_key);
-        this.placesClient = Places.createClient(context);
-    }
 
     public void restartRequest() {
         this.getPlaceInfo();
