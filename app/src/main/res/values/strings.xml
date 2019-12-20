@@ -51,9 +51,12 @@
     <string name="activity_restaurant_detail_restaurant_booked">Restaurant booked !</string>
     <string name="activity_restaurant_detail_restaurant_unbooked">Restaurant unbooked !</string>
     <string name="activity_restaurant_detail_recycler_text_joining">%1$s is joining !</string>
+    <string name="activity_restaurant_detail_snackbar_add_like">Like add for restaurant !</string>
+    <string name="activity_restaurant_detail_snackbar_already_like">You already like this restaurant !\nClick again to unlike !</string>
+    <string name="activity_restaurant_detail_snackbar_remove_like">Restaurant unlike !</string>
 
     <!-- VIEW MODEL -->
-    <string name="view_model_toast_request_failure">"Google Place time out ..."</string>
+    <string name="view_model_toast_request_failure">Google Place time out …</string>
 
     <!-- FACEBOOK PURPOSE -->
     <string name="facebook_application_id" translatable="false">2475450979175039</string>

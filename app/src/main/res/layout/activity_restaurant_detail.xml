@@ -8,6 +8,9 @@
         <variable
             name="restaurantInfoViewModel"
             type="org.desperu.go4lunch.viewmodel.RestaurantInfoViewModel" />
+        <variable
+            name="restaurantDBViewModel"
+            type="org.desperu.go4lunch.viewmodel.RestaurantDBViewModel" />
     </data>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -62,7 +65,8 @@
                         android:textSize="@dimen/activity_restaurant_detail_text_restaurant_name_text_size"
                         android:textColor="@android:color/white"
                         android:maxLines="1"
-                        android:maxLength="25"/>
+                        android:maxLength="25"
+                        android:ellipsize="end"/>
 
                     <ImageView
                         android:id="@+id/activity_restaurant_detail_image_restaurant_stars_1"
@@ -73,7 +77,7 @@
                         android:contentDescription="@null"
                         app:srcCompat="@drawable/ic_baseline_star_black_24"
                         android:tint="@color/colorStar"
-                        android:visibility="gone"/>
+                        android:visibility="@{(restaurantInfoViewModel.place.rating + restaurantDBViewModel.likeUsersNumber) > 1.5 ? 0 : 8}"/>
 
                     <ImageView
                         android:id="@+id/activity_restaurant_detail_image_restaurant_stars_2"
@@ -84,7 +88,7 @@
                         android:contentDescription="@null"
                         app:srcCompat="@drawable/ic_baseline_star_black_24"
                         android:tint="@color/colorStar"
-                        android:visibility="gone"/>
+                        android:visibility="@{(restaurantInfoViewModel.place.rating + restaurantDBViewModel.likeUsersNumber) > 3 ? 0 : 8}"/>
 
                     <ImageView
                         android:id="@+id/activity_restaurant_detail_image_restaurant_stars_3"
@@ -95,7 +99,7 @@
                         android:contentDescription="@null"
                         app:srcCompat="@drawable/ic_baseline_star_black_24"
                         android:tint="@color/colorStar"
-                        android:visibility="gone"/>
+                        android:visibility="@{(restaurantInfoViewModel.place.rating + restaurantDBViewModel.likeUsersNumber) > 4.5 ? 0 : 8}"/>
 
                     <TextView
                         android:id="@+id/activity_restaurant_detail_restaurant_type_and_address"
@@ -104,7 +108,9 @@
                         android:layout_below="@id/activity_restaurant_detail_text_view_restaurant_name"
                         android:layout_marginTop="@dimen/activity_restaurant_detail_text_restaurant_address_margin_top"
                         android:text="@{String.valueOf(restaurantInfoViewModel.place.address)}"
-                        android:textColor="@android:color/white"/>
+                        android:textColor="@android:color/white"
+                        android:maxLines="1"
+                        android:ellipsize="end"/>
 
                 </RelativeLayout>
 

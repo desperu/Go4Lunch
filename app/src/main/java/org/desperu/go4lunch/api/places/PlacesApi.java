@@ -16,15 +16,15 @@ public class PlacesApi {
      * @param context Context from this method is called.
      * @return PlaceClient instance.
      */
-    public static PlacesClient getPlaceClient(Context context) {
-        if (placesClient == null) initializePlace(context);
+    public static PlacesClient getPlacesClient(Context context) {
+        if (placesClient == null) initializePlaces(context);
         return placesClient;
     }
 
     /**
      * Initialize google place api.
      */
-    private static void initializePlace(Context context) {
+    private static void initializePlaces(Context context) {
         // Initialize Place API.
         Places.initialize(context, BuildConfig.google_maps_api_key);
         placesClient = Places.createClient(context);

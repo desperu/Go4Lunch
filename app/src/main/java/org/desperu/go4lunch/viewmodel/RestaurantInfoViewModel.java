@@ -37,7 +37,7 @@ public class RestaurantInfoViewModel extends BaseObservable {
     public RestaurantInfoViewModel(Context context, String placeId) {
         this.context = context;
         this.placeId = placeId;
-        this.placesClient = PlacesApi.getPlaceClient(this.context);
+        this.placesClient = PlacesApi.getPlacesClient(this.context);
         this.getPlaceInfo();
     }
 
@@ -45,7 +45,7 @@ public class RestaurantInfoViewModel extends BaseObservable {
         this.mapsFragment = mapsFragment;
         this.context = mapsFragment.getContext();
         this.placeId = placeId;
-        this.placesClient = PlacesApi.getPlaceClient(this.context);
+        this.placesClient = PlacesApi.getPlacesClient(this.context);
         this.getPlaceInfo();
     }
 
@@ -64,7 +64,7 @@ public class RestaurantInfoViewModel extends BaseObservable {
         // Specify the fields to return.
         List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.TYPES,
                 Place.Field.LAT_LNG, Place.Field.OPENING_HOURS, Place.Field.WEBSITE_URI, Place.Field.PHONE_NUMBER,
-                Place.Field.RATING, Place.Field.PHOTO_METADATAS, Place.Field.ADDRESS);
+                Place.Field.RATING, Place.Field.PHOTO_METADATAS, Place.Field.ADDRESS, Place.Field.ADDRESS_COMPONENTS);
 
         // Construct a request object, passing the place ID and fields array.
         FetchPlaceRequest request = FetchPlaceRequest.newInstance(placeId, placeFields);
@@ -103,9 +103,8 @@ public class RestaurantInfoViewModel extends BaseObservable {
                     Toast.makeText(context, R.string.view_model_toast_request_failure, Toast.LENGTH_SHORT).show();
                 }
             });
-            if (this.picture.get() == null)
-                this.picture.set(context.getResources().getDrawable(R.drawable.im_no_image_300dp));
-        }
+        } else
+            this.picture.set(context.getResources().getDrawable(R.drawable.im_no_image_300dp));
     }
 
     // --- GETTERS ---

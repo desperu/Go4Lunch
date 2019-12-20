@@ -11,16 +11,19 @@ public class Restaurant {
     private String openHours;
     private String restaurantType;
     private Double stars;
+    private List<String> likeUsers;
 
     public Restaurant() { }
 
-    public Restaurant(String name, String restaurantId, List<String> bookedUsersId, String openHours, String restaurantType, Double stars) {
+    public Restaurant(String name, String restaurantId, List<String> bookedUsersId,
+                      String openHours, String restaurantType, Double stars, List<String> likeUsers) {
         this.name = name;
         this.restaurantId = restaurantId;
         this.bookedUsersId = bookedUsersId;
         this.openHours = openHours;
         this.restaurantType = restaurantType;
         this.stars = stars;
+        this.likeUsers = likeUsers;
     }
 
     // --- GETTERS ---
@@ -30,6 +33,7 @@ public class Restaurant {
     public String getOpenHours() { return openHours; }
     public String getRestaurantType() { return restaurantType; }
     public Double getStars() { return stars; }
+    public List<String> getUsersLike() { return likeUsers; }
 
     // --- SETTERS ---
     public void setName(String name) { this.name = name; }
@@ -38,4 +42,5 @@ public class Restaurant {
     public void setOpenHours(String openHours) { this.openHours = openHours; }
     public void setRestaurantType(String restaurantType) { this.restaurantType = restaurantType; }
     public void setStars(Double stars) { this.stars = stars; }
+    public void setLikeUsers(List<String> likeUsers) { this.likeUsers = likeUsers; }
 }

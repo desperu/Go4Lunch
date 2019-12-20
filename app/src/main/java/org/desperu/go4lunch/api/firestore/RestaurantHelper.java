@@ -15,6 +15,7 @@ public class RestaurantHelper {
 
     private static final String COLLECTION_NAME = "restaurants";
     private static final String FIELD_BOOKED_USERS = "bookedUsersId";
+    private static final String FIELD_LIKE_USERS = "likeUsers";
 
     // --- COLLECTION REFERENCE ---
 
@@ -27,8 +28,8 @@ public class RestaurantHelper {
 
     @NotNull
     public static Task<Void> createRestaurant(String restaurantId, String name, List<String> bookedUsersId,
-                                              String openHours, String restaurantType, Double stars) {
-        Restaurant restaurantToCreate = new Restaurant(name, restaurantId, bookedUsersId, openHours,restaurantType, stars);
+                                              String openHours, String restaurantType, Double stars, List<String> likeUsers) {
+        Restaurant restaurantToCreate = new Restaurant(name, restaurantId, bookedUsersId, openHours,restaurantType, stars, likeUsers);
         return RestaurantHelper.getRestaurantCollection().document(restaurantId).set(restaurantToCreate);
     }
 
@@ -46,11 +47,21 @@ public class RestaurantHelper {
         return RestaurantHelper.getRestaurantCollection().document(restaurantId).update(FIELD_BOOKED_USERS, FieldValue.arrayUnion(usersId));
     }
 
+    @NotNull
+    public static Task<Void> updateLikeUsers(String restaurantId, String userId) {
+        return RestaurantHelper.getRestaurantCollection().document(restaurantId).update(FIELD_LIKE_USERS, FieldValue.arrayUnion(userId));
+    }
+
     // --- REMOVE ---
 
     @NotNull
     public static Task<Void> removeBookedUser(String restaurantId, String userId) {
         return RestaurantHelper.getRestaurantCollection().document(restaurantId).update(FIELD_BOOKED_USERS, FieldValue.arrayRemove(userId));
+    }
+
+    @NotNull
+    public static Task<Void> removeLikeUser(String restaurantId, String userId) {
+        return RestaurantHelper.getRestaurantCollection().document(restaurantId).update(FIELD_LIKE_USERS, FieldValue.arrayRemove(userId));
     }
 
     // --- DELETE ---

@@ -12,6 +12,7 @@ import com.google.android.libraries.places.api.model.Place;
 import org.desperu.go4lunch.R;
 import org.desperu.go4lunch.api.firestore.RestaurantHelper;
 import org.desperu.go4lunch.api.firestore.UserHelper;
+import org.desperu.go4lunch.models.Restaurant;
 import org.desperu.go4lunch.models.User;
 import org.desperu.go4lunch.view.main.fragments.WorkmatesFragment;
 import org.desperu.go4lunch.view.restaurantdetail.RestaurantDetailActivity;
@@ -75,7 +76,7 @@ public class UserDBViewModel {
      * @param newBookedRestaurant New booked restaurant id.
      * @param activity Instance of RestaurantDetailActivity.
      */
-    public void updateBookedRestaurant(@NotNull RestaurantDetailActivity activity, Place newBookedRestaurant) {
+    public void updateBookedRestaurant(@NotNull RestaurantDetailActivity activity, Place newBookedRestaurant, Restaurant restaurant) {
         UserHelper.getUser(uid).addOnSuccessListener(documentSnapshot -> {
             // Get old booked restaurant before update.
             String olBookedRestaurant = documentSnapshot.toObject(User.class).getBookedRestaurantId();
@@ -87,21 +88,22 @@ public class UserDBViewModel {
             if (olBookedRestaurant != null && olBookedRestaurant.equals(newBookedRestaurant.getId())) {
                 // If clicked when already booked, remove booked restaurant.
                 UserHelper.updateBookedRestaurant(uid, null); // TODO modify floating button
-                activity.handleResponseAfterBooking(UNBOOKED);
+                activity.handleResponseAfterAction(UNBOOKED);
             } else {
                 // Update user's bookedRestaurantId in firestore.
                 UserHelper.updateBookedRestaurant(uid, newBookedRestaurant.getId());
 
                 // Update restaurant's bookedUsersId in firestore.
-                List<String> userList = new ArrayList<>();
-
-                RestaurantHelper.createRestaurant(newBookedRestaurant.getId(), newBookedRestaurant.getName(), userList,
-                        newBookedRestaurant.getOpeningHours().toString(), newBookedRestaurant.getTypes().toString(), // TODO can be null object...
-                        newBookedRestaurant.getRating());
+                if (restaurant == null)
+                    RestaurantHelper.createRestaurant(newBookedRestaurant.getId(), newBookedRestaurant.getName(), new ArrayList<>(),
+//                        newBookedRestaurant.getOpeningHours().toString(),
+                        newBookedRestaurant.getAddressComponents().toString(),
+                        newBookedRestaurant.getTypes().toString(), // TODO can be null object...
+                        newBookedRestaurant.getRating(), new ArrayList<>());
                 RestaurantHelper.updateBookedUsers(newBookedRestaurant.getId(), uid);
-                activity.handleResponseAfterBooking(BOOKED);
+                activity.handleResponseAfterAction(BOOKED);
             }
-        }).addOnFailureListener(e -> activity.handleResponseAfterBooking(ERROR));
+        }).addOnFailureListener(e -> activity.handleResponseAfterAction(ERROR));
     }
 
     // --- GETTERS ---

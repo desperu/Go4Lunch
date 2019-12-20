@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class BaseAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
+    @NotNull
     public MyViewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         ViewDataBinding binding = DataBindingUtil.inflate(
@@ -20,8 +21,7 @@ public abstract class BaseAdapter extends RecyclerView.Adapter<MyViewHolder> {
     }
 
     public void onBindViewHolder(@NotNull MyViewHolder holder, int position) {
-        Object obj = getObjForPosition(position);
-        holder.bind(obj);
+        holder.bind(getObjForPosition(position));
     }
 
     @Override

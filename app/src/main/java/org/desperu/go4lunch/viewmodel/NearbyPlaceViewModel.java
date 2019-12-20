@@ -45,7 +45,7 @@ public class NearbyPlaceViewModel {
      */
     public void fetchNearbyRestaurant() {
         // Get Place API instance.
-        PlacesClient placesClient = PlacesApi.getPlaceClient(context);
+        PlacesClient placesClient = PlacesApi.getPlacesClient(context);
 
         // Specify the fields to return.
         List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME,

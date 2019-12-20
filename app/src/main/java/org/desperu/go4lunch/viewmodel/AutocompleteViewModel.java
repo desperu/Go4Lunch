@@ -40,7 +40,7 @@ public class AutocompleteViewModel {
      */
     public void fetchAutocompletePrediction(String query, RectangularBounds bounds) {
         // Get Place API instance.
-        PlacesClient placesClient = PlacesApi.getPlaceClient(context);
+        PlacesClient placesClient = PlacesApi.getPlacesClient(context);
 
         // Create a new token for the autocomplete session. Pass this to FindAutocompletePredictionsRequest,
         // and once again when the user makes a selection (for example when calling fetchPlace()).
@@ -95,5 +95,5 @@ public class AutocompleteViewModel {
                 restaurantListFragment.updateRecyclerViewWithAutocomplete(placeIdList);
             }
         }
-    }
+    } // TODO use interface !!!!!
 }
