@@ -48,10 +48,10 @@ public class RestaurantDetailActivity extends BaseActivity {
 
     private RestaurantInfoViewModel restaurantInfoViewModel;
     private RestaurantDBViewModel restaurantDBViewModel;
-    private Place currentRestaurant;
+    private Place restaurantInfo;
     private RestaurantDetailAdapter adapter;
     private List<UserDBViewModel> joiningUsers = new ArrayList<>();
-    private Restaurant restaurant;
+    private Restaurant restaurantDB;
     private boolean isCallPermissionEnabled = false;
     private boolean isAlreadyClicked = false;
 
@@ -68,7 +68,7 @@ public class RestaurantDetailActivity extends BaseActivity {
         this.configureSwipeRefreshLayout();
         this.drawBelowStatusBar();
         this.configureRecyclerView();
-        this.getRestaurantBookedUsers();
+        this.observeRestaurantData();
         this.checkCallPhonePermissionsStatus();
     }
 
@@ -92,23 +92,14 @@ public class RestaurantDetailActivity extends BaseActivity {
     private String getIdFromIntentData() { return getIntent().getStringExtra(RESTAURANT_ID); }
 
     /**
-     * Get restaurant's bookedUsers from firestore.
-     */
-    private void getRestaurantBookedUsers() {
-//        if (restaurantDBViewModel == null)
-            restaurantDBViewModel = new RestaurantDBViewModel(this.getIdFromIntentData());
-        restaurantDBViewModel.fetchRestaurant();
-        restaurantDBViewModel.getRestaurant(this);
-    }
-
-    /**
      * Configure data binding.
      */
     private void configureDataBinding() {
         ActivityRestaurantDetailBinding restaurantDetailBinding = DataBindingUtil.setContentView(this, this.getActivityLayout());
         restaurantInfoViewModel = new RestaurantInfoViewModel(this, this.getIdFromIntentData());
         restaurantDetailBinding.setRestaurantInfoViewModel(restaurantInfoViewModel);
-        if (restaurantDBViewModel == null) restaurantDBViewModel = new RestaurantDBViewModel(this.getIdFromIntentData());
+
+        restaurantDBViewModel = new RestaurantDBViewModel(this.getIdFromIntentData());
         restaurantDBViewModel.fetchRestaurant();
         restaurantDetailBinding.setRestaurantDBViewModel(restaurantDBViewModel);
         ButterKnife.bind(this);
@@ -133,7 +124,7 @@ public class RestaurantDetailActivity extends BaseActivity {
         swipeRefreshLayout.setOnRefreshListener(() -> {
             restaurantInfoViewModel.restartRequest();
             restaurantDBViewModel.fetchRestaurant();
-            this.getRestaurantBookedUsers();
+            this.reloadRestaurantData();
         });
     }
 
@@ -165,23 +156,23 @@ public class RestaurantDetailActivity extends BaseActivity {
 
     @OnClick(R.id.activity_restaurant_detail_button_booked)
     protected void onClickBookRestaurant() {
-        if (currentRestaurant == null) currentRestaurant = restaurantInfoViewModel.getPlace().get();
+        if (restaurantInfo == null) restaurantInfo = restaurantInfoViewModel.getPlace().get();
 
-        if (currentRestaurant != null && currentRestaurant.getId() != null) {
+        if (restaurantInfo != null && restaurantInfo.getId() != null) {
             UserDBViewModel userDBViewModel = new UserDBViewModel(this, this.getCurrentUser().getUid());
-            userDBViewModel.updateBookedRestaurant(this, currentRestaurant, restaurant);
+            userDBViewModel.updateBookedRestaurant(this, restaurantInfo, restaurantDB);
             // Wait before reload actualised data from firestore.
-            new Handler().postDelayed(this::getRestaurantBookedUsers, 1500);
+            new Handler().postDelayed(this::reloadRestaurantData, 1500);
         } else this.handleResponseAfterAction(NO_DATA);
     }
 
     @OnClick(R.id.activity_restaurant_detail_call_button)
     protected void onClickCallRestaurant() {
-        if (currentRestaurant == null) currentRestaurant = restaurantInfoViewModel.getPlace().get();
+        if (restaurantInfo == null) restaurantInfo = restaurantInfoViewModel.getPlace().get();
 
-        if (currentRestaurant != null)
+        if (restaurantInfo != null)
             if (isCallPermissionEnabled)
-                this.startCallIntent(currentRestaurant.getPhoneNumber());
+                this.startCallIntent(restaurantInfo.getPhoneNumber());
             else this.checkCallPhonePermissionsStatus();
         else this.handleResponseAfterAction(NO_DATA);
     }
@@ -189,26 +180,28 @@ public class RestaurantDetailActivity extends BaseActivity {
     @OnClick(R.id.activity_restaurant_detail_like_button)
     protected void onClickLikeRestaurant() {
         boolean isAlreadyLike = false;
-        if (currentRestaurant == null) currentRestaurant = restaurantInfoViewModel.getPlace().get();
+        if (restaurantInfo == null) restaurantInfo = restaurantInfoViewModel.getPlace().get();
 
-        if (currentRestaurant != null) {
+        if (restaurantInfo != null) {
             // Check if current user already like restaurant
-            for (String userId : restaurant.getUsersLike())
-                isAlreadyLike = userId.equals(this.getCurrentUser().getUid());
+            if (restaurantDB != null && restaurantDB.getLikeUsers() != null) {
+                for (String userId : restaurantDB.getLikeUsers())
+                    isAlreadyLike = userId.equals(this.getCurrentUser().getUid());
+            }
 
             if (!isAlreadyLike) {
                 // Like restaurant
-                restaurantDBViewModel.updateRestaurantUsersLike(currentRestaurant, this.getCurrentUser().getUid());
+                restaurantDBViewModel.updateRestaurantLikeUsers(restaurantInfo, this.getCurrentUser().getUid());
                 this.showSnackbar(getString(R.string.activity_restaurant_detail_snackbar_add_like));
-                this.getRestaurantBookedUsers();
+                this.reloadRestaurantData();
             } else {
                 if (isAlreadyClicked) {
                     // Unlike restaurant
-                    restaurantDBViewModel.removeRestaurantUserLike(this.getCurrentUser().getUid());
+                    restaurantDBViewModel.removeRestaurantLikeUser(this.getCurrentUser().getUid());
                     this.showSnackbar(getString(R.string.activity_restaurant_detail_snackbar_remove_like));
-                    this.getRestaurantBookedUsers();
+                    this.reloadRestaurantData();
                 } else {
-                    // Show message for two click
+                    // Show message for two click to unlike
                     Toast.makeText(this, R.string.activity_restaurant_detail_snackbar_already_like, Toast.LENGTH_SHORT).show();
                     new Handler().postDelayed(() -> isAlreadyClicked = false, 2000);
                     this.isAlreadyClicked = true;
@@ -219,10 +212,10 @@ public class RestaurantDetailActivity extends BaseActivity {
 
     @OnClick(R.id.activity_restaurant_detail_website_button)
     protected void onClickWebsiteRestaurant() {
-        if (currentRestaurant == null) currentRestaurant = restaurantInfoViewModel.getPlace().get();
+        if (restaurantInfo == null) restaurantInfo = restaurantInfoViewModel.getPlace().get();
 
-        if (currentRestaurant != null)
-            this.showWebsite(currentRestaurant.getWebsiteUri().toString());
+        if (restaurantInfo != null)
+            this.showWebsite(restaurantInfo.getWebsiteUri().toString());
         else this.handleResponseAfterAction(NO_DATA);
     }
 
@@ -248,6 +241,27 @@ public class RestaurantDetailActivity extends BaseActivity {
     }
 
     // --------------
+    // REQUEST & DATA
+    // --------------
+
+    /**
+     * Reload restaurant data from firestore.
+     */
+    private void reloadRestaurantData() {
+        restaurantDBViewModel.fetchRestaurant();
+    }
+
+    /**
+     * Observe restaurant data, and update data and ui when received data.
+     */
+    private void observeRestaurantData() {
+        restaurantDBViewModel.getRestaurantLiveData().observe(this, restaurant -> {
+            this.restaurantDB = restaurant;
+            this.updateRecyclerView(restaurant);
+        });
+    }
+
+    // --------------
     // UI
     // --------------
 
@@ -257,7 +271,6 @@ public class RestaurantDetailActivity extends BaseActivity {
      */
     public void updateRecyclerView(Restaurant restaurant) {
         joiningUsers.clear();
-        this.restaurant = restaurant;
         if (restaurant != null) {
             for (String user : restaurant.getBookedUsersId()) {
                 UserDBViewModel userDBViewModel = new UserDBViewModel(this, user);

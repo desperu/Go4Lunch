@@ -2,25 +2,27 @@ package org.desperu.go4lunch.viewmodel;
 
 import androidx.databinding.ObservableDouble;
 import androidx.databinding.ObservableField;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.libraries.places.api.model.Place;
 
 import org.desperu.go4lunch.api.firestore.RestaurantHelper;
 import org.desperu.go4lunch.models.Restaurant;
-import org.desperu.go4lunch.view.main.fragments.MapsFragment;
-import org.desperu.go4lunch.view.restaurantdetail.RestaurantDetailActivity;
 
 import java.util.ArrayList;
 
 public class RestaurantDBViewModel {
 
+    // FOR DATA
     private String restaurantId;
     private ObservableField<Restaurant> restaurant = new ObservableField<>();
     private ObservableDouble likeUsersNumber = new ObservableDouble();
+// TODO to clean if good
+    private MutableLiveData<Restaurant> restaurantLiveData = new MutableLiveData<>();
 
-    public RestaurantDBViewModel(String restaurantId) {
-        this.restaurantId = restaurantId;
-    }
+    // CONSTRUCTOR
+    public RestaurantDBViewModel(String restaurantId) { this.restaurantId = restaurantId; }
 
     // --------------
     // REQUEST
@@ -32,27 +34,10 @@ public class RestaurantDBViewModel {
     public void fetchRestaurant() {
         RestaurantHelper.getRestaurant(restaurantId).addOnSuccessListener(documentSnapshot -> {
             this.restaurant.set(documentSnapshot.toObject(Restaurant.class));
-            if (restaurant.get() != null && restaurant.get().getUsersLike() != null)
-                this.likeUsersNumber.set(restaurant.get().getUsersLike().size() / (double) 10);
+            this.restaurantLiveData.postValue(documentSnapshot.toObject(Restaurant.class)); // TODO use ObservableField or MutableLiveData
+            if (restaurant.get() != null && restaurant.get().getLikeUsers() != null)
+                this.likeUsersNumber.set(restaurant.get().getLikeUsers().size() / (double) 10);
         });
-    }
-
-    /**
-     * Get restaurants booked users from restaurant detail activity.
-     */
-    public void getRestaurant(RestaurantDetailActivity activity) {
-        RestaurantHelper.getRestaurant(restaurantId).addOnSuccessListener(documentSnapshot ->
-                activity.updateRecyclerView(documentSnapshot.toObject(Restaurant.class)));
-    }
-
-    /**
-     * Get restaurants booked users from maps fragment.
-     */
-    public void getRestaurant(MapsFragment fragment, Place place) {
-        RestaurantHelper.getRestaurant(restaurantId)
-                .addOnSuccessListener(documentSnapshot ->
-                fragment.addMarker(documentSnapshot.toObject(Restaurant.class), place))
-                .addOnFailureListener(e -> fragment.addMarker(null, place));
     }
 
     /**
@@ -60,7 +45,7 @@ public class RestaurantDBViewModel {
      * @param place Restaurant place object.
      * @param userId Id of user.
      */
-    public void updateRestaurantUsersLike(Place place, String userId) {
+    public void updateRestaurantLikeUsers(Place place, String userId) {
         if (restaurant.get() == null)
             RestaurantHelper.createRestaurant(place.getId(), place.getName(), new ArrayList<>(),
                     place.getOpeningHours().toString(), place.getTypes().toString(), place.getRating(), new ArrayList<>());
@@ -71,7 +56,7 @@ public class RestaurantDBViewModel {
      * Remove restaurant like user.
      * @param userId User id.
      */
-    public void removeRestaurantUserLike(String userId) {
+    public void removeRestaurantLikeUser(String userId) {
         RestaurantHelper.removeLikeUser(restaurantId, userId);
     }
 
@@ -79,4 +64,6 @@ public class RestaurantDBViewModel {
     public ObservableField<Restaurant> getRestaurant() { return this.restaurant; }
 
     public ObservableDouble getLikeUsersNumber() { return this.likeUsersNumber; }
+
+    public LiveData<Restaurant> getRestaurantLiveData() { return this.restaurantLiveData; }
 }

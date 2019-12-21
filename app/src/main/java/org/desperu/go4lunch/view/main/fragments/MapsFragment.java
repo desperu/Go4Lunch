@@ -40,6 +40,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -66,7 +67,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
     // CALLBACKS
     public interface OnNewDataOrClickListener {
         void onClickedMarker(String id);
-        void onNewPlaceIdList(ArrayList<String> placeIdList);
+        void onNewPlacesIdList(ArrayList<String> placesIdList);
         void onNewBounds(RectangularBounds bounds);
         void onNewCameraPosition(CameraPosition cameraPosition);
     }
@@ -122,6 +123,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
         mMap.setOnMarkerClickListener(this);
 
         // Set map style
+        assert getContext() != null;
         mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.map_style));
 
         // Restore map state, or update map with restaurant
@@ -209,13 +211,16 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
      */
     @SuppressLint("MissingPermission")
     private void setMapWithLocation() {
+        assert getContext() != null;
         LocationManager lm = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+        assert lm != null;
         Location myLocation = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
         if (myLocation == null) {
             Criteria criteria = new Criteria();
             criteria.setAccuracy(Criteria.ACCURACY_COARSE);
             String provider = lm.getBestProvider(criteria, true);
+            assert provider != null;
             myLocation = lm.getLastKnownLocation(provider);
         }
 
@@ -229,6 +234,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
      * Check if Coarse Location and Fine Location are granted, if not, ask for them.
      */
     private void checkLocationPermissionsStatus() {
+        assert getContext() != null;
         if (!EasyPermissions.hasPermissions(getContext(), PERMS))
             EasyPermissions.requestPermissions(this, getString(R.string.fragment_maps_popup_title_permission_location),
                     PERM_COARSE_LOCATION, PERMS);
@@ -262,20 +268,12 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
         return getArguments() != null ? getArguments().getParcelable(CAMERA_POSITION) : null;
     }
 
-    /**
-     * Set place list when request finish.
-     * @param placeIdList Found place id list.
-     */
-    public void setPlaceList(ArrayList<String> placeIdList) {
-        mCallback.onNewPlaceIdList(placeIdList);
-    }
-
     // --------------
     // ACTION
     // --------------
 
     @OnClick(R.id.fragment_maps_floating_button_location)
-    protected void myLocationButtonListener() {
+    void myLocationButtonListener() {
         mMap.setMyLocationEnabled(isLocationEnabled);
         if (isLocationEnabled) this.setMapWithLocation();
         else this.checkLocationPermissionsStatus();
@@ -287,12 +285,24 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
     // --------------
 
     /**
-     * Update map with nearby restaurants.
+     * Get nearby restaurants with place api.
      */
     private void getNearbyRestaurant() {
         if (mMap != null) mMap.clear();
-        NearbyPlaceViewModel nearbyPlaceViewModel = new NearbyPlaceViewModel(this);
+        // Start request
+        assert getActivity() != null;
+        NearbyPlaceViewModel nearbyPlaceViewModel = new NearbyPlaceViewModel(getActivity().getApplication());
         nearbyPlaceViewModel.fetchNearbyRestaurant();
+
+        // Get request result
+        nearbyPlaceViewModel.getPlacesList().observe(this, placesList -> {
+            ArrayList<String> placesIdList = new ArrayList<>();
+            for (Place place : placesList) {
+                this.getRestaurantBookedUsers(place);
+                placesIdList.add(place.getId());
+            }
+            mCallback.onNewPlacesIdList(placesIdList);
+        });
     }
 
     /**
@@ -300,8 +310,12 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
      * @param place restaurant place object.
      */
     public void getRestaurantBookedUsers(@NotNull Place place) {
+        // Start request
         RestaurantDBViewModel restaurantDBViewModel = new RestaurantDBViewModel(place.getId());
-        restaurantDBViewModel.getRestaurant(this, place);
+        restaurantDBViewModel.fetchRestaurant();
+        // Get request result
+        restaurantDBViewModel.getRestaurantLiveData().observe(this, restaurant ->
+                this.addMarker(restaurant, place));
     }
 
     /**
@@ -321,15 +335,18 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
      * @param restaurant Restaurant object with data from firestore.
      * @param place Current place object found.
      */
-    public void addMarker(Restaurant restaurant, @NotNull Place place) {
-        mMap.addMarker(new MarkerOptions().position(place.getLatLng()).title(place.getName())
-                .icon(this.switchMarkerColors(this.isBookedRestaurant(restaurant))).snippet(place.getId()));
+    private void addMarker(Restaurant restaurant, @NotNull Place place) {
+        mMap.addMarker(new MarkerOptions()
+                .position(Objects.requireNonNull(place.getLatLng()))
+                .title(place.getName())
+                .icon(this.switchMarkerColors(this.isBookedRestaurant(restaurant)))
+                .snippet(place.getId()));
     }
 
-    public void updateMap(@NotNull ArrayList<String> placeIdList) {
+    public void updateMap(@NotNull ArrayList<String> placesIdList) {
         mMap.clear();
-        mCallback.onNewPlaceIdList(placeIdList);
-        for (String restaurantId : placeIdList)
+        mCallback.onNewPlacesIdList(placesIdList);
+        for (String restaurantId : placesIdList)
             this.getRestaurantInfo(restaurantId);
     }
 
@@ -380,18 +397,16 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
      */
     @NotNull
     private BitmapDescriptor switchMarkerColors(boolean isBooked) {
-        if (getContext() != null) {
-            if (isBooked)
-                return BitmapDescriptorFactory.fromBitmap(MarkerUtils.createBitmapFromView(getContext(),
-                        R.layout.custom_marker_layout, getResources().getColor(R.color.colorMarkerBookedFont),
-                        getResources().getColor(R.color.colorMarkerBookedCutlery)));
+        assert getContext() != null;
+        if (isBooked)
+            return BitmapDescriptorFactory.fromBitmap(MarkerUtils.createBitmapFromView(getContext(),
+                    R.layout.custom_marker_layout, getResources().getColor(R.color.colorMarkerBookedFont),
+                    getResources().getColor(R.color.colorMarkerBookedCutlery)));
 
-            else
-                return BitmapDescriptorFactory.fromBitmap(MarkerUtils.createBitmapFromView(getContext(),
-                        R.layout.custom_marker_layout, getResources().getColor(R.color.colorMarkerNotBookedFont),
-                        getResources().getColor(R.color.colorMarkerNotBookedCutlery)));
-        }
-        return BitmapDescriptorFactory.defaultMarker();
+        else
+            return BitmapDescriptorFactory.fromBitmap(MarkerUtils.createBitmapFromView(getContext(),
+                    R.layout.custom_marker_layout, getResources().getColor(R.color.colorMarkerNotBookedFont),
+                    getResources().getColor(R.color.colorMarkerNotBookedCutlery)));
     }
 
     // --------------

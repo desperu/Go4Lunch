@@ -279,7 +279,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     public void onClickedMarker(String id) { this.showRestaurantDetailActivity(id); }
 
     @Override
-    public void onNewPlaceIdList(ArrayList<String> placeList) { this.placeList = placeList; }
+    public void onNewPlacesIdList(ArrayList<String> placeList) { this.placeList = placeList; }
 
     @Override
     public void onNewBounds(RectangularBounds bounds) { this.bounds = bounds; }

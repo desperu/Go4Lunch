@@ -33,7 +33,7 @@ public class Restaurant {
     public String getOpenHours() { return openHours; }
     public String getRestaurantType() { return restaurantType; }
     public Double getStars() { return stars; }
-    public List<String> getUsersLike() { return likeUsers; }
+    public List<String> getLikeUsers() { return likeUsers; }
 
     // --- SETTERS ---
     public void setName(String name) { this.name = name; }
