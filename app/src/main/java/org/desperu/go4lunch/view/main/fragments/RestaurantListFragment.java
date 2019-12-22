@@ -14,7 +14,6 @@ import org.desperu.go4lunch.view.base.BaseFragment;
 import org.desperu.go4lunch.viewmodel.AutocompleteViewModel;
 import org.desperu.go4lunch.viewmodel.NearbyPlaceViewModel;
 import org.desperu.go4lunch.viewmodel.RestaurantInfoViewModel;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -29,12 +28,14 @@ public class RestaurantListFragment extends BaseFragment {
     @BindView(R.id.fragment_recycler_view) RecyclerView recyclerView;
 
     // FOR BUNDLE
+    public static final String NEARBY_BOUNDS = "nearbyBounds";
     public static final String PLACE_ID_LIST_RESTAURANT_LIST = "placesIdList";
     public static final String QUERY_TERM_LIST = "queryTerm";
     public static final String BOUNDS = "bounds";
 
     // FOR DATA
     private ArrayList<String> placesIdList;
+    private String queryTerm;
     private RectangularBounds bounds;
     private RestaurantListAdapter adapter;
     private ArrayList<RestaurantInfoViewModel> restaurantList = new ArrayList<>();
@@ -42,6 +43,7 @@ public class RestaurantListFragment extends BaseFragment {
     // CALLBACK
     public interface OnNewDataListener {
         void onNewPlacesIdList(ArrayList<String> placeIdList);
+        void onNewBounds(RectangularBounds bounds);
     }
 
     private OnNewDataListener mCallback;
@@ -56,8 +58,7 @@ public class RestaurantListFragment extends BaseFragment {
     @Override
     protected void configureDesign() {
         this.createCallbackToParentActivity();
-        this.setPlaceIdListFromBundle();
-        this.setBoundsFromBundle();
+        this.setDataFromBundle();
         this.configureRecyclerView();
         this.updateRecyclerViewWithMapsData();
         this.configureSwipeRefresh();
@@ -75,26 +76,21 @@ public class RestaurantListFragment extends BaseFragment {
     // --------------
 
     /**
-     * Set place Id list from bundle.
+     * Set data from bundle, placesIdList, bounds and query term.
      */
-    private void setPlaceIdListFromBundle() {
+    private void setDataFromBundle() {
         this.placesIdList = getArguments() != null ? getArguments().getStringArrayList(PLACE_ID_LIST_RESTAURANT_LIST) : null;
-    }
-
-    /**
-     * Set rectangular bounds from bundle.
-     */
-    private void setBoundsFromBundle() {
         this.bounds = getArguments() != null ? getArguments().getParcelable(BOUNDS): null;
+        this.queryTerm = getArguments() != null ? getArguments().getString(QUERY_TERM_LIST) : null;
     }
 
     /**
-     * Get query term from bundle.
-     * @return Query term.
+     * Get nearby rectangular bounds from bundle.
+     * @return Nearby rectangular bounds.
      */
     @Nullable
-    private String getQueryTerm() {
-        return getArguments() != null ? getArguments().getString(QUERY_TERM_LIST) : null;
+    private RectangularBounds getNearbyBounds() {
+        return getArguments() != null ? getArguments().getParcelable(NEARBY_BOUNDS) : null;
     }
 
     /**
@@ -147,8 +143,8 @@ public class RestaurantListFragment extends BaseFragment {
      * Reload corresponding restaurant list.
      */
     private void reloadRestaurantList() {
-        if (getQueryTerm() != null && !getQueryTerm().isEmpty())
-            this.getAutocompleteRestaurant();
+        if (queryTerm != null && !queryTerm.isEmpty())
+            this.getAutocompleteRestaurant(queryTerm);
         else this.getNearbyRestaurant();
     }
 
@@ -165,18 +161,25 @@ public class RestaurantListFragment extends BaseFragment {
             for (Place place : placesList)
                 placesIdList.add(place.getId());
             this.updateRecyclerView(placesIdList);
+            this.placesIdList = placesIdList;
         });
+        this.bounds = this.getNearbyBounds();
+        mCallback.onNewBounds(null);
         Snackbar.make(swipeRefreshLayout, R.string.fragment_restaurant_list_snackbar_refresh_nearby_restaurant, Snackbar.LENGTH_SHORT).show();
     }
 
     /**
      * Get autocomplete search result restaurant list.
+     * @param query Query term.
      */
-    private void getAutocompleteRestaurant() {
+    private void getAutocompleteRestaurant(String query) {
         // Start request
-        AutocompleteViewModel autocompleteViewModel = new AutocompleteViewModel(this);
-        autocompleteViewModel.fetchAutocompletePrediction(getQueryTerm(), this.bounds);
+        assert getActivity() != null;
+        AutocompleteViewModel autocompleteViewModel = new AutocompleteViewModel(getActivity().getApplication());
+        autocompleteViewModel.fetchAutocompletePrediction(query, this.bounds);
         // Get request result
+        autocompleteViewModel.getPlacesIdListLiveData().observe(this, this::updateRecyclerView);
+
     }
 
     // --------------
@@ -184,25 +187,27 @@ public class RestaurantListFragment extends BaseFragment {
     // --------------
 
     /**
-     * Update recycler view when received data only if query term isn't empty (from autocomplete request).
-     * @param placeIdList List of found places id.
-     */
-    public void updateRecyclerViewWithAutocomplete(@NotNull ArrayList<String> placeIdList) {
-        if (getQueryTerm() != null && !getQueryTerm().isEmpty())
-            this.updateRecyclerView(placeIdList);
-        else this.updateRecyclerViewWithMapsData();
-    }
-
-    /**
      * Update recycler view.
      * @param placeIdList List of restaurant id.
      */
     private void updateRecyclerView(ArrayList<String> placeIdList) {
+        assert getActivity() != null;
         mCallback.onNewPlacesIdList(placeIdList);
         restaurantList.clear();
         for (String placeId : placeIdList)
-            restaurantList.add(new RestaurantInfoViewModel(getContext(), placeId));
+            restaurantList.add(new RestaurantInfoViewModel(getActivity().getApplication(), placeId));
         adapter.notifyDataSetChanged();
         swipeRefreshLayout.setRefreshing(false);
+    }
+
+    /**
+     * Method called when query text change.
+     * @param query Query term.
+     */
+    public void onSearchQueryTextChange(String query) {
+        this.queryTerm = query;
+        if (query != null && !query.isEmpty())
+            this.getAutocompleteRestaurant(query);
+        else this.updateRecyclerViewWithMapsData();
     }
 }

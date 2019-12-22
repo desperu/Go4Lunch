@@ -32,7 +32,6 @@ import org.desperu.go4lunch.view.main.fragments.MapsFragment;
 import org.desperu.go4lunch.view.main.fragments.RestaurantListFragment;
 import org.desperu.go4lunch.view.main.fragments.WorkmatesFragment;
 import org.desperu.go4lunch.view.restaurantdetail.RestaurantDetailActivity;
-import org.desperu.go4lunch.viewmodel.AutocompleteViewModel;
 import org.desperu.go4lunch.viewmodel.UserAuthViewModel;
 import org.desperu.go4lunch.viewmodel.UserDBViewModel;
 import org.jetbrains.annotations.NotNull;
@@ -63,13 +62,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     // FOR DATA
     private UserAuthViewModel userAuthViewModel;
     private UserDBViewModel userDBViewModel;
+    @State RectangularBounds nearbyBounds;
     @State ArrayList<String> placeList;
     @State RectangularBounds bounds;
     @State CameraPosition cameraPosition;
     @State String queryTerm;
+    @State int currentFragment = -1;
     private Fragment fragment;
     private static final int RC_SIGN_IN = 1234;
-    private int currentFragment = -1;
 
     // --------------
     // BASE METHODS
@@ -137,12 +137,15 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 case MAP_FRAGMENT:
                     fragment = MapsFragment.newInstance();
                     bundle.putStringArrayList(PLACE_ID_LIST_MAPS, placeList);
-                    if (this.queryTerm != null && !this.queryTerm.isEmpty())
+                    if (this.bounds != null)
                         bundle.putParcelable(CAMERA_POSITION, cameraPosition);
+                    if (this.queryTerm != null && !this.queryTerm.isEmpty())
+                        bundle.putString(QUERY_TERM_MAPS, queryTerm);
                     fragment.setArguments(bundle);
                     break;
                 case LIST_FRAGMENT:
                     fragment = RestaurantListFragment.newInstance();
+                    bundle.putParcelable(NEARBY_BOUNDS, nearbyBounds);
                     bundle.putStringArrayList(PLACE_ID_LIST_RESTAURANT_LIST, placeList);
                     bundle.putParcelable(BOUNDS, bounds);
                     if (this.queryTerm != null && !this.queryTerm.isEmpty())
@@ -186,7 +189,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     protected void onResume() {
         super.onResume();
         if (this.isCurrentUserLogged()) {
-            this.configureAndShowFragment(MAP_FRAGMENT);
+            this.configureAndShowFragment(this.currentFragment >= 0 ? currentFragment : MAP_FRAGMENT);
             this.loadUserDataFromFirestore();
         }
         else this.startSignInActivity();
@@ -279,6 +282,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     public void onClickedMarker(String id) { this.showRestaurantDetailActivity(id); }
 
     @Override
+    public void saveNearbyBounds(RectangularBounds nearbyBounds) { this.nearbyBounds = nearbyBounds; }
+
+    @Override
     public void onNewPlacesIdList(ArrayList<String> placeList) { this.placeList = placeList; }
 
     @Override
@@ -292,8 +298,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
      */
     private void onClickYourLunch() {
         if (userDBViewModel.getUser().get() != null
-                && userDBViewModel.getUser().get().getBookedRestaurantId() != null)
-            this.showRestaurantDetailActivity(userDBViewModel.getUser().get().getBookedRestaurantId());
+                && Objects.requireNonNull(userDBViewModel.getUser().get()).getBookedRestaurantId() != null)
+            this.showRestaurantDetailActivity(Objects.requireNonNull(userDBViewModel.getUser().get()).getBookedRestaurantId());
         else Snackbar.make(drawerLayout, R.string.activity_main_message_no_booked_restaurant, Snackbar.LENGTH_SHORT).show();
     }
 
@@ -303,17 +309,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
      */
     private void onSearchTextChange(String query) {
         this.queryTerm = query;
-        AutocompleteViewModel autocompleteViewModel = new AutocompleteViewModel(fragment);
-        autocompleteViewModel.fetchAutocompletePrediction(query, this.bounds);
-        Bundle bundle = new Bundle();
         if (fragment.getClass() == MapsFragment.class) {
             MapsFragment mapsFragment = (MapsFragment) this.fragment;
-            bundle.putString(QUERY_TERM_MAPS, query);
-            mapsFragment.setArguments(bundle);
+            mapsFragment.getAutocompleteRestaurant(query);
         } else if (fragment.getClass() == RestaurantListFragment.class) {
             RestaurantListFragment restaurantListFragment = (RestaurantListFragment) this.fragment;
-            bundle.putString(QUERY_TERM_LIST, query);
-            restaurantListFragment.setArguments(bundle);
+            restaurantListFragment.onSearchQueryTextChange(query);
         }
     }
 
@@ -322,26 +323,17 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     // -----------------
 
 //    /**
-//     * Start show article activity.
-//     *
-//     * @param articleUrl The url's article.
+//     * Start chat activity.
 //     */
-//    private void showArticleActivity(String articleUrl) {
-//        startActivity(new Intent(this, ShowArticleActivity.class).putExtra(ShowArticleActivity.ARTICLE_URL, articleUrl));
+//    private void showChatActivity() {
+//        startActivity(new Intent(this, ChatActivity.class));
 //    }
-//
+
 //    /**
-//     * Start search articles activity.
+//     * Start settings activity.
 //     */
-//    private void showSearchArticlesActivity() {
-//        startActivity(new Intent(this, SearchArticlesActivity.class));
-//    }
-//
-//    /**
-//     * Start notifications activity.
-//     */
-//    private void showNotificationsActivity() {
-//        startActivity(new Intent(this, NotificationsActivity.class));
+//    private void showSettingsActivity() {
+//        startActivity(new Intent(this, SettingsActivity.class));
 //    }
 
     /**

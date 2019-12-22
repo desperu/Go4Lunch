@@ -96,7 +96,7 @@ public class RestaurantDetailActivity extends BaseActivity {
      */
     private void configureDataBinding() {
         ActivityRestaurantDetailBinding restaurantDetailBinding = DataBindingUtil.setContentView(this, this.getActivityLayout());
-        restaurantInfoViewModel = new RestaurantInfoViewModel(this, this.getIdFromIntentData());
+        restaurantInfoViewModel = new RestaurantInfoViewModel(getApplication(), this.getIdFromIntentData());
         restaurantDetailBinding.setRestaurantInfoViewModel(restaurantInfoViewModel);
 
         restaurantDBViewModel = new RestaurantDBViewModel(this.getIdFromIntentData());

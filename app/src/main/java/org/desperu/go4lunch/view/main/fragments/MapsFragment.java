@@ -36,6 +36,7 @@ import org.desperu.go4lunch.viewmodel.AutocompleteViewModel;
 import org.desperu.go4lunch.viewmodel.NearbyPlaceViewModel;
 import org.desperu.go4lunch.viewmodel.RestaurantDBViewModel;
 import org.desperu.go4lunch.viewmodel.RestaurantInfoViewModel;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -63,10 +64,13 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
     private SupportMapFragment mapFragment;
     private GoogleMap mMap;
     private boolean isLocationEnabled = false;
+    private String queryTerm;
+    private boolean isPlacesUpdating = false;
 
     // CALLBACKS
     public interface OnNewDataOrClickListener {
         void onClickedMarker(String id);
+        void saveNearbyBounds(RectangularBounds nearbyBounds);
         void onNewPlacesIdList(ArrayList<String> placesIdList);
         void onNewBounds(RectangularBounds bounds);
         void onNewCameraPosition(CameraPosition cameraPosition);
@@ -85,6 +89,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
     protected void configureDesign() {
         this.configureMapFragment();
         this.createCallbackToParentActivity();
+        this.setQueryTermFromBundle();
     }
 
 
@@ -154,10 +159,11 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
 
     @Override
     public void onCameraIdle() {
-        AutocompleteViewModel autocompleteViewModel = new AutocompleteViewModel(this);
-        autocompleteViewModel.fetchAutocompletePrediction(this.getQueryTerm(), getRectangularBounds());
-        mCallback.onNewBounds(getRectangularBounds());
         mCallback.onNewCameraPosition(mMap.getCameraPosition());
+        mCallback.onNewBounds(getRectangularBounds());
+        assert getActivity() != null;
+        if (queryTerm != null && !isPlacesUpdating)
+            this.getAutocompleteRestaurant(queryTerm);
     }
 
     // --------------
@@ -197,7 +203,9 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
      * @return If a previous state is restored.
      */
     private boolean restoreState() {
-        if (this.getPlaceIdList() != null && this.getCameraPosition() != null) {
+        if (this.getPlaceIdList() != null && this.getCameraPosition() != null
+                && this.queryTerm != null && !this.queryTerm.isEmpty()) {
+            this.isPlacesUpdating = true;
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(this.getCameraPosition()));
             for (String restaurantId : this.getPlaceIdList())
                 this.getRestaurantInfo(restaurantId);
@@ -242,12 +250,10 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
     }
 
     /**
-     * Get query term from bundle argument.
-     * @return Query term.
+     * Set query term from bundle argument.
      */
-    @Nullable
-    private String getQueryTerm() {
-        return getArguments() != null ? getArguments().getString(QUERY_TERM_MAPS) : null;
+    private void setQueryTermFromBundle() {
+        this.queryTerm = getArguments() != null ? getArguments().getString(QUERY_TERM_MAPS) : null;
     }
 
     /**
@@ -277,7 +283,9 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
         mMap.setMyLocationEnabled(isLocationEnabled);
         if (isLocationEnabled) this.setMapWithLocation();
         else this.checkLocationPermissionsStatus();
-        this.getNearbyRestaurant();
+        if (queryTerm != null && !queryTerm.isEmpty())
+            this.getAutocompleteRestaurant(this.queryTerm);
+        else this.getNearbyRestaurant();
     }
 
     // --------------
@@ -288,42 +296,70 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
      * Get nearby restaurants with place api.
      */
     private void getNearbyRestaurant() {
+        this.isPlacesUpdating = true;
         if (mMap != null) mMap.clear();
-        // Start request
+        // Start nearby request
         assert getActivity() != null;
         NearbyPlaceViewModel nearbyPlaceViewModel = new NearbyPlaceViewModel(getActivity().getApplication());
         nearbyPlaceViewModel.fetchNearbyRestaurant();
 
-        // Get request result
+        // Get nearby request result
         nearbyPlaceViewModel.getPlacesList().observe(this, placesList -> {
             ArrayList<String> placesIdList = new ArrayList<>();
             for (Place place : placesList) {
-                this.getRestaurantBookedUsers(place);
+                this.getRestaurantDB(place);
                 placesIdList.add(place.getId());
             }
             mCallback.onNewPlacesIdList(placesIdList);
+            mCallback.saveNearbyBounds(this.getRectangularBounds()); // TODO correct, put in location listener method, problem when play between custom map position en fragment,
         });
     }
 
     /**
-     * Get restaurant booked users list.
-     * @param place restaurant place object.
+     * Get restaurant DB from firestore.
+     * @param place Restaurant place object.
      */
-    public void getRestaurantBookedUsers(@NotNull Place place) {
-        // Start request
+    private void getRestaurantDB(@NotNull Place place) {
+        // Start DB request
         RestaurantDBViewModel restaurantDBViewModel = new RestaurantDBViewModel(place.getId());
         restaurantDBViewModel.fetchRestaurant();
-        // Get request result
+        // Get DB request result
         restaurantDBViewModel.getRestaurantLiveData().observe(this, restaurant ->
                 this.addMarker(restaurant, place));
     }
 
     /**
-     * Get restaurant info from place api.
+     * Get restaurant info from places api.
      * @param restaurantId Restaurant id.
      */
     private void getRestaurantInfo(String restaurantId) {
-        new RestaurantInfoViewModel(this, restaurantId);
+        // Start place info request
+        assert getActivity() != null;
+        RestaurantInfoViewModel restaurantInfoViewModel =
+                new RestaurantInfoViewModel(getActivity().getApplication(), restaurantId);
+        // Get place info request result
+        restaurantInfoViewModel.getPlaceLiveData().observe(this, this::getRestaurantDB);
+    }
+
+    /**
+     * Get autocomplete restaurant response.
+     */
+    public void getAutocompleteRestaurant(@NotNull String query) {
+        this.isPlacesUpdating = true;
+        this.queryTerm = query;
+        if (!query.isEmpty()) {
+            // Start autocomplete request
+            assert getActivity() != null;
+            AutocompleteViewModel autocompleteViewModel = new AutocompleteViewModel(getActivity().getApplication());
+            autocompleteViewModel.fetchAutocompletePrediction(query, getRectangularBounds());
+            // Get autocomplete request result
+            autocompleteViewModel.getPlacesIdListLiveData().observe(this, placesIdList -> {
+                mMap.clear();
+                for (String restaurantId : placesIdList)
+                    this.getRestaurantInfo(restaurantId);
+                mCallback.onNewPlacesIdList(placesIdList);
+            });
+        } else this.getNearbyRestaurant();
     }
 
     // --------------
@@ -341,13 +377,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
                 .title(place.getName())
                 .icon(this.switchMarkerColors(this.isBookedRestaurant(restaurant)))
                 .snippet(place.getId()));
-    }
-
-    public void updateMap(@NotNull ArrayList<String> placesIdList) {
-        mMap.clear();
-        mCallback.onNewPlacesIdList(placesIdList);
-        for (String restaurantId : placesIdList)
-            this.getRestaurantInfo(restaurantId);
+        this.isPlacesUpdating = false;
     }
 
     /**
@@ -385,6 +415,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
      * @param restaurant Restaurant object.
      * @return Boolean value if is booked.
      */
+    @Contract("null -> false")
     private boolean isBookedRestaurant(Restaurant restaurant) {
         if (restaurant != null) return !restaurant.getBookedUsersId().isEmpty();
         else return false;
