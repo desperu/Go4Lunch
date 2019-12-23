@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Looper;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -13,6 +14,10 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -64,6 +69,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
     private SupportMapFragment mapFragment;
     private GoogleMap mMap;
     private boolean isLocationEnabled = false;
+    private Location myLocation;
     private String queryTerm;
     private boolean isPlacesUpdating = false;
 
@@ -149,7 +155,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
         if (marker.getSnippet() != null)
             mCallback.onClickedMarker(marker.getSnippet());
         else Toast.makeText(getContext(), R.string.fragment_maps_no_place_found, Toast.LENGTH_SHORT).show();
-        return true;
+        return true; // TODO false to show windows info and to navigate
     }
 
     @Override
@@ -162,7 +168,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
         mCallback.onNewCameraPosition(mMap.getCameraPosition());
         mCallback.onNewBounds(getRectangularBounds());
         assert getActivity() != null;
-        if (queryTerm != null && !isPlacesUpdating)
+        if (queryTerm != null && !isPlacesUpdating) // TODO how don't launch
             this.getAutocompleteRestaurant(queryTerm);
     }
 
@@ -222,7 +228,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
         assert getContext() != null;
         LocationManager lm = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
         assert lm != null;
-        Location myLocation = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        myLocation = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
         if (myLocation == null) {
             Criteria criteria = new Criteria();
@@ -283,14 +289,31 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
         mMap.setMyLocationEnabled(isLocationEnabled);
         if (isLocationEnabled) this.setMapWithLocation();
         else this.checkLocationPermissionsStatus();
-        if (queryTerm != null && !queryTerm.isEmpty())
-            this.getAutocompleteRestaurant(this.queryTerm);
-        else this.getNearbyRestaurant();
+        this.startNewRequest(this.queryTerm);
+    }
+
+    /**
+     * Method called when query text change.
+     * @param query Query term.
+     */
+    public void onSearchQueryTextChange(@NotNull String query) {
+        this.queryTerm = query;
+        this.startNewRequest(query);
     }
 
     // --------------
     // REQUEST
     // --------------
+
+    /**
+     * Start new request to get restaurant.
+     * @param query Query term.
+     */
+    private void startNewRequest(String query) {
+        if (query != null && !query.isEmpty())
+            this.getAutocompleteRestaurant(query);
+        else this.getNearbyRestaurant();
+    }
 
     /**
      * Get nearby restaurants with place api.
@@ -316,16 +339,22 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
     }
 
     /**
-     * Get restaurant DB from firestore.
-     * @param place Restaurant place object.
+     * Get autocomplete restaurant response.
+     * @param query Query term.
      */
-    private void getRestaurantDB(@NotNull Place place) {
-        // Start DB request
-        RestaurantDBViewModel restaurantDBViewModel = new RestaurantDBViewModel(place.getId());
-        restaurantDBViewModel.fetchRestaurant();
-        // Get DB request result
-        restaurantDBViewModel.getRestaurantLiveData().observe(this, restaurant ->
-                this.addMarker(restaurant, place));
+    private void getAutocompleteRestaurant(@NotNull String query) {
+        this.isPlacesUpdating = true;
+        this.mMap.clear();
+        // Start autocomplete request
+        assert getActivity() != null;
+        AutocompleteViewModel autocompleteViewModel = new AutocompleteViewModel(getActivity().getApplication());
+        autocompleteViewModel.fetchAutocompletePrediction(query, getRectangularBounds());
+        // Get autocomplete request result
+        autocompleteViewModel.getPlacesIdListLiveData().observe(this, placesIdList -> {
+            for (String restaurantId : placesIdList)
+                this.getRestaurantInfo(restaurantId);
+            mCallback.onNewPlacesIdList(placesIdList);
+        });
     }
 
     /**
@@ -342,24 +371,16 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
     }
 
     /**
-     * Get autocomplete restaurant response.
+     * Get restaurant DB from firestore.
+     * @param place Restaurant place object.
      */
-    public void getAutocompleteRestaurant(@NotNull String query) {
-        this.isPlacesUpdating = true;
-        this.queryTerm = query;
-        if (!query.isEmpty()) {
-            // Start autocomplete request
-            assert getActivity() != null;
-            AutocompleteViewModel autocompleteViewModel = new AutocompleteViewModel(getActivity().getApplication());
-            autocompleteViewModel.fetchAutocompletePrediction(query, getRectangularBounds());
-            // Get autocomplete request result
-            autocompleteViewModel.getPlacesIdListLiveData().observe(this, placesIdList -> {
-                mMap.clear();
-                for (String restaurantId : placesIdList)
-                    this.getRestaurantInfo(restaurantId);
-                mCallback.onNewPlacesIdList(placesIdList);
-            });
-        } else this.getNearbyRestaurant();
+    private void getRestaurantDB(@NotNull Place place) {
+        // Start DB request
+        RestaurantDBViewModel restaurantDBViewModel = new RestaurantDBViewModel(place.getId());
+        restaurantDBViewModel.fetchRestaurant();
+        // Get DB request result
+        restaurantDBViewModel.getRestaurantLiveData().observe(this, restaurant ->
+                this.addMarker(restaurant, place));
     }
 
     // --------------
@@ -452,5 +473,50 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
     private RectangularBounds getRectangularBounds() {
         return RectangularBounds.newInstance(mMap.getProjection().getVisibleRegion().latLngBounds);
     }
-    // TODO add on map move Listener
+
+    // TODO finish to implement location updates and add to settings
+    @Override
+    public void onResume() {
+        super.onResume();
+        startLocationUpdates();
+    }
+    private LocationCallback locationCallback;
+    private FusedLocationProviderClient fusedLocationClient;
+    private void startLocationUpdates() {
+        assert getContext() != null;
+        fusedLocationClient = new FusedLocationProviderClient(getContext());
+
+        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(40000);
+
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                super.onLocationResult(locationResult);
+                if (myLocation.distanceTo(locationResult.getLastLocation()) > 10) {
+                    startNewRequest(queryTerm);
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                            new LatLng(
+                                    locationResult.getLastLocation().getLatitude(),
+                                    locationResult.getLastLocation().getLongitude()),
+                            18), 1500, null);
+                }
+            }
+        };
+
+        fusedLocationClient.requestLocationUpdates(locationRequest,
+                locationCallback,
+                Looper.getMainLooper());
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        stopLocationUpdates();
+    }
+
+    private void stopLocationUpdates() {
+        fusedLocationClient.removeLocationUpdates(locationCallback);
+    }
 }

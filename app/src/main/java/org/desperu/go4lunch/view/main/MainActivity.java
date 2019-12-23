@@ -311,7 +311,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         this.queryTerm = query;
         if (fragment.getClass() == MapsFragment.class) {
             MapsFragment mapsFragment = (MapsFragment) this.fragment;
-            mapsFragment.getAutocompleteRestaurant(query);
+            mapsFragment.onSearchQueryTextChange(query);
         } else if (fragment.getClass() == RestaurantListFragment.class) {
             RestaurantListFragment restaurantListFragment = (RestaurantListFragment) this.fragment;
             restaurantListFragment.onSearchQueryTextChange(query);
