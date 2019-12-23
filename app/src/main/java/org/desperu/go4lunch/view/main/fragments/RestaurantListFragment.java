@@ -183,6 +183,22 @@ public class RestaurantListFragment extends BaseFragment {
     }
 
     // --------------
+    // ACTION
+    // --------------
+
+    // TODO onclick restaurant.
+    /**
+     * Method called when query text change.
+     * @param query Query term.
+     */
+    public void onSearchQueryTextChange(String query) {
+        this.queryTerm = query;
+        if (query != null && !query.isEmpty())
+            this.getAutocompleteRestaurant(query);
+        else this.updateRecyclerViewWithMapsData();
+    }
+
+    // --------------
     // UI
     // --------------
 
@@ -198,16 +214,5 @@ public class RestaurantListFragment extends BaseFragment {
             restaurantList.add(new RestaurantInfoViewModel(getActivity().getApplication(), placeId));
         adapter.notifyDataSetChanged();
         swipeRefreshLayout.setRefreshing(false);
-    }
-
-    /**
-     * Method called when query text change.
-     * @param query Query term.
-     */
-    public void onSearchQueryTextChange(String query) {
-        this.queryTerm = query;
-        if (query != null && !query.isEmpty())
-            this.getAutocompleteRestaurant(query);
-        else this.updateRecyclerViewWithMapsData();
     }
 }

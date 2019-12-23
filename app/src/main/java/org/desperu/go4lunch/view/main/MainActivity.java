@@ -394,8 +394,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
      * Create user in firestore.
      */
     private void createUserInFirestore(){
-        if (this.getCurrentUser() != null) {
-            userDBViewModel = new UserDBViewModel(this, userAuthViewModel.getUid());
+        if (this.getCurrentUser() == null) {
+            userDBViewModel = new UserDBViewModel(getApplication(), userAuthViewModel.getUid());
             userDBViewModel.createUserInFirestore(userAuthViewModel.getUid(), userAuthViewModel.getUserName(), userAuthViewModel.getUserPicture());
         }
     }
@@ -405,7 +405,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
      */
     private void loadUserDataFromFirestore() {
         if (userDBViewModel == null)
-            userDBViewModel = new UserDBViewModel(this, userAuthViewModel.getUid());
+            userDBViewModel = new UserDBViewModel(getApplication(), userAuthViewModel.getUid());
         userDBViewModel.fetchUser();
     }
 

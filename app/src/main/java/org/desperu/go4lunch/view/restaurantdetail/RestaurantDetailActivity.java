@@ -28,6 +28,7 @@ import org.desperu.go4lunch.viewmodel.UserDBViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -159,8 +160,9 @@ public class RestaurantDetailActivity extends BaseActivity {
         if (restaurantInfo == null) restaurantInfo = restaurantInfoViewModel.getPlace().get();
 
         if (restaurantInfo != null && restaurantInfo.getId() != null) {
-            UserDBViewModel userDBViewModel = new UserDBViewModel(this, this.getCurrentUser().getUid());
-            userDBViewModel.updateBookedRestaurant(this, restaurantInfo, restaurantDB);
+            UserDBViewModel userDBViewModel = new UserDBViewModel(getApplication(), Objects.requireNonNull(this.getCurrentUser()).getUid());
+            userDBViewModel.updateBookedRestaurant(restaurantInfo, restaurantDB);
+            userDBViewModel.getUpdateBookedResponse().observe(this, this::handleResponseAfterAction);
             // Wait before reload actualised data from firestore.
             new Handler().postDelayed(this::reloadRestaurantData, 1500);
         } else this.handleResponseAfterAction(NO_DATA);
@@ -186,18 +188,18 @@ public class RestaurantDetailActivity extends BaseActivity {
             // Check if current user already like restaurant
             if (restaurantDB != null && restaurantDB.getLikeUsers() != null) {
                 for (String userId : restaurantDB.getLikeUsers())
-                    isAlreadyLike = userId.equals(this.getCurrentUser().getUid());
+                    isAlreadyLike = userId.equals(Objects.requireNonNull(this.getCurrentUser()).getUid());
             }
 
             if (!isAlreadyLike) {
                 // Like restaurant
-                restaurantDBViewModel.updateRestaurantLikeUsers(restaurantInfo, this.getCurrentUser().getUid());
+                restaurantDBViewModel.updateRestaurantLikeUsers(restaurantInfo, Objects.requireNonNull(this.getCurrentUser()).getUid());
                 this.showSnackbar(getString(R.string.activity_restaurant_detail_snackbar_add_like));
                 this.reloadRestaurantData();
             } else {
                 if (isAlreadyClicked) {
                     // Unlike restaurant
-                    restaurantDBViewModel.removeRestaurantLikeUser(this.getCurrentUser().getUid());
+                    restaurantDBViewModel.removeRestaurantLikeUser(restaurantInfo.getId(), this.getCurrentUser().getUid());
                     this.showSnackbar(getString(R.string.activity_restaurant_detail_snackbar_remove_like));
                     this.reloadRestaurantData();
                 } else {
@@ -215,7 +217,7 @@ public class RestaurantDetailActivity extends BaseActivity {
         if (restaurantInfo == null) restaurantInfo = restaurantInfoViewModel.getPlace().get();
 
         if (restaurantInfo != null)
-            this.showWebsite(restaurantInfo.getWebsiteUri().toString());
+            this.showWebsite(Objects.requireNonNull(restaurantInfo.getWebsiteUri()).toString());
         else this.handleResponseAfterAction(NO_DATA);
     }
 
@@ -273,7 +275,7 @@ public class RestaurantDetailActivity extends BaseActivity {
         joiningUsers.clear();
         if (restaurant != null) {
             for (String user : restaurant.getBookedUsersId()) {
-                UserDBViewModel userDBViewModel = new UserDBViewModel(this, user);
+                UserDBViewModel userDBViewModel = new UserDBViewModel(getApplication(), user);
                 userDBViewModel.fetchUser();
                 joiningUsers.add(userDBViewModel);
             }
@@ -298,7 +300,7 @@ public class RestaurantDetailActivity extends BaseActivity {
      * Handle response after action button clicked.
      * @param resultCode Code result from request method.
      */
-    public void handleResponseAfterAction(int resultCode) {
+    private void handleResponseAfterAction(int resultCode) {
         switch (resultCode) {
             case BOOKED:
                 this.showSnackbar(getString(R.string.activity_restaurant_detail_restaurant_booked));
