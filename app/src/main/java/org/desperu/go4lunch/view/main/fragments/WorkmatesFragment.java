@@ -22,7 +22,7 @@ public class WorkmatesFragment extends BaseFragment {
     @BindView(R.id.fragment_recycler_view) RecyclerView recyclerView;
 
     private WorkmatesAdapter adapter;
-    private List<UserDBViewModel> workmatesList = new ArrayList<>();
+    private List<UserDBViewModel> allWorkmatesList = new ArrayList<>();
 
     // --------------
     // BASE METHODS
@@ -34,7 +34,7 @@ public class WorkmatesFragment extends BaseFragment {
     @Override
     protected void configureDesign() {
         this.configureRecyclerView();
-        this.loadWorkmatesList();
+        this.getAllWorkmatesList();
         this.configureSwipeRefresh();
     }
 
@@ -54,7 +54,7 @@ public class WorkmatesFragment extends BaseFragment {
      */
     private void configureRecyclerView() {
         // Create adapter passing in the sample user data
-        this.adapter = new WorkmatesAdapter(R.layout.fragment_workmates_item, workmatesList);
+        this.adapter = new WorkmatesAdapter(R.layout.fragment_workmates_item, allWorkmatesList);
         // Attach the adapter to the recyclerView to populate items
         this.recyclerView.setAdapter(this.adapter);
         // Set layout manager to position the items
@@ -64,16 +64,18 @@ public class WorkmatesFragment extends BaseFragment {
     /**
      * Load all workmates list.
      */
-    private void loadWorkmatesList() {
-        UserDBViewModel allUsers = new UserDBViewModel();
-        allUsers.fetchAllUsers(this);
+    private void getAllWorkmatesList() {
+        assert getActivity() != null;
+        UserDBViewModel allUsers = new UserDBViewModel(getActivity().getApplication());
+        allUsers.fetchAllUsers();
+        allUsers.getAllUsersListLiveData().observe(this, this::updateRecyclerView);
     }
 
     /**
      * Configure swipe to refresh.
      */
     private void configureSwipeRefresh() {
-        swipeRefreshLayout.setOnRefreshListener(this::loadWorkmatesList);
+        swipeRefreshLayout.setOnRefreshListener(this::getAllWorkmatesList);
     }
 
     // --------------
@@ -82,14 +84,15 @@ public class WorkmatesFragment extends BaseFragment {
 
     /**
      * Update recycler view when received data.
-     * @param allUsers List of all apk users, from firestore.
+     * @param allUsersList List of all apk users, from firestore.
      */
-    public void updateRecyclerView(@NotNull List<User> allUsers) {
-        workmatesList.clear();
-        for (User user : allUsers) {
-            UserDBViewModel userDBViewModel = new UserDBViewModel(getContext(), user.getUid());
+    private void updateRecyclerView(@NotNull List<User> allUsersList) {
+        assert getActivity() != null;
+        allWorkmatesList.clear();
+        for (User user : allUsersList) {
+            UserDBViewModel userDBViewModel = new UserDBViewModel(getActivity().getApplication(), user.getUid());
             userDBViewModel.fetchUser();
-            workmatesList.add(userDBViewModel);
+            allWorkmatesList.add(userDBViewModel);
         }
         adapter.notifyDataSetChanged();
         swipeRefreshLayout.setRefreshing(false);

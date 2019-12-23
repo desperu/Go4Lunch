@@ -9,6 +9,7 @@ import com.google.android.libraries.places.api.model.Place;
 
 import org.desperu.go4lunch.api.firestore.RestaurantHelper;
 import org.desperu.go4lunch.models.Restaurant;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
@@ -18,7 +19,6 @@ public class RestaurantDBViewModel {
     private String restaurantId;
     private ObservableField<Restaurant> restaurant = new ObservableField<>();
     private ObservableDouble likeUsersNumber = new ObservableDouble();
-// TODO to clean if good
     private MutableLiveData<Restaurant> restaurantLiveData = new MutableLiveData<>();
 
     // CONSTRUCTOR
@@ -29,34 +29,57 @@ public class RestaurantDBViewModel {
     // --------------
 
     /**
+     * Create restaurant in firestore.
+     * @param place Restaurant place object.
+     */
+    void createRestaurant(@NotNull Place place) {
+        RestaurantHelper.createRestaurant(place.getId(), place.getName(), new ArrayList<>(), place.getRating(), new ArrayList<>());
+    }
+
+    /**
      * Fetch restaurant data from firestore.
      */
     public void fetchRestaurant() {
         RestaurantHelper.getRestaurant(restaurantId).addOnSuccessListener(documentSnapshot -> {
             this.restaurant.set(documentSnapshot.toObject(Restaurant.class));
-            this.restaurantLiveData.postValue(documentSnapshot.toObject(Restaurant.class)); // TODO use ObservableField or MutableLiveData
+            this.restaurantLiveData.postValue(documentSnapshot.toObject(Restaurant.class));
             if (restaurant.get() != null && restaurant.get().getLikeUsers() != null)
                 this.likeUsersNumber.set(restaurant.get().getLikeUsers().size() / (double) 10);
         });
     }
 
     /**
+     * Update restaurant booked user in firestore.
+     * @param userId User Id.
+     */
+    void updateRestaurantBookedUser(String userId) {
+        RestaurantHelper.updateBookedUsers(restaurantId, userId);
+    }
+
+    /**
+     * Remove restaurant booked user in firestore.
+     * @param restaurantId Restaurant Id.
+     * @param userId User Id.
+     */
+    void removeRestaurantBookedUser(String restaurantId, String userId) {
+        RestaurantHelper.removeBookedUser(restaurantId, userId);
+    }
+    /**
      * Update restaurant like users.
      * @param place Restaurant place object.
      * @param userId Id of user.
      */
     public void updateRestaurantLikeUsers(Place place, String userId) {
-        if (restaurant.get() == null)
-            RestaurantHelper.createRestaurant(place.getId(), place.getName(), new ArrayList<>(),
-                    place.getOpeningHours().toString(), place.getTypes().toString(), place.getRating(), new ArrayList<>());
+        if (restaurant.get() == null) this.createRestaurant(place);
         RestaurantHelper.updateLikeUsers(restaurantId, userId);
     }
 
     /**
      * Remove restaurant like user.
+     * @param restaurantId Restaurant Id.
      * @param userId User id.
      */
-    public void removeRestaurantLikeUser(String userId) {
+    public void removeRestaurantLikeUser(String restaurantId, String userId) {
         RestaurantHelper.removeLikeUser(restaurantId, userId);
     }
 
