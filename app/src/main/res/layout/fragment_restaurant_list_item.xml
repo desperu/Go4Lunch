@@ -1,36 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
         <variable
             name="obj"
             type="org.desperu.go4lunch.viewmodel.RestaurantInfoViewModel" />
+        <variable
+            name="restaurantDB"
+            type="org.desperu.go4lunch.viewmodel.RestaurantDBViewModel" />
     </data>
 
-    <LinearLayout
-        android:orientation="horizontal"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/fragment_restaurant_detail_item_linear_root_padding">
+        android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/fragment_restaurant_list_item_image_restaurant"
-            android:layout_width="@dimen/fragment_restaurant_detail_item_image_user_width"
-            android:layout_height="@dimen/fragment_restaurant_detail_item_image_user_height"
-            android:contentDescription="@null"
-            android:src="@{obj.picture}"/>
-
-        <TextView
-            android:id="@+id/fragment_restaurant_list_item_text_restaurant_name"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="@dimen/fragment_restaurant_detail_item_text_user_margin"
-            android:textColor="@android:color/black"
-            android:textSize="@dimen/fragment_restaurant_detail_item_text_user_size"
-            android:text="@{obj.place.name}"/>
+            android:padding="@dimen/fragment_restaurant_detail_item_linear_root_padding">
 
-    </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="5"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/fragment_restaurant_list_item_text_restaurant_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"
+                    android:text="@{obj.simpleName}"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    tools:ignore="NestedWeights" />
+
+                <TextView
+                    android:id="@+id/fragment_restaurant_list_item_text_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:text="@{obj.typeAndAddress}"
+                    android:textColor="@color/colorLightDark"
+                    android:ellipsize="end"
+                    android:maxLines="1"/>
+
+                <TextView
+                    android:id="@+id/fragment_restaurant_list_item_text_opened"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text="@{obj.openingHoursString}"
+                    android:textColor="@{obj.openingHoursColor}"
+                    tools:setStyle="@{obj.isOpened}"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/fragment_restaurant_list_item_text_distance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:layout_gravity="start"
+                    android:text="@{obj.restaurantDistance}"
+                    android:textSize="16sp"
+                    android:textColor="@color/colorLightGrey"
+                    tools:ignore="NestedWeights" />
+
+                <TextView
+                    android:id="@+id/fragment_restaurant_list_item_joining_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:drawableStart="@drawable/ic_baseline_person_outline_black_24"
+                    android:text="(2)"
+                    android:textColor="@android:color/black"/>
+<!--                    android:text="@{restaurantDB.restaurant.bookedUsersId.size()}"/>-->
+
+                <RatingBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    style="@style/Widget.AppCompat.RatingBar.Small"
+                    android:numStars="3"/>
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/fragment_restaurant_list_item_image_restaurant"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:contentDescription="@null"
+                android:scaleType="fitXY"
+                android:src="@{obj.picture}"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.01dp"
+            android:background="@color/colorExtraLightGrey"
+            android:layout_alignParentBottom="true"/>
+
+    </RelativeLayout>
 
 </layout>

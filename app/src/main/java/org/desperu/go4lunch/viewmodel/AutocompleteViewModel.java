@@ -44,7 +44,7 @@ public class AutocompleteViewModel extends AndroidViewModel {
         // Use the builder to create a FindAutocompletePredictionsRequest.
         FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
                 .setLocationRestriction(bounds)
-                .setTypeFilter(TypeFilter.ESTABLISHMENT)
+                .setTypeFilter(TypeFilter.ESTABLISHMENT) // TODO test other
                 .setSessionToken(token)
                 .setQuery(query)
                 .build();

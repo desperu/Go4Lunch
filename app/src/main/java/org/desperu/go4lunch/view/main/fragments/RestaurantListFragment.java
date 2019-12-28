@@ -1,9 +1,12 @@
 package org.desperu.go4lunch.view.main.fragments;
 
+import android.location.Location;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.model.RectangularBounds;
 import com.google.android.material.snackbar.Snackbar;
@@ -29,6 +32,7 @@ public class RestaurantListFragment extends BaseFragment {
 
     // FOR BUNDLE
     public static final String NEARBY_BOUNDS = "nearbyBounds";
+    public static final String USER_LOCATION = "userLocation";
     public static final String PLACE_ID_LIST_RESTAURANT_LIST = "placesIdList";
     public static final String QUERY_TERM_LIST = "queryTerm";
     public static final String BOUNDS = "bounds";
@@ -91,6 +95,15 @@ public class RestaurantListFragment extends BaseFragment {
     @Nullable
     private RectangularBounds getNearbyBounds() {
         return getArguments() != null ? getArguments().getParcelable(NEARBY_BOUNDS) : null;
+    }
+
+    /**
+     * Get user location from bundle.
+     * @return User location.
+     */
+    @Nullable
+    private Location getUserLocation() { // TODO use public method to get user location
+        return getArguments() != null ? getArguments().getParcelable(USER_LOCATION) : null;
     }
 
     /**
@@ -208,10 +221,15 @@ public class RestaurantListFragment extends BaseFragment {
      */
     private void updateRecyclerView(ArrayList<String> placeIdList) {
         assert getActivity() != null;
+        assert this.getUserLocation() != null;
         mCallback.onNewPlacesIdList(placeIdList);
         restaurantList.clear();
-        for (String placeId : placeIdList)
-            restaurantList.add(new RestaurantInfoViewModel(getActivity().getApplication(), placeId));
+        for (String placeId : placeIdList) {
+            RestaurantInfoViewModel restaurantInfoViewModel =
+                    new RestaurantInfoViewModel(getActivity().getApplication(), placeId);
+            restaurantInfoViewModel.setLocationData(new LatLng(this.getUserLocation().getLatitude(), getUserLocation().getLongitude()));
+            restaurantList.add(restaurantInfoViewModel);
+        }
         adapter.notifyDataSetChanged();
         swipeRefreshLayout.setRefreshing(false);
     }

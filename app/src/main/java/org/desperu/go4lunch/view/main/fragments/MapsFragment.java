@@ -52,6 +52,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import pub.devrel.easypermissions.EasyPermissions;
 
+import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 import static org.desperu.go4lunch.Go4LunchTools.GoogleMap.*;
 
 public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
@@ -70,6 +71,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
     private GoogleMap mMap;
     private boolean isLocationEnabled = false;
     private Location myLocation;
+    private boolean isRequestingLocationUpdates = false;
     private String queryTerm;
     private boolean isPlacesUpdating = false;
 
@@ -77,6 +79,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
     public interface OnNewDataOrClickListener {
         void onClickedMarker(String id);
         void saveNearbyBounds(RectangularBounds nearbyBounds);
+        void onNewUserLocation(Location userLocation);
         void onNewPlacesIdList(ArrayList<String> placesIdList);
         void onNewBounds(RectangularBounds bounds);
         void onNewCameraPosition(CameraPosition cameraPosition);
@@ -147,6 +150,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
         // Forward results to EasyPermissions
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
         this.isLocationEnabled = grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED;
+        if (isLocationEnabled) this.setMapWithLocation();
     }
 
     @Override
@@ -478,15 +482,21 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
     @Override
     public void onResume() {
         super.onResume();
-        startLocationUpdates();
+        if (!isRequestingLocationUpdates) startLocationUpdates();
     }
-    private LocationCallback locationCallback;
-    private FusedLocationProviderClient fusedLocationClient;
-    private void startLocationUpdates() {
-        assert getContext() != null;
-        fusedLocationClient = new FusedLocationProviderClient(getContext());
 
-        LocationRequest locationRequest = LocationRequest.create();
+    private FusedLocationProviderClient fusedLocationClient;
+    private LocationCallback locationCallback;
+//    private WeakReference<LocationCallback> weakLocationCallback;
+    private static LocationRequest locationRequest = null;
+
+    private void startLocationUpdates() {
+        isRequestingLocationUpdates = true;
+        assert getContext() != null;
+//        fusedLocationClient = new FusedLocationProviderClient(getContext());
+        fusedLocationClient = getFusedLocationProviderClient(getContext());
+
+        locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(40000);
 
@@ -494,7 +504,8 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
             @Override
             public void onLocationResult(LocationResult locationResult) {
                 super.onLocationResult(locationResult);
-                if (myLocation.distanceTo(locationResult.getLastLocation()) > 10) {
+                mCallback.onNewUserLocation(locationResult.getLastLocation());
+                if (myLocation != null && myLocation.distanceTo(locationResult.getLastLocation()) > 10) {
                     startNewRequest(queryTerm);
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
                             new LatLng(
@@ -505,18 +516,75 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
             }
         };
 
+//        weakLocationCallback = new WeakReference<>(locationCallback);
         fusedLocationClient.requestLocationUpdates(locationRequest,
                 locationCallback,
+//                weakLocationCallback.get(),
                 Looper.getMainLooper());
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        stopLocationUpdates();
+        if (isRequestingLocationUpdates) stopLocationUpdates();
     }
 
     private void stopLocationUpdates() {
+        isRequestingLocationUpdates = false;
+//        fusedLocationClient.removeLocationUpdates(weakLocationCallback.get());
         fusedLocationClient.removeLocationUpdates(locationCallback);
+        fusedLocationClient.flushLocations();
+
+        locationCallback = null;
+        locationRequest = null;
+        fusedLocationClient = null;
     }
+
+    // TODO Probably not good because nearby place make it's own location request
+    //  try override method witch answer location request, to fake location
+    private void setMockLocation(Location location) {
+        fusedLocationClient.setMockMode(true);
+        fusedLocationClient.setMockLocation(location);
+    }
+
+//    private void startLocationUpdates() {
+//        assert getContext() != null;
+//
+//        // Create the location request to start receiving updates
+//        locationRequest = new LocationRequest();
+//        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+//        locationRequest.setInterval(40000);
+//        locationRequest.setFastestInterval(4000);
+//
+//        // Create LocationSettingsRequest object using location request
+//        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
+//        builder.addLocationRequest(locationRequest);
+//        LocationSettingsRequest locationSettingsRequest = builder.build();
+//
+//        // Check whether location settings are satisfied
+//        // https://developers.google.com/android/reference/com/google/android/gms/location/SettingsClient
+//        SettingsClient settingsClient = LocationServices.getSettingsClient(getContext());
+//        settingsClient.checkLocationSettings(locationSettingsRequest);
+//
+//        locationCallback = new LocationCallback() {
+//            @Override
+//            public void onLocationResult(LocationResult locationResult) {
+//                super.onLocationResult(locationResult);
+//                mCallback.onNewUserLocation(locationResult.getLastLocation());
+//                if (myLocation != null && myLocation.distanceTo(locationResult.getLastLocation()) > 10 && getActivity() != null) {
+//                    startNewRequest(queryTerm);
+//                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+//                            new LatLng(
+//                                    locationResult.getLastLocation().getLatitude(),
+//                                    locationResult.getLastLocation().getLongitude()),
+//                            18), 1500, null);
+//                }
+//            }
+//        };
+//
+//        // new Google API SDK v11 uses getFusedLocationProviderClient(this)
+//        fusedLocationClient = getFusedLocationProviderClient(getContext());
+//        fusedLocationClient.requestLocationUpdates(
+//                locationRequest, locationCallback, Looper.myLooper());
+//    }
 }

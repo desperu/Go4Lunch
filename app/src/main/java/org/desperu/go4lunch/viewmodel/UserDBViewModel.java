@@ -12,10 +12,10 @@ import androidx.lifecycle.MutableLiveData;
 import com.bumptech.glide.Glide;
 import com.google.android.libraries.places.api.model.Place;
 
-import org.desperu.go4lunch.R;
 import org.desperu.go4lunch.api.firestore.UserHelper;
 import org.desperu.go4lunch.models.Restaurant;
 import org.desperu.go4lunch.models.User;
+import org.desperu.go4lunch.utils.Go4LunchUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -55,10 +55,8 @@ public class UserDBViewModel extends AndroidViewModel {
     public void fetchUser() {
         UserHelper.getUser(uid).addOnSuccessListener(documentSnapshot -> {
             user.set(documentSnapshot.toObject(User.class));
-            // TODO move this in utils
-            joiningName.set(getApplication().getResources().getString(
-                    R.string.activity_restaurant_detail_recycler_text_joining,
-                    Objects.requireNonNull(this.user.get()).getUsername()));
+            joiningName.set(Go4LunchUtils.getJoiningName(getApplication(),
+                    Objects.requireNonNull(user.get()).getUsername()));
         });
     }
 

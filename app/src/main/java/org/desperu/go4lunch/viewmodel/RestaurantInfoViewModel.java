@@ -1,25 +1,32 @@
 package org.desperu.go4lunch.viewmodel;
 
 import android.app.Application;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.databinding.BindingAdapter;
 import androidx.databinding.ObservableField;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.model.PhotoMetadata;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.FetchPhotoRequest;
 import com.google.android.libraries.places.api.net.FetchPlaceRequest;
+import com.google.android.libraries.places.api.net.FetchPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
 
 import org.desperu.go4lunch.R;
 import org.desperu.go4lunch.api.places.PlacesApi;
+import org.desperu.go4lunch.utils.Go4LunchUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,15 +34,22 @@ import java.util.List;
 public class RestaurantInfoViewModel extends AndroidViewModel {
 
     private String placeId;
+    private LatLng userPosition;
 
     private ObservableField<Place> place = new ObservableField<>();
     private ObservableField<Drawable> picture = new ObservableField<>();
+    private ObservableField<String> simpleName = new ObservableField<>();
+    private ObservableField<String> typeAndAddress = new ObservableField<>();
+    private ObservableField<String> openingHoursString = new ObservableField<>();
+    private ObservableField<Integer> openingHoursColor = new ObservableField<>();
+    private ObservableField<Boolean> isOpened = new ObservableField<>();
+    private ObservableField<String> restaurantDistance = new ObservableField<>();
     private MutableLiveData<Place> placeMutableLiveData = new MutableLiveData<>();
 
     public RestaurantInfoViewModel(Application application, String placeId) {
         super(application);
         this.placeId = placeId; // TODO put in method witch need placeId...
-        this.getPlaceInfo();
+        this.fetchPlaceInfo();
     }
 
     // --------------
@@ -43,13 +57,13 @@ public class RestaurantInfoViewModel extends AndroidViewModel {
     // --------------
 
     public void restartRequest() {
-        this.getPlaceInfo();
+        this.fetchPlaceInfo();
     }
 
     /**
-     * Get place info from its id.
+     * Fetch place info with its id.
      */
-    private void getPlaceInfo() {
+    private void fetchPlaceInfo() {
         // Get Place API instance.
         PlacesClient placesClient = PlacesApi.getPlacesClient(getApplication());
 
@@ -62,8 +76,7 @@ public class RestaurantInfoViewModel extends AndroidViewModel {
         FetchPlaceRequest request = FetchPlaceRequest.newInstance(placeId, placeFields);
 
         placesClient.fetchPlace(request).addOnSuccessListener((response) -> {
-            this.place.set(response.getPlace());
-            this.placeMutableLiveData.postValue(response.getPlace());
+            this.setRestaurantData(response);
             this.setPicture();
             Log.i(getClass().getSimpleName(), "Place found: " + place.get().getName());
         }).addOnFailureListener((exception) -> {
@@ -73,6 +86,22 @@ public class RestaurantInfoViewModel extends AndroidViewModel {
                 Toast.makeText(getApplication(), R.string.view_model_toast_request_failure, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    /**
+     * Set restaurant data when received response.
+     * @param response Fetch place response.
+     */
+    private void setRestaurantData(@NotNull FetchPlaceResponse response) {
+        this.place.set(response.getPlace());
+        this.simpleName.set(Go4LunchUtils.getSimpleRestaurantName(response.getPlace().getName()));
+        this.typeAndAddress.set(Go4LunchUtils.getRestaurantType(response.getPlace().getName())
+                + Go4LunchUtils.getRestaurantStreetAddress(response.getPlace().getAddress()));
+        this.openingHoursString.set(Go4LunchUtils.getOpeningHours(getApplication(), response.getPlace().getOpeningHours()));
+        this.openingHoursColor.set(getApplication().getResources().getColor(Go4LunchUtils.getOpeningHoursColor()));
+        this.isOpened.set(Go4LunchUtils.getIsOpened());
+        this.restaurantDistance.set(Go4LunchUtils.getRestaurantDistance(this.userPosition, response.getPlace().getLatLng()));
+        this.placeMutableLiveData.postValue(response.getPlace());
     }
 
     /**
@@ -102,10 +131,32 @@ public class RestaurantInfoViewModel extends AndroidViewModel {
             this.picture.set(getApplication().getResources().getDrawable(R.drawable.im_no_image_300dp));
     }
 
+    /**
+     * Set current user position.
+     * @param userPosition Current user position.
+     */
+    public void setLocationData(LatLng userPosition) { this.userPosition = userPosition; }
+
     // --- GETTERS ---
     public ObservableField<Place> getPlace() { return this.place; }
 
     public ObservableField<Drawable> getPicture() { return this.picture; }
+
+    public ObservableField<String> getSimpleName() { return this.simpleName; }
+
+    public ObservableField<String> getTypeAndAddress() { return this.typeAndAddress; }
+
+    public ObservableField<String> getOpeningHoursString() { return this.openingHoursString; }
+
+    public ObservableField<Integer> getOpeningHoursColor() { return this.openingHoursColor; }
+
+    public ObservableField<Boolean> getIsOpened() { return this.isOpened; }
+
+    @BindingAdapter("setStyle") public static void setStyle(@NotNull TextView textView, boolean isOpened) {
+        textView.setTypeface(null, isOpened ? Typeface.NORMAL : Typeface.BOLD);
+    }
+
+    public ObservableField<String> getRestaurantDistance() { return this.restaurantDistance; }
 
     public LiveData<Place> getPlaceLiveData() { return this.placeMutableLiveData; }
 }

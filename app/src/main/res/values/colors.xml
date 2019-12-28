@@ -1,19 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <!-- Go4Lunch colors -->
     <color name="colorPrimary">#ff5722</color>
     <color name="colorPrimaryDark">#c41c00</color>
     <color name="colorAccent">#ff5722</color>
-    <color name="colorLightGray">#974D4D4D</color>
+    <color name="colorLightGrey">#974D4D4D</color>
     <color name="colorNavDrawer">#ff8a50</color>
 
-    <!-- Marker maps color -->
+    <!-- Marker maps colors -->
     <color name="colorMarkerNotBookedFont">#ff8a50</color>
     <color name="colorMarkerNotBookedCutlery">#c41c00</color>
     <color name="colorMarkerBookedFont">#69f0ae</color>
     <color name="colorMarkerBookedCutlery">@android:color/white</color>
 
-    <!-- Restaurant Detail divider -->
+    <!-- Restaurant Detail and List colors -->
     <color name="colorExtraLightGrey">#C4C4C4</color>
     <color name="colorStar">#f8e71c</color>
+    <color name="colorLightDark">#323232</color>
+    <color name="colorOpen">#12B613</color>
+    <color name="colorOpenAt">#FC6215</color>
+    <color name="colorClose">#FF0000</color>
 </resources>

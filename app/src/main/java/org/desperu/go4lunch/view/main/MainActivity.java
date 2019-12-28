@@ -1,6 +1,7 @@
 package org.desperu.go4lunch.view.main;
 
 import android.content.Intent;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
@@ -63,6 +64,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private UserAuthViewModel userAuthViewModel;
     private UserDBViewModel userDBViewModel;
     @State RectangularBounds nearbyBounds;
+    @State Location userLocation;
     @State ArrayList<String> placeList;
     @State RectangularBounds bounds;
     @State CameraPosition cameraPosition;
@@ -150,6 +152,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     bundle.putParcelable(BOUNDS, bounds);
                     if (this.queryTerm != null && !this.queryTerm.isEmpty())
                         bundle.putString(QUERY_TERM_LIST, queryTerm);
+                    bundle.putParcelable(USER_LOCATION, userLocation);
                     fragment.setArguments(bundle);
                     break;
                 case WORKMATES_FRAGMENT:
@@ -283,6 +286,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     public void saveNearbyBounds(RectangularBounds nearbyBounds) { this.nearbyBounds = nearbyBounds; }
+
+    @Override
+    public void onNewUserLocation(Location userLocation) { this.userLocation = userLocation; }
 
     @Override
     public void onNewPlacesIdList(ArrayList<String> placeList) { this.placeList = placeList; }
