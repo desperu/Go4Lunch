@@ -107,7 +107,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/activity_restaurant_detail_text_view_restaurant_name"
                         android:layout_marginTop="@dimen/activity_restaurant_detail_text_restaurant_address_margin_top"
-                        android:text="@{String.valueOf(restaurantInfoViewModel.place.address)}"
+                        android:text="@{restaurantInfoViewModel.typeAndAddress}"
                         android:textColor="@android:color/white"
                         android:maxLines="1"
                         android:ellipsize="end"/>

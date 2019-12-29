@@ -59,11 +59,12 @@
     <string name="view_model_toast_request_failure">Google Place time out …</string>
 
     <!-- GO4LUNCH UTILS -->
-    <string name="go4lunch_utils_opening_hours_open_until">"Open until "</string>
-    <string name="go4lunch_utils_opening_hours_open_at">"Open at "</string>
+    <string name="go4lunch_utils_opening_hours_open_until">Open until %1$s</string>
+    <string name="go4lunch_utils_opening_hours_open_at">Open at %1$s</string>
     <string name="go4lunch_utils_opening_hours_next_open_hour">"Open %1$s at "</string>
     <string name="go4lunch_utils_opening_hours_close">Closing soon !</string>
     <string name="go4lunch_utils_opening_hours_no_data">No opening hours data !</string>
+    <string name="go4lunch_utils_restaurant_distance_no_data">No data</string>
 
     <!-- FACEBOOK PURPOSE -->
     <string name="facebook_application_id" translatable="false">2475450979175039</string>

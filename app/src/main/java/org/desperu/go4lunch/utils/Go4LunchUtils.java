@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import static org.desperu.go4lunch.Go4LunchTools.OpeningHoursState.*;
 
@@ -37,7 +38,7 @@ public class Go4LunchUtils {
      */
     @NotNull
     public static String getJoiningName(@NotNull Context context, String userName) {
-        return context.getResources().getString(R.string.activity_restaurant_detail_recycler_text_joining, userName);
+        return context.getString(R.string.activity_restaurant_detail_recycler_text_joining, userName);
     }
 
     // --------------
@@ -52,7 +53,7 @@ public class Go4LunchUtils {
     @NotNull
     public static String getSimpleRestaurantName(@NotNull String restaurantName) {
         restaurantType = null;
-        List<String> str = Arrays.asList(restaurantName.split("-"));
+        List<String> str = Arrays.asList(restaurantName.split(" - "));
         if (str.size() > 1) restaurantType = str.get(1);
         return str.get(0);
     }
@@ -75,7 +76,7 @@ public class Go4LunchUtils {
     @NotNull
     public static String getRestaurantType(String restaurantName) {
         if (restaurantType == null) getSimpleRestaurantName(restaurantName);
-        else if (!restaurantType.isEmpty()) {
+        if (restaurantType != null && !restaurantType.isEmpty()) {
             if (restaurantType.toLowerCase().contains("restaurant")) {
                 List<String> type = Arrays.asList(restaurantType.split(" "));
                 return Character.toUpperCase(type.get(type.size() - 1).charAt(0)) + type.get(type.size() - 1).substring(1) + " - ";
@@ -92,11 +93,11 @@ public class Go4LunchUtils {
      * Get opening hours.
      * @param context Context from this method is called.
      * @param openingHours Restaurant opening hours.
+     * @param cal Calendar instance.
      * @return Current opening hours string.
      */
-    public static String getOpeningHours(Context context, OpeningHours openingHours) {
+    public static String getOpeningHours(Context context, OpeningHours openingHours, Calendar cal) {
         if (openingHours != null) {
-            Calendar cal = Calendar.getInstance();
             String period = openingHours.getWeekdayText().get(convertDayOfWeek(cal.get(Calendar.DAY_OF_WEEK)));
             List<String> periodSplit = Arrays.asList(period.split(": "));
             if (period.contains("/")) {
@@ -129,30 +130,33 @@ public class Go4LunchUtils {
 
         // Search opening hours for current day
         for (int i = 0; i < periodList.size(); i++) {
+            DayOfWeek openDay = Objects.requireNonNull(periodList.get(i).getOpen()).getDay();
+            DayOfWeek closeDay = DayOfWeek.SUNDAY;
+            LocalTime openTime = Objects.requireNonNull(periodList.get(i).getOpen()).getTime();
+            LocalTime closeTime = LocalTime.newInstance(0,0);
+            if (periodList.get(i).getClose() != null) {
+                closeTime = Objects.requireNonNull(periodList.get(i).getClose()).getTime();
+                closeDay = Objects.requireNonNull(periodList.get(i).getClose()).getDay();
+            }
             // Get opening hours for today
-            if (periodList.get(i).getOpen().getDay().compareTo(getDayOfWeek(dayOfWeekNumber)) == 0) {
+            if (openDay.compareTo(getDayOfWeek(dayOfWeekNumber)) == 0) {
                 // If current time >= open hour and, close hour > current time or close day > today
-                if (localTime.compareTo(periodList.get(i).getOpen().getTime()) >= 0
-                        && (periodList.get(i).getClose().getTime().compareTo(localTime) > 0
-                        || periodList.get(i).getClose().getDay().compareTo(getDayOfWeek(dayOfWeekNumber)) < 0)) {
+                if (localTime.compareTo(openTime) >= 0 && (closeTime.compareTo(localTime) > 0
+                        || closeDay.compareTo(getDayOfWeek(dayOfWeekNumber)) > 0)) { // TODO check that and modification
                     openingHoursColor = OPEN;
-                    return context.getString(R.string.go4lunch_utils_opening_hours_open_until)
-                            + setTimeFormat(periodList.get(i).getClose().getTime().getHours(),
-                            periodList.get(i).getClose().getTime().getMinutes());
+                    return context.getString(R.string.go4lunch_utils_opening_hours_open_until, setTimeFormat(closeTime.getHours(), closeTime.getMinutes()));
                     // Else if open hour > now
-                } else if (periodList.get(i).getOpen().getTime().compareTo(localTime) > 0) {
+                } else if (openTime.compareTo(localTime) > 0) {
                     openingHoursColor = OPEN_AT;
-                    return context.getString(R.string.go4lunch_utils_opening_hours_open_at)
-                            + setTimeFormat(periodList.get(i).getOpen().getTime().getHours(),
-                            periodList.get(i).getOpen().getTime().getMinutes());
+                    return context.getString(R.string.go4lunch_utils_opening_hours_open_at, setTimeFormat(openTime.getHours(), openTime.getMinutes()));
                 }
             }
         }
+        cal.add(Calendar.DAY_OF_WEEK, 1);
         for (int i = 0; i < periodList.size(); i++) {
             // If close today, show tomorrow open hour
-            cal.add(Calendar.DAY_OF_WEEK, 1);
-            DayOfWeek openDay = periodList.get(i).getOpen().getDay();
-            LocalTime openTime = periodList.get(i).getOpen().getTime();
+            DayOfWeek openDay = Objects.requireNonNull(periodList.get(i).getOpen()).getDay();
+            LocalTime openTime = Objects.requireNonNull(periodList.get(i).getOpen()).getTime();
             if (openDay.compareTo(getDayOfWeek(cal.get(Calendar.DAY_OF_WEEK))) == 0) {
                 openingHoursColor = OPEN_AT;
                 String nextDay = openDay.toString().toLowerCase();
@@ -172,7 +176,7 @@ public class Go4LunchUtils {
      */
     @Nullable
     @Contract(pure = true)
-    private static DayOfWeek getDayOfWeek(int dayOfWeekNumber) {
+    static DayOfWeek getDayOfWeek(int dayOfWeekNumber) {
         switch (dayOfWeekNumber) {
             case 1: return DayOfWeek.SUNDAY;
             case 2: return DayOfWeek.MONDAY;
@@ -233,11 +237,11 @@ public class Go4LunchUtils {
     }
 
     /**
-     * Get restaurant open hours string state (open, open at or close).
-     * @return String state.
+     * Get opening hours string style, depending of restaurant state (open, open at or close).
+     * @return String style (italic, bold or normal).
      */
     @Contract(pure = true)
-    public static int getRestaurantState() {
+    public static int getOpeningHoursStyle() {
         if (openingHoursColor == OPEN) return Typeface.ITALIC;
         return openingHoursColor == CLOSE ? Typeface.BOLD : Typeface.NORMAL;
     }
@@ -248,19 +252,20 @@ public class Go4LunchUtils {
 
     /**
      * Get distance between user position and restaurant position, in meters.
+     * @param context Context from this method is called.
      * @param userPosition User position.
      * @param restaurantPosition Restaurant position.
      * @return String distance in meters.
      */
     @NotNull
-    public static String getRestaurantDistance(LatLng userPosition, LatLng restaurantPosition) {
+    public static String getRestaurantDistance(Context context, LatLng userPosition, LatLng restaurantPosition) {
         float[] results = new float[1];
         if (userPosition != null && restaurantPosition != null) {
             Location.distanceBetween(userPosition.latitude, userPosition.longitude,
                     restaurantPosition.latitude, restaurantPosition.longitude, results);
             return ((int) results[0]) + "m";
         }
-        return "no data";
+        return context.getString(R.string.go4lunch_utils_restaurant_distance_no_data);
     }
 
     // --------------

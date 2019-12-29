@@ -29,7 +29,7 @@
             android:layout_margin="@dimen/fragment_restaurant_detail_item_text_user_margin"
             android:textColor="@android:color/black"
             android:textSize="@dimen/fragment_restaurant_detail_item_text_user_size"
-            android:text="@{obj.user.username}"/>
+            android:text="@{obj.user.userName}"/>
 
     </LinearLayout>
 

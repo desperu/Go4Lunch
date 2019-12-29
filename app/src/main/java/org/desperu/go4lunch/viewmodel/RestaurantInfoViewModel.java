@@ -29,6 +29,7 @@ import org.desperu.go4lunch.utils.Go4LunchUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 public class RestaurantInfoViewModel extends AndroidViewModel {
@@ -97,10 +98,12 @@ public class RestaurantInfoViewModel extends AndroidViewModel {
         this.simpleName.set(Go4LunchUtils.getSimpleRestaurantName(response.getPlace().getName()));
         this.typeAndAddress.set(Go4LunchUtils.getRestaurantType(response.getPlace().getName())
                 + Go4LunchUtils.getRestaurantStreetAddress(response.getPlace().getAddress()));
-        this.openingHoursString.set(Go4LunchUtils.getOpeningHours(getApplication(), response.getPlace().getOpeningHours()));
+        this.openingHoursString.set(Go4LunchUtils.getOpeningHours(getApplication(),
+                response.getPlace().getOpeningHours(), Calendar.getInstance()));
         this.openingHoursColor.set(getApplication().getResources().getColor(Go4LunchUtils.getOpeningHoursColor()));
-        this.isOpeningHoursStyle.set(Go4LunchUtils.getRestaurantState());
-        this.restaurantDistance.set(Go4LunchUtils.getRestaurantDistance(this.userPosition, response.getPlace().getLatLng()));
+        this.isOpeningHoursStyle.set(Go4LunchUtils.getOpeningHoursStyle());
+        this.restaurantDistance.set(Go4LunchUtils.getRestaurantDistance(getApplication(),
+                this.userPosition, response.getPlace().getLatLng()));
         this.placeMutableLiveData.postValue(response.getPlace());
     }
 

@@ -56,7 +56,7 @@ public class UserDBViewModel extends AndroidViewModel {
         UserHelper.getUser(uid).addOnSuccessListener(documentSnapshot -> {
             user.set(documentSnapshot.toObject(User.class));
             joiningName.set(Go4LunchUtils.getJoiningName(getApplication(),
-                    Objects.requireNonNull(user.get()).getUsername()));
+                    Objects.requireNonNull(user.get()).getUserName()));
         });
     }
 
