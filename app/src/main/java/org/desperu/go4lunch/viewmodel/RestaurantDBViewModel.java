@@ -2,6 +2,7 @@ package org.desperu.go4lunch.viewmodel;
 
 import androidx.databinding.ObservableDouble;
 import androidx.databinding.ObservableField;
+import androidx.databinding.ObservableInt;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -9,16 +10,20 @@ import com.google.android.libraries.places.api.model.Place;
 
 import org.desperu.go4lunch.api.firestore.RestaurantHelper;
 import org.desperu.go4lunch.models.Restaurant;
+import org.desperu.go4lunch.utils.Go4LunchUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class RestaurantDBViewModel {
 
     // FOR DATA
     private String restaurantId;
     private ObservableField<Restaurant> restaurant = new ObservableField<>();
+    private ObservableField<String> bookedUsersNumber = new ObservableField<>();
     private ObservableDouble likeUsersNumber = new ObservableDouble();
+    private ObservableInt likeUsersNumberString = new ObservableInt();
     private MutableLiveData<Restaurant> restaurantLiveData = new MutableLiveData<>();
 
     // CONSTRUCTOR
@@ -43,8 +48,9 @@ public class RestaurantDBViewModel {
         RestaurantHelper.getRestaurant(restaurantId).addOnSuccessListener(documentSnapshot -> {
             this.restaurant.set(documentSnapshot.toObject(Restaurant.class));
             this.restaurantLiveData.postValue(documentSnapshot.toObject(Restaurant.class));
-            if (restaurant.get() != null && restaurant.get().getLikeUsers() != null)
-                this.likeUsersNumber.set(restaurant.get().getLikeUsers().size() / (double) 10);
+            this.bookedUsersNumber.set(Go4LunchUtils.getBookedUsersNumber(documentSnapshot.toObject(Restaurant.class)));
+            if (restaurant.get() != null && Objects.requireNonNull(restaurant.get()).getLikeUsers() != null)
+                this.likeUsersNumber.set(Objects.requireNonNull(restaurant.get()).getLikeUsers().size() / (double) 10);
         });
     }
 
@@ -86,7 +92,12 @@ public class RestaurantDBViewModel {
     // --- GETTERS ---
     public ObservableField<Restaurant> getRestaurant() { return this.restaurant; }
 
-    public ObservableDouble getLikeUsersNumber() { return this.likeUsersNumber; }
+    public ObservableField<String> getBookedUsersNumber() { return this.bookedUsersNumber; }
+
+    public ObservableInt getLikeUsersNumberString(double placeRating, int starPosition) {
+        this.likeUsersNumberString.set(Go4LunchUtils.getRatingStarState(likeUsersNumber.get(), placeRating, starPosition));
+        return this.likeUsersNumberString;
+    }
 
     public LiveData<Restaurant> getRestaurantLiveData() { return this.restaurantLiveData; }
 }

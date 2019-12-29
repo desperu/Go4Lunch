@@ -77,7 +77,7 @@
                         android:contentDescription="@null"
                         app:srcCompat="@drawable/ic_baseline_star_black_24"
                         android:tint="@color/colorStar"
-                        android:visibility="@{(restaurantInfoViewModel.place.rating + restaurantDBViewModel.likeUsersNumber) > 1.5 ? 0 : 8}"/>
+                        android:visibility="@{restaurantDBViewModel.getLikeUsersNumberString(restaurantInfoViewModel.place.rating, 1)}"/>
 
                     <ImageView
                         android:id="@+id/activity_restaurant_detail_image_restaurant_stars_2"
@@ -88,7 +88,7 @@
                         android:contentDescription="@null"
                         app:srcCompat="@drawable/ic_baseline_star_black_24"
                         android:tint="@color/colorStar"
-                        android:visibility="@{(restaurantInfoViewModel.place.rating + restaurantDBViewModel.likeUsersNumber) > 3 ? 0 : 8}"/>
+                        android:visibility="@{restaurantDBViewModel.getLikeUsersNumberString(restaurantInfoViewModel.place.rating, 2)}"/>
 
                     <ImageView
                         android:id="@+id/activity_restaurant_detail_image_restaurant_stars_3"
@@ -99,7 +99,7 @@
                         android:contentDescription="@null"
                         app:srcCompat="@drawable/ic_baseline_star_black_24"
                         android:tint="@color/colorStar"
-                        android:visibility="@{(restaurantInfoViewModel.place.rating + restaurantDBViewModel.likeUsersNumber) > 4.5 ? 0 : 8}"/>
+                        android:visibility="@{restaurantDBViewModel.getLikeUsersNumberString(restaurantInfoViewModel.place.rating, 3)}"/>
 
                     <TextView
                         android:id="@+id/activity_restaurant_detail_restaurant_type_and_address"

@@ -18,4 +18,9 @@ public class MyViewHolder extends RecyclerView.ViewHolder {
         binding.setVariable(org.desperu.go4lunch.BR.obj, obj);
         binding.executePendingBindings();
     }
+
+    public void bind2(Object obj2) {
+        binding.setVariable(org.desperu.go4lunch.BR.obj2, obj2);
+        binding.executePendingBindings();
+    }
 }

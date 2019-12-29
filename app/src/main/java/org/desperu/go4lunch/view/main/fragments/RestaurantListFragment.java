@@ -16,6 +16,7 @@ import org.desperu.go4lunch.view.adapter.RestaurantListAdapter;
 import org.desperu.go4lunch.view.base.BaseFragment;
 import org.desperu.go4lunch.viewmodel.AutocompleteViewModel;
 import org.desperu.go4lunch.viewmodel.NearbyPlaceViewModel;
+import org.desperu.go4lunch.viewmodel.RestaurantDBViewModel;
 import org.desperu.go4lunch.viewmodel.RestaurantInfoViewModel;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,6 +44,7 @@ public class RestaurantListFragment extends BaseFragment {
     private RectangularBounds bounds;
     private RestaurantListAdapter adapter;
     private ArrayList<RestaurantInfoViewModel> restaurantList = new ArrayList<>();
+    private ArrayList<RestaurantDBViewModel> restaurantDBList = new ArrayList<>();
 
     // CALLBACK
     public interface OnNewDataListener {
@@ -111,7 +113,7 @@ public class RestaurantListFragment extends BaseFragment {
      */
     private void configureRecyclerView() {
         // Create adapter passing in the sample user data
-        this.adapter = new RestaurantListAdapter(R.layout.fragment_restaurant_list_item, restaurantList);
+        this.adapter = new RestaurantListAdapter(R.layout.fragment_restaurant_list_item, restaurantList, restaurantDBList);
         // Attach the adapter to the recyclerView to populate items
         this.recyclerView.setAdapter(this.adapter);
         // Set layout manager to position the items
@@ -229,6 +231,10 @@ public class RestaurantListFragment extends BaseFragment {
                     new RestaurantInfoViewModel(getActivity().getApplication(), placeId);
             restaurantInfoViewModel.setLocationData(new LatLng(this.getUserLocation().getLatitude(), getUserLocation().getLongitude()));
             restaurantList.add(restaurantInfoViewModel);
+
+            RestaurantDBViewModel restaurantDBViewModel = new RestaurantDBViewModel(placeId);
+            restaurantDBViewModel.fetchRestaurant();
+            restaurantDBList.add(restaurantDBViewModel);
         }
         adapter.notifyDataSetChanged();
         swipeRefreshLayout.setRefreshing(false);

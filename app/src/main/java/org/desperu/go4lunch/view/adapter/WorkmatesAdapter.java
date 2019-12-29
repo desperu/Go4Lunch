@@ -19,6 +19,11 @@ public class WorkmatesAdapter extends BaseAdapter {
     protected Object getObjForPosition(int position) { return this.userList.get(position); }
 
     @Override
+    protected Object getObj2ForPosition(int position) {
+        return null;
+    }
+
+    @Override
     protected int getLayoutIdForPosition(int position) { return layoutId; }
 
     @Override

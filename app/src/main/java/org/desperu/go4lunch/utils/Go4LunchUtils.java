@@ -1,7 +1,9 @@
 package org.desperu.go4lunch.utils;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.location.Location;
+import android.view.View;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.model.DayOfWeek;
@@ -10,6 +12,7 @@ import com.google.android.libraries.places.api.model.OpeningHours;
 import com.google.android.libraries.places.api.model.Period;
 
 import org.desperu.go4lunch.R;
+import org.desperu.go4lunch.models.Restaurant;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -146,15 +149,16 @@ public class Go4LunchUtils {
             }
         }
         for (int i = 0; i < periodList.size(); i++) {
-            // If close today, show open hour tomorrow
+            // If close today, show tomorrow open hour
             cal.add(Calendar.DAY_OF_WEEK, 1);
-            if (periodList.get(i).getOpen().getDay().compareTo(getDayOfWeek(cal.get(Calendar.DAY_OF_WEEK))) == 0) {
+            DayOfWeek openDay = periodList.get(i).getOpen().getDay();
+            LocalTime openTime = periodList.get(i).getOpen().getTime();
+            if (openDay.compareTo(getDayOfWeek(cal.get(Calendar.DAY_OF_WEEK))) == 0) {
                 openingHoursColor = OPEN_AT;
-                String nextDay = periodList.get(i).getOpen().getDay().toString().toLowerCase();
+                String nextDay = openDay.toString().toLowerCase();
                 return context.getString(R.string.go4lunch_utils_opening_hours_next_open_hour,
                         Character.toUpperCase(nextDay.charAt(0)) + nextDay.substring(1))
-                        + setTimeFormat(periodList.get(i).getOpen().getTime().getHours(),
-                        periodList.get(i).getOpen().getTime().getMinutes());
+                        + setTimeFormat(openTime.getHours(), openTime.getMinutes());
             }
         }
         openingHoursColor = CLOSE;
@@ -229,11 +233,14 @@ public class Go4LunchUtils {
     }
 
     /**
-     * Get restaurant status.
-     * @return Is restaurant opened.
+     * Get restaurant open hours string state (open, open at or close).
+     * @return String state.
      */
     @Contract(pure = true)
-    public static boolean getIsOpened() { return openingHoursColor != 2; }
+    public static int getRestaurantState() {
+        if (openingHoursColor == OPEN) return Typeface.ITALIC;
+        return openingHoursColor == CLOSE ? Typeface.BOLD : Typeface.NORMAL;
+    }
 
     // --------------
     // RESTAURANT DISTANCE
@@ -246,7 +253,7 @@ public class Go4LunchUtils {
      * @return String distance in meters.
      */
     @NotNull
-    public static String getRestaurantDistance(@NotNull LatLng userPosition, @NotNull LatLng restaurantPosition) {
+    public static String getRestaurantDistance(LatLng userPosition, LatLng restaurantPosition) {
         float[] results = new float[1];
         if (userPosition != null && restaurantPosition != null) {
             Location.distanceBetween(userPosition.latitude, userPosition.longitude,
@@ -254,5 +261,33 @@ public class Go4LunchUtils {
             return ((int) results[0]) + "m";
         }
         return "no data";
+    }
+
+    // --------------
+    // RESTAURANT BOOKED USERS AND RATING
+    // --------------
+
+    /**
+     * Get string to show restaurant's booked users number "(x)".
+     * @param restaurant Restaurant object.
+     * @return Booked users number string.
+     */
+    @NotNull
+    public static String getBookedUsersNumber(Restaurant restaurant) {
+        if (restaurant != null && restaurant.getBookedUsersId() != null)
+            return "(" + restaurant.getBookedUsersId().size() + ")";
+        else return "(0)";
+    }
+
+    /**
+     * Get rating star state, depending of star position (1,2 or 3), google place rating, and application users rating.
+     * @param ratingDB Application user rating.
+     * @param ratingPlace Google places rating.
+     * @param starPosition Star position.
+     * @return State for the star (visible or not).
+     */
+    @Contract(pure = true)
+    public static int getRatingStarState(double ratingDB, double ratingPlace, int starPosition) {
+        return (ratingDB + ratingPlace) >= (starPosition * 1.5) ? View.VISIBLE : View.GONE;
     }
 }

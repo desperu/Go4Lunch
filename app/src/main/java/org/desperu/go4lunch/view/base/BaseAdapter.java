@@ -22,6 +22,7 @@ public abstract class BaseAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
     public void onBindViewHolder(@NotNull MyViewHolder holder, int position) {
         holder.bind(getObjForPosition(position));
+        holder.bind2(getObj2ForPosition(position));
     }
 
     @Override
@@ -30,6 +31,8 @@ public abstract class BaseAdapter extends RecyclerView.Adapter<MyViewHolder> {
     }
 
     protected abstract Object getObjForPosition(int position);
+
+    protected abstract Object getObj2ForPosition(int position);
 
     protected abstract int getLayoutIdForPosition(int position);
 }

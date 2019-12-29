@@ -1,7 +1,6 @@
 package org.desperu.go4lunch.viewmodel;
 
 import android.app.Application;
-import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
@@ -10,6 +9,7 @@ import android.widget.Toast;
 
 import androidx.databinding.BindingAdapter;
 import androidx.databinding.ObservableField;
+import androidx.databinding.ObservableInt;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -41,8 +41,8 @@ public class RestaurantInfoViewModel extends AndroidViewModel {
     private ObservableField<String> simpleName = new ObservableField<>();
     private ObservableField<String> typeAndAddress = new ObservableField<>();
     private ObservableField<String> openingHoursString = new ObservableField<>();
-    private ObservableField<Integer> openingHoursColor = new ObservableField<>();
-    private ObservableField<Boolean> isOpened = new ObservableField<>();
+    private ObservableInt openingHoursColor = new ObservableInt();
+    private ObservableInt isOpeningHoursStyle = new ObservableInt();
     private ObservableField<String> restaurantDistance = new ObservableField<>();
     private MutableLiveData<Place> placeMutableLiveData = new MutableLiveData<>();
 
@@ -99,7 +99,7 @@ public class RestaurantInfoViewModel extends AndroidViewModel {
                 + Go4LunchUtils.getRestaurantStreetAddress(response.getPlace().getAddress()));
         this.openingHoursString.set(Go4LunchUtils.getOpeningHours(getApplication(), response.getPlace().getOpeningHours()));
         this.openingHoursColor.set(getApplication().getResources().getColor(Go4LunchUtils.getOpeningHoursColor()));
-        this.isOpened.set(Go4LunchUtils.getIsOpened());
+        this.isOpeningHoursStyle.set(Go4LunchUtils.getRestaurantState());
         this.restaurantDistance.set(Go4LunchUtils.getRestaurantDistance(this.userPosition, response.getPlace().getLatLng()));
         this.placeMutableLiveData.postValue(response.getPlace());
     }
@@ -148,12 +148,12 @@ public class RestaurantInfoViewModel extends AndroidViewModel {
 
     public ObservableField<String> getOpeningHoursString() { return this.openingHoursString; }
 
-    public ObservableField<Integer> getOpeningHoursColor() { return this.openingHoursColor; }
+    public ObservableInt getOpeningHoursColor() { return this.openingHoursColor; }
 
-    public ObservableField<Boolean> getIsOpened() { return this.isOpened; }
+    public ObservableInt getIsOpeningHoursStyle() { return this.isOpeningHoursStyle; }
 
-    @BindingAdapter("setStyle") public static void setStyle(@NotNull TextView textView, boolean isOpened) {
-        textView.setTypeface(null, isOpened ? Typeface.NORMAL : Typeface.BOLD);
+    @BindingAdapter("setStyle") public static void setStyle(@NotNull TextView textView, int openingHourStyle) {
+        textView.setTypeface(null, openingHourStyle);
     }
 
     public ObservableField<String> getRestaurantDistance() { return this.restaurantDistance; }
