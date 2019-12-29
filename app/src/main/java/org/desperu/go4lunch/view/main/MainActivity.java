@@ -50,8 +50,8 @@ import static org.desperu.go4lunch.view.main.fragments.RestaurantListFragment.*;
 
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener,
-        BottomNavigationView.OnNavigationItemSelectedListener, OnNewDataOrClickListener,
-        OnNewDataListener {
+        BottomNavigationView.OnNavigationItemSelectedListener, MapsFragment.OnNewDataOrClickListener,
+        RestaurantListFragment.OnNewDataListener, RestaurantListFragment.OnClickListener {
 
     // FOR DESIGN
     @BindView(R.id.toolbar) Toolbar toolbar;
@@ -298,6 +298,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     public void onNewCameraPosition(CameraPosition cameraPosition) { this.cameraPosition = cameraPosition; }
+
+    @Override
+    public void onItemClick(String restaurantId) { this.showRestaurantDetailActivity(restaurantId); }
 
     /**
      * Manage click on Your Lunch button.

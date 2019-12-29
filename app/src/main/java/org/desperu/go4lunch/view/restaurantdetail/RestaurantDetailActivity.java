@@ -130,7 +130,7 @@ public class RestaurantDetailActivity extends BaseActivity {
     }
 
     /**
-     * Check if call phone is granted, if not, ask for them.
+     * Check if call phone permission is granted, if not, ask for it.
      */
     private void checkCallPhonePermissionsStatus() {
         if (!EasyPermissions.hasPermissions(this, PERMS))

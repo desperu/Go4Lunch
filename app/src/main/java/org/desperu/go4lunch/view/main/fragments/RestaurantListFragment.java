@@ -12,6 +12,7 @@ import com.google.android.libraries.places.api.model.RectangularBounds;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.desperu.go4lunch.R;
+import org.desperu.go4lunch.utils.ItemClickSupport;
 import org.desperu.go4lunch.view.adapter.RestaurantListAdapter;
 import org.desperu.go4lunch.view.base.BaseFragment;
 import org.desperu.go4lunch.viewmodel.AutocompleteViewModel;
@@ -43,16 +44,22 @@ public class RestaurantListFragment extends BaseFragment {
     private String queryTerm;
     private RectangularBounds bounds;
     private RestaurantListAdapter adapter;
-    private ArrayList<RestaurantInfoViewModel> restaurantList = new ArrayList<>();
+    private ArrayList<RestaurantInfoViewModel> restaurantInfoList = new ArrayList<>();
     private ArrayList<RestaurantDBViewModel> restaurantDBList = new ArrayList<>();
 
-    // CALLBACK
+    // CALLBACKS
     public interface OnNewDataListener {
         void onNewPlacesIdList(ArrayList<String> placeIdList);
         void onNewBounds(RectangularBounds bounds);
     }
 
-    private OnNewDataListener mCallback;
+    public interface OnClickListener {
+        void onItemClick(String restaurantId);
+    }
+
+    private OnNewDataListener dataCallback;
+
+    private OnClickListener clickCallback;
 
     // --------------
     // BASE METHODS
@@ -63,9 +70,11 @@ public class RestaurantListFragment extends BaseFragment {
 
     @Override
     protected void configureDesign() {
-        this.createCallbackToParentActivity();
+        this.createDataCallbackToParentActivity();
+        this.createClickCallbackToParentActivity();
         this.setDataFromBundle();
         this.configureRecyclerView();
+        this.configureOnClickRecyclerViewItem();
         this.updateRecyclerViewWithMapsData();
         this.configureSwipeRefresh();
     }
@@ -113,7 +122,7 @@ public class RestaurantListFragment extends BaseFragment {
      */
     private void configureRecyclerView() {
         // Create adapter passing in the sample user data
-        this.adapter = new RestaurantListAdapter(R.layout.fragment_restaurant_list_item, restaurantList, restaurantDBList);
+        this.adapter = new RestaurantListAdapter(R.layout.fragment_restaurant_list_item, restaurantInfoList, restaurantDBList);
         // Attach the adapter to the recyclerView to populate items
         this.recyclerView.setAdapter(this.adapter);
         // Set layout manager to position the items
@@ -140,13 +149,24 @@ public class RestaurantListFragment extends BaseFragment {
     // --------------
 
     /**
-     * Configure callback for parent activity to return new restaurant list.
+     * Configure data callback for parent activity to return new restaurant list.
      */
-    private void createCallbackToParentActivity(){
+    private void createDataCallbackToParentActivity(){
         try {
-            mCallback = (OnNewDataListener) getActivity();
+            dataCallback = (OnNewDataListener) getActivity();
         } catch (ClassCastException e) {
             throw new ClassCastException(e.toString()+ " must implement OnNewDataListener");
+        }
+    }
+
+    /**
+     * Configure click callback for parent activity to manage click.
+     */
+    private void createClickCallbackToParentActivity(){
+        try {
+            clickCallback = (OnClickListener) getActivity();
+        } catch (ClassCastException e) {
+            throw new ClassCastException(e.toString()+ " must implement OnClickListener");
         }
     }
 
@@ -179,7 +199,7 @@ public class RestaurantListFragment extends BaseFragment {
             this.placesIdList = placesIdList;
         });
         this.bounds = this.getNearbyBounds();
-        mCallback.onNewBounds(null);
+        dataCallback.onNewBounds(null);
         Snackbar.make(swipeRefreshLayout, R.string.fragment_restaurant_list_snackbar_refresh_nearby_restaurant, Snackbar.LENGTH_SHORT).show();
     }
 
@@ -201,7 +221,17 @@ public class RestaurantListFragment extends BaseFragment {
     // ACTION
     // --------------
 
-    // TODO onclick restaurant.
+    /**
+     * Configure click on recycler view item.
+     */
+    private void configureOnClickRecyclerViewItem() {
+        ItemClickSupport.addTo(recyclerView, R.layout.fragment_restaurant_list_item)
+                .setOnItemClickListener((recyclerView, position, v) -> {
+                    String restaurantId = Objects.requireNonNull(adapter.getRestaurantInfo(position).getPlace().get()).getId();
+                    clickCallback.onItemClick(restaurantId);
+                });
+    }
+
     /**
      * Method called when query text change.
      * @param query Query term.
@@ -224,14 +254,16 @@ public class RestaurantListFragment extends BaseFragment {
     private void updateRecyclerView(ArrayList<String> placeIdList) {
         assert getActivity() != null;
         assert this.getUserLocation() != null;
-        mCallback.onNewPlacesIdList(placeIdList);
-        restaurantList.clear();
+        dataCallback.onNewPlacesIdList(placeIdList);
+        restaurantInfoList.clear();
         for (String placeId : placeIdList) {
+            // Google place info
             RestaurantInfoViewModel restaurantInfoViewModel =
                     new RestaurantInfoViewModel(getActivity().getApplication(), placeId);
             restaurantInfoViewModel.setLocationData(new LatLng(this.getUserLocation().getLatitude(), getUserLocation().getLongitude()));
-            restaurantList.add(restaurantInfoViewModel);
+            restaurantInfoList.add(restaurantInfoViewModel);
 
+            // Restaurant data base
             RestaurantDBViewModel restaurantDBViewModel = new RestaurantDBViewModel(placeId);
             restaurantDBViewModel.fetchRestaurant();
             restaurantDBList.add(restaurantDBViewModel);
