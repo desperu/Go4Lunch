@@ -131,7 +131,8 @@
                         android:layout_weight="1"
                         android:orientation="vertical"
                         android:gravity="center"
-                        android:padding="@dimen/activity_restaurant_detail_linear_button_padding">
+                        android:padding="@dimen/activity_restaurant_detail_linear_button_padding"
+                        tools:ignore="UseCompoundDrawables">
 
                         <ImageView
                             android:layout_width="wrap_content"
@@ -159,7 +160,8 @@
                         android:layout_weight="1"
                         android:orientation="vertical"
                         android:gravity="center"
-                        android:padding="@dimen/activity_restaurant_detail_linear_button_padding">
+                        android:padding="@dimen/activity_restaurant_detail_linear_button_padding"
+                        tools:ignore="UseCompoundDrawables">
 
                         <ImageView
                             android:layout_width="wrap_content"
@@ -187,7 +189,8 @@
                         android:layout_weight="1"
                         android:orientation="vertical"
                         android:gravity="center"
-                        android:padding="@dimen/activity_restaurant_detail_linear_button_padding">
+                        android:padding="@dimen/activity_restaurant_detail_linear_button_padding"
+                        tools:ignore="UseCompoundDrawables">
 
                         <ImageView
                             android:layout_width="wrap_content"

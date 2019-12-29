@@ -41,6 +41,18 @@
     <dimen name="fragment_maps_toolbar_margin_bottom">20dp</dimen>
     <dimen name="fragment_maps_toolbar_margin_end">18dp</dimen>
 
+    <!-- Restaurant List Fragment -->
+    <dimen name="fragment_restaurant_list_item_linear_root_padding">10dp</dimen>
+    <dimen name="fragment_restaurant_list_item_text_restaurant_name_text_size">16sp</dimen>
+    <dimen name="fragment_restaurant_list_item_text_restaurant_address_margin_top_and_bottom">5dp</dimen>
+    <dimen name="fragment_restaurant_list_item_linear_distance_joining_rating_margin_start_and_end">5dp</dimen>
+    <dimen name="fragment_restaurant_list_item_text_distance_margin_start">3dp</dimen>
+    <dimen name="fragment_restaurant_list_item_text_distance_text_size">16sp</dimen>
+    <dimen name="fragment_restaurant_list_item_text_booked_number_margin_top_and_bottom">5dp</dimen>
+    <dimen name="fragment_restaurant_list_item_text_booked_number_margin_end">2dp</dimen>
+    <dimen name="fragment_restaurant_list_item_image_restaurant_width">75dp</dimen>
+    <dimen name="fragment_restaurant_list_item_image_restaurant_height">75dp</dimen>
+
     <!-- Restaurant Detail Activity -->
     <dimen name="activity_restaurant_detail_constraint_margin_top">-25dp</dimen>
     <dimen name="activity_restaurant_detail_floating_button_max_image_size">30dp</dimen>
