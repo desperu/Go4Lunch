@@ -8,7 +8,9 @@ import org.desperu.go4lunch.R;
 import org.desperu.go4lunch.view.base.BaseFragment;
 import org.desperu.go4lunch.models.User;
 import org.desperu.go4lunch.view.adapter.WorkmatesAdapter;
+import org.desperu.go4lunch.viewmodel.RestaurantDBViewModel;
 import org.desperu.go4lunch.viewmodel.UserDBViewModel;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -23,6 +25,7 @@ public class WorkmatesFragment extends BaseFragment {
 
     private WorkmatesAdapter adapter;
     private List<UserDBViewModel> allWorkmatesList = new ArrayList<>();
+    private List<RestaurantDBViewModel> bookedRestaurantList = new ArrayList<>();
 
     // --------------
     // BASE METHODS
@@ -43,6 +46,8 @@ public class WorkmatesFragment extends BaseFragment {
         // Needed empty constructor
     }
 
+    @NotNull
+    @Contract(" -> new")
     public static WorkmatesFragment newInstance() { return new WorkmatesFragment(); }
 
     // --------------
@@ -54,7 +59,7 @@ public class WorkmatesFragment extends BaseFragment {
      */
     private void configureRecyclerView() {
         // Create adapter passing in the sample user data
-        this.adapter = new WorkmatesAdapter(R.layout.fragment_workmates_item, allWorkmatesList);
+        this.adapter = new WorkmatesAdapter(R.layout.fragment_workmates_item, allWorkmatesList, bookedRestaurantList);
         // Attach the adapter to the recyclerView to populate items
         this.recyclerView.setAdapter(this.adapter);
         // Set layout manager to position the items
@@ -90,9 +95,15 @@ public class WorkmatesFragment extends BaseFragment {
         assert getActivity() != null;
         allWorkmatesList.clear();
         for (User user : allUsersList) {
+            // User data from firestore
             UserDBViewModel userDBViewModel = new UserDBViewModel(getActivity().getApplication(), user.getUid());
             userDBViewModel.fetchUser();
-            allWorkmatesList.add(userDBViewModel);
+            this.allWorkmatesList.add(userDBViewModel);
+
+            // Restaurant data from firestore
+            RestaurantDBViewModel restaurantDBViewModel = new RestaurantDBViewModel(user.getBookedRestaurantId());
+            if (user.getBookedRestaurantId() != null) restaurantDBViewModel.fetchRestaurant();
+            this.bookedRestaurantList.add(restaurantDBViewModel);
         }
         adapter.notifyDataSetChanged();
         swipeRefreshLayout.setRefreshing(false);

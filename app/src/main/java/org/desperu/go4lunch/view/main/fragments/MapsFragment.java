@@ -106,6 +106,8 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
         // Needed empty constructor
     }
 
+    @NotNull
+    @Contract(" -> new")
     public static MapsFragment newInstance() { return new MapsFragment(); }
 
     // --------------

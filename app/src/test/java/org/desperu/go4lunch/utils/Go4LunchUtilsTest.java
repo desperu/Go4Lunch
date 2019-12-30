@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.Objects;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 @RunWith(PowerMockRunner.class)
@@ -33,12 +35,18 @@ public class Go4LunchUtilsTest {
 
     @Mock Context mockContext;
 
+    // User name and restaurant info
     private String userName = "user name";
     private String joiningUser = userName + " is joining !";
     private String restaurantName = "La Cucina - Restaurant italien";
     private String simpleRestaurantName = "La Cucina";
     private String restaurantType = "Italien - ";
+    private String simpleRestaurantType = "Italien";
+    private String userEatingAt = userName + " is eating " + simpleRestaurantType + " (" + simpleRestaurantName + ")";
+    private String userEatingAtWithoutType = userName + " is eating at " + simpleRestaurantName;
+    private String userEatingNotDecided = userEatingAt + " hasn't decided yet";
 
+    // Opening hours
     private String openMonday = "Open until 19h30";
     private String openAt = "Open at 8h30";
     private String openTuesdayAt = "Open Tuesday at ";
@@ -48,7 +56,10 @@ public class Go4LunchUtilsTest {
 
     @Before
     public void before() {
-        when(mockContext.getString(R.string.activity_restaurant_detail_recycler_text_joining, userName)).thenReturn(joiningUser);
+        when(mockContext.getString(R.string.go4lunch_utils_text_user_joining, userName)).thenReturn(joiningUser);
+        when(mockContext.getString(R.string.go4lunch_utils_text_user_eating_at, userName, simpleRestaurantType, simpleRestaurantName)).thenReturn(userEatingAt);
+        when(mockContext.getString(R.string.go4lunch_utils_text_user_eating_at_without_type, userName, simpleRestaurantName)).thenReturn(userEatingAtWithoutType);
+        when(mockContext.getString(R.string.go4lunch_utils_text_user_eating_not_decided, userName)).thenReturn(userEatingNotDecided);
         when(mockContext.getString(R.string.go4lunch_utils_opening_hours_open_until, "19h30")).thenReturn(openMonday);
         when(mockContext.getString(R.string.go4lunch_utils_opening_hours_open_at, "8h30")).thenReturn(openAt);
         when(mockContext.getString(R.string.go4lunch_utils_opening_hours_next_open_hour, "Tuesday")).thenReturn(openTuesdayAt);
@@ -62,6 +73,43 @@ public class Go4LunchUtilsTest {
         String output = Go4LunchUtils.getJoiningName(mockContext, userName);
 
         assertEquals(joiningUser, output);
+    }
+
+    @Test
+    public void Given_userAndRestaurantName_When_getUserEatingAt_Then_checkEatingString() {
+        String output = Go4LunchUtils.getUserEatingAt(mockContext, userName, restaurantName);
+
+        assertEquals(userEatingAt, output);
+    }
+
+    @Test
+    public void Given_userAndRestaurantNameWithoutType_When_getUserEatingAt_Then_checkSimpleEatingString() {
+        String output = Go4LunchUtils.getUserEatingAt(mockContext, userName, simpleRestaurantName);
+
+        assertEquals(userEatingAtWithoutType, output);
+    }
+
+    @Test
+    public void Given_userAndNullRestaurantName_When_getUserEatingAt_Then_checkNotDecidedString() {
+        String output = Go4LunchUtils.getUserEatingAt(mockContext, userName, null);
+
+        assertEquals(userEatingNotDecided, output);
+    }
+
+    @Test
+    public void Given_userAndRestaurantName_When_getUserEatingColor_Then_checkNotDecidedString() {
+        Go4LunchUtils.getUserEatingAt(mockContext, userName, restaurantName);
+        boolean output = Go4LunchUtils.getUserDecided();
+
+        assertTrue(output);
+    }
+
+    @Test
+    public void Given_userAndNullRestaurantName_When_getUserEatingColor_Then_checkNotDecidedString() {
+        Go4LunchUtils.getUserEatingAt(mockContext, userName, null);
+        boolean output = Go4LunchUtils.getUserDecided();
+
+        assertFalse(output);
     }
 
     @Test

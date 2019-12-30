@@ -19,6 +19,8 @@ import org.desperu.go4lunch.viewmodel.AutocompleteViewModel;
 import org.desperu.go4lunch.viewmodel.NearbyPlaceViewModel;
 import org.desperu.go4lunch.viewmodel.RestaurantDBViewModel;
 import org.desperu.go4lunch.viewmodel.RestaurantInfoViewModel;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -84,6 +86,8 @@ public class RestaurantListFragment extends BaseFragment {
         // Needed empty constructor
     }
 
+    @NotNull
+    @Contract(" -> new")
     public static RestaurantListFragment newInstance() { return new RestaurantListFragment(); }
 
     // --------------
@@ -227,8 +231,9 @@ public class RestaurantListFragment extends BaseFragment {
     private void configureOnClickRecyclerViewItem() {
         ItemClickSupport.addTo(recyclerView, R.layout.fragment_restaurant_list_item)
                 .setOnItemClickListener((recyclerView, position, v) -> {
-                    String restaurantId = Objects.requireNonNull(adapter.getRestaurantInfo(position).getPlace().get()).getId();
-                    clickCallback.onItemClick(restaurantId);
+                    if (adapter.getRestaurantInfo(position).getPlace().get() != null)
+                        clickCallback.onItemClick(Objects.requireNonNull(
+                                adapter.getRestaurantInfo(position).getPlace().get()).getId());
                 });
     }
 
@@ -261,12 +266,12 @@ public class RestaurantListFragment extends BaseFragment {
             RestaurantInfoViewModel restaurantInfoViewModel =
                     new RestaurantInfoViewModel(getActivity().getApplication(), placeId);
             restaurantInfoViewModel.setLocationData(new LatLng(this.getUserLocation().getLatitude(), getUserLocation().getLongitude()));
-            restaurantInfoList.add(restaurantInfoViewModel);
+            this.restaurantInfoList.add(restaurantInfoViewModel);
 
             // Restaurant data base
             RestaurantDBViewModel restaurantDBViewModel = new RestaurantDBViewModel(placeId);
             restaurantDBViewModel.fetchRestaurant();
-            restaurantDBList.add(restaurantDBViewModel);
+            this.restaurantDBList.add(restaurantDBViewModel);
         }
         adapter.notifyDataSetChanged();
         swipeRefreshLayout.setRefreshing(false);

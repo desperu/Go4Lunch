@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 public class UserHelper {
 
     private static final String COLLECTION_NAME = "users";
-    private static final String FIELD_USERNAME = "username";
+    private static final String FIELD_USERNAME = "userName";
     private static final String FILED_RESTAURANT_ID = "bookedRestaurantId";
 
     // --- COLLECTION REFERENCE ---
@@ -25,8 +25,8 @@ public class UserHelper {
     // --- CREATE ---
 
     @NotNull
-    public static Task<Void> createUser(String uid, String username, String urlPicture) {
-        User userToCreate = new User(uid, username, urlPicture, null);
+    public static Task<Void> createUser(String uid, String userName, String urlPicture) {
+        User userToCreate = new User(uid, userName, urlPicture, null);
         return UserHelper.getUsersCollection().document(uid).set(userToCreate);
     }
 
@@ -45,8 +45,8 @@ public class UserHelper {
     // --- UPDATE ---
 
     @NotNull
-    public static Task<Void> updateUsername(String username, String uid) {
-        return UserHelper.getUsersCollection().document(uid).update(FIELD_USERNAME, username);
+    public static Task<Void> updateUsername(String userName, String uid) {
+        return UserHelper.getUsersCollection().document(uid).update(FIELD_USERNAME, userName);
     }
 
     @NotNull

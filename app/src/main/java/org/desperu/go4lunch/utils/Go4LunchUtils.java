@@ -27,8 +27,13 @@ import static org.desperu.go4lunch.Go4LunchTools.OpeningHoursState.*;
 
 public class Go4LunchUtils {
 
+    private static boolean userDecided;
     private static String restaurantType;
     private static int openingHoursColor;
+
+    // --------------
+    // USER JOINING AND EATING AT
+    // --------------
 
     /**
      * Get joining name string, for users eating in restaurant.
@@ -38,8 +43,39 @@ public class Go4LunchUtils {
      */
     @NotNull
     public static String getJoiningName(@NotNull Context context, String userName) {
-        return context.getString(R.string.activity_restaurant_detail_recycler_text_joining, userName);
+        return context.getString(R.string.go4lunch_utils_text_user_joining, userName);
     }
+
+    /**
+     * Get user eating at string.
+     * @param context Context from this method is called.
+     * @param userName User name.
+     * @param restaurantName Full restaurant name.
+     * @return User eating at or hasn't decided yet.
+     */
+    @NotNull
+    public static String getUserEatingAt(Context context, String userName, String restaurantName) {
+        if (restaurantName != null) {
+            userDecided = true;
+            String simpleRestaurantName = getSimpleRestaurantName(restaurantName);
+            if (restaurantType != null) {
+                String simpleRestaurantType = Arrays.asList(getRestaurantType(restaurantType).split(" - ")).get(0);
+                return context.getString(R.string.go4lunch_utils_text_user_eating_at,
+                        userName, simpleRestaurantType, simpleRestaurantName);
+            }
+            return context.getString(R.string.go4lunch_utils_text_user_eating_at_without_type,
+                    userName, simpleRestaurantName);
+        }
+        userDecided = false;
+        return context.getString(R.string.go4lunch_utils_text_user_eating_not_decided, userName);
+    }
+
+    /**
+     * Get if user has decided were eating.
+     * @return Decided or not.
+     */
+    @Contract(pure = true)
+    public static boolean getUserDecided() { return userDecided; }
 
     // --------------
     // RESTAURANT NAME ADDRESS AND TYPE
@@ -78,7 +114,7 @@ public class Go4LunchUtils {
         if (restaurantType == null) getSimpleRestaurantName(restaurantName);
         if (restaurantType != null && !restaurantType.isEmpty()) {
             if (restaurantType.toLowerCase().contains("restaurant")) {
-                List<String> type = Arrays.asList(restaurantType.split(" "));
+                List<String> type = Arrays.asList(restaurantType.toLowerCase().split(" "));
                 return Character.toUpperCase(type.get(type.size() - 1).charAt(0)) + type.get(type.size() - 1).substring(1) + " - ";
             } else return restaurantType + " - ";
         }
@@ -232,12 +268,12 @@ public class Go4LunchUtils {
             case OPEN: return R.color.colorOpen;
             case OPEN_AT: return R.color.colorOpenAt;
             case CLOSE: return R.color.colorClose;
-            default: return R.color.colorLightDark;
+            default: return R.color.colorLightDark; // No data
         }
     }
 
     /**
-     * Get opening hours string style, depending of restaurant state (open, open at or close).
+     * Get opening hours string style, depending of restaurant state (open, open at, close or no data).
      * @return String style (italic, bold or normal).
      */
     @Contract(pure = true)

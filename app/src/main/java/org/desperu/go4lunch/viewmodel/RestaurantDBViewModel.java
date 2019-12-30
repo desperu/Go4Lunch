@@ -59,7 +59,7 @@ public class RestaurantDBViewModel {
      * @param userId User Id.
      */
     void updateRestaurantBookedUser(String userId) {
-        RestaurantHelper.updateBookedUsers(restaurantId, userId);
+        RestaurantHelper.updateBookedUsers(this.restaurantId, userId);
     }
 
     /**
@@ -77,7 +77,7 @@ public class RestaurantDBViewModel {
      */
     public void updateRestaurantLikeUsers(Place place, String userId) {
         if (restaurant.get() == null) this.createRestaurant(place);
-        RestaurantHelper.updateLikeUsers(restaurantId, userId);
+        RestaurantHelper.updateLikeUsers(this.restaurantId, userId);
     }
 
     /**
@@ -94,8 +94,8 @@ public class RestaurantDBViewModel {
 
     public ObservableField<String> getBookedUsersNumber() { return this.bookedUsersNumber; }
 
-    public ObservableInt getLikeUsersNumberString(double placeRating, int starPosition) {
-        this.likeUsersNumberString.set(Go4LunchUtils.getRatingStarState(likeUsersNumber.get(), placeRating, starPosition));
+    public ObservableInt getLikeUsersNumberString(double placeRating, int starPosition) { // TODO BindingAdapter
+        this.likeUsersNumberString.set(Go4LunchUtils.getRatingStarState(this.likeUsersNumber.get(), placeRating, starPosition));
         return this.likeUsersNumberString;
     }
 

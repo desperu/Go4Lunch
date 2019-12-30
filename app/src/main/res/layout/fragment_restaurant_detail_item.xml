@@ -12,7 +12,8 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/fragment_restaurant_detail_item_linear_root_padding">
+        android:padding="@dimen/fragment_restaurant_detail_item_linear_root_padding"
+        tools:ignore="UseCompoundDrawables">
 
         <ImageView
             android:id="@+id/fragment_restaurant_detail_item_image_user"

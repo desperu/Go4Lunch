@@ -1,9 +1,12 @@
 package org.desperu.go4lunch.viewmodel;
 
 import android.app.Application;
+import android.graphics.Typeface;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.databinding.BindingAdapter;
+import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -12,6 +15,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.bumptech.glide.Glide;
 import com.google.android.libraries.places.api.model.Place;
 
+import org.desperu.go4lunch.R;
 import org.desperu.go4lunch.api.firestore.UserHelper;
 import org.desperu.go4lunch.models.Restaurant;
 import org.desperu.go4lunch.models.User;
@@ -27,10 +31,13 @@ public class UserDBViewModel extends AndroidViewModel {
 
     private String uid;
     private ObservableField<User> user = new ObservableField<>();
+    private static ObservableField<String> userName = new ObservableField<>();
     private ObservableField<String> joiningName = new ObservableField<>();
+    private static ObservableBoolean userEatingDecided = new ObservableBoolean();
     private MutableLiveData<List<User>> allUsersList = new MutableLiveData<>();
     private MutableLiveData<Integer> updateBookedResponse = new MutableLiveData<>();
 
+    // CONSTRUCTORS
     public UserDBViewModel(Application application) { super(application); }
 
     public UserDBViewModel(Application application, String uid) {
@@ -54,9 +61,12 @@ public class UserDBViewModel extends AndroidViewModel {
      */
     public void fetchUser() {
         UserHelper.getUser(uid).addOnSuccessListener(documentSnapshot -> {
-            user.set(documentSnapshot.toObject(User.class));
-            joiningName.set(Go4LunchUtils.getJoiningName(getApplication(),
-                    Objects.requireNonNull(user.get()).getUserName()));
+            this.user.set(documentSnapshot.toObject(User.class));
+            if (user.get() != null && Objects.requireNonNull(user.get()).getUserName() != null) {
+                userName.set(Objects.requireNonNull(this.user.get()).getUserName());
+                this.joiningName.set(Go4LunchUtils.getJoiningName(getApplication(),
+                        Objects.requireNonNull(user.get()).getUserName()));
+            }
         });
     }
 
@@ -65,7 +75,7 @@ public class UserDBViewModel extends AndroidViewModel {
      */
     public void fetchAllUsers() {
         UserHelper.getAllUsers().addOnSuccessListener(queryDocumentSnapshots ->
-                allUsersList.postValue(queryDocumentSnapshots.toObjects(User.class)));
+                this.allUsersList.postValue(queryDocumentSnapshots.toObjects(User.class)));
     }
 
     /**
@@ -106,11 +116,27 @@ public class UserDBViewModel extends AndroidViewModel {
 
     public ObservableField<String> getJoiningName() { return this.joiningName; }
 
+    public ObservableBoolean getUserEatingDecided() { return userEatingDecided; }
+
     public LiveData<List<User>> getAllUsersListLiveData() { return this.allUsersList; }
 
     public LiveData<Integer> getUpdateBookedResponse() { return this.updateBookedResponse; }
 
-    @BindingAdapter("pictureUrl") public static void setImageUrl(@NotNull ImageView imageView, String url) {
+    @BindingAdapter("pictureUrl")
+    public static void setImageUrl(@NotNull ImageView imageView, String url) {
         Glide.with(imageView.getContext()).load(url).circleCrop().into(imageView);
+    }
+
+    @BindingAdapter("userEatingAt")
+    public static void setUserEatingAt(@NotNull TextView textView, String restaurantName) {
+        textView.setText(Go4LunchUtils.getUserEatingAt(textView.getContext(), userName.get(), restaurantName));
+        userEatingDecided.set(Go4LunchUtils.getUserDecided());
+    }
+
+    @BindingAdapter("userEatingStyle")
+    public static void setUserEatingStyle(@NotNull TextView textView, boolean userEatingDecided) {
+        textView.setTextColor(textView.getContext().getResources().getColor(
+                userEatingDecided ? R.color.colorDark : R.color.colorExtraLightGrey));
+        textView.setTypeface(null, userEatingDecided ? Typeface.NORMAL : Typeface.ITALIC);
     }
 }

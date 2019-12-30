@@ -1,7 +1,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- ACTIVITY AND FRAGMENT NAME -->
     <string name="app_name">Go4Lunch</string>
     <string name="title_activity_main">I\'m Hungry!</string>
     <string name="title_fragment_workmates">Available workmates</string>
+    <string name="title_activity_settings">Settings</string>
 
     <!-- MENU -->
     <!-- Nav Drawer -->
@@ -50,7 +53,6 @@
     <string name="activity_restaurant_detail_no_restaurant_data">No restaurant data, swipe to refresh !</string>
     <string name="activity_restaurant_detail_restaurant_booked">Restaurant booked !</string>
     <string name="activity_restaurant_detail_restaurant_unbooked">Restaurant unbooked !</string>
-    <string name="activity_restaurant_detail_recycler_text_joining">%1$s is joining !</string>
     <string name="activity_restaurant_detail_snackbar_add_like">Like add for restaurant !</string>
     <string name="activity_restaurant_detail_snackbar_already_like">You already like this restaurant !\nClick again to unlike !</string>
     <string name="activity_restaurant_detail_snackbar_remove_like">Restaurant unlike !</string>
@@ -59,6 +61,10 @@
     <string name="view_model_toast_request_failure">Google Place time out …</string>
 
     <!-- GO4LUNCH UTILS -->
+    <string name="go4lunch_utils_text_user_joining">%1$s is joining !</string>
+    <string name="go4lunch_utils_text_user_eating_at">%1$s is eating %2$s (%3$s)</string>
+    <string name="go4lunch_utils_text_user_eating_at_without_type">%1$s is eating at (%2$s)</string>
+    <string name="go4lunch_utils_text_user_eating_not_decided">%1$s hasn\'t decided yet</string>
     <string name="go4lunch_utils_opening_hours_open_until">Open until %1$s</string>
     <string name="go4lunch_utils_opening_hours_open_at">Open at %1$s</string>
     <string name="go4lunch_utils_opening_hours_next_open_hour">"Open %1$s at "</string>

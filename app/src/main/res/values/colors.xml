@@ -7,6 +7,7 @@
     <color name="colorAccent">#ff5722</color>
     <color name="colorLightGrey">#974D4D4D</color>
     <color name="colorNavDrawer">#ff8a50</color>
+    <color name="colorDark">#ff000000</color>
 
     <!-- Marker maps colors -->
     <color name="colorMarkerNotBookedFont">#ff8a50</color>

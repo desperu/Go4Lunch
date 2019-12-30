@@ -68,7 +68,7 @@
     <dimen name="fragment_restaurant_detail_item_image_user_width">60dp</dimen>
     <dimen name="fragment_restaurant_detail_item_image_user_height">60dp</dimen>
     <dimen name="fragment_restaurant_detail_item_text_user_margin">15dp</dimen>
-    <dimen name="fragment_restaurant_detail_item_text_user_size">18sp</dimen>
+    <dimen name="fragment_restaurant_detail_item_text_user_size">16sp</dimen>
 
     <!-- MENU -->
 
