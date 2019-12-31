@@ -28,6 +28,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import org.desperu.go4lunch.R;
 import org.desperu.go4lunch.databinding.ActivityMainNavHeaderBinding;
+import org.desperu.go4lunch.models.User;
 import org.desperu.go4lunch.view.base.BaseActivity;
 import org.desperu.go4lunch.view.main.fragments.MapsFragment;
 import org.desperu.go4lunch.view.main.fragments.RestaurantListFragment;
@@ -61,6 +62,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @BindView(R.id.activity_main_nav_bottom) BottomNavigationView bottomNavigationView;
 
     // FOR DATA
+    private ActivityMainNavHeaderBinding activityMainNavHeaderBinding;
     private UserAuthViewModel userAuthViewModel;
     private UserDBViewModel userDBViewModel;
     @State RectangularBounds nearbyBounds;
@@ -177,7 +179,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         if (isCurrentUserLogged()) {
             // Enable Data binding for user info
             View headerView = navigationView.getHeaderView(0);
-            ActivityMainNavHeaderBinding activityMainNavHeaderBinding = ActivityMainNavHeaderBinding.bind(headerView);
+            activityMainNavHeaderBinding = ActivityMainNavHeaderBinding.bind(headerView);
             userAuthViewModel = new UserAuthViewModel();
             activityMainNavHeaderBinding.setUserAuthViewModel(userAuthViewModel);
         }
@@ -388,6 +390,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     /**
+     * Load user data from firebase authentication, and refresh header with data binding.
+     */
+    private void loadUserDataFirebaseAuth() {
+        userAuthViewModel = new UserAuthViewModel();
+        activityMainNavHeaderBinding.setUserAuthViewModel(userAuthViewModel);
+    }
+
+    /**
      * Log out of current login, and start Login Activity.
      */
     private void logOut() {
@@ -402,10 +412,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     /**
      * Create user in firestore.
      */
-    private void createUserInFirestore(){
-        if (this.getCurrentUser() == null) {
+    private void createUserInFirestore(User user) {
+        if (user == null) {
             userDBViewModel = new UserDBViewModel(getApplication(), userAuthViewModel.getUid());
-            userDBViewModel.createUserInFirestore(userAuthViewModel.getUid(), userAuthViewModel.getUserName(), userAuthViewModel.getUserPicture());
+            userDBViewModel.createUserInFirestore(userAuthViewModel.getUid(),
+                    userAuthViewModel.getUserName(), userAuthViewModel.getUserPicture());
         }
     }
 
@@ -413,9 +424,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
      * Load user data from firestore.
      */
     private void loadUserDataFromFirestore() {
-        if (userDBViewModel == null)
-            userDBViewModel = new UserDBViewModel(getApplication(), userAuthViewModel.getUid());
+        userDBViewModel = new UserDBViewModel(getApplication(), userAuthViewModel.getUid());
         userDBViewModel.fetchUser();
+        userDBViewModel.getUserLiveData().observe(this, this::createUserInFirestore);
     }
 
     // -----------------
@@ -452,8 +463,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_OK) { // SUCCESS
-                if (userAuthViewModel == null) this.configureDesign();
-                this.createUserInFirestore();
+                this.loadUserDataFirebaseAuth();
+                this.loadUserDataFromFirestore();
                 showToast(getString(R.string.connection_succeed));
             } else { // ERRORS
                 if (response == null) {

@@ -260,7 +260,8 @@ public class RestaurantListFragment extends BaseFragment {
         assert getActivity() != null;
         assert this.getUserLocation() != null;
         dataCallback.onNewPlacesIdList(placeIdList);
-        restaurantInfoList.clear();
+        this.restaurantInfoList.clear();
+        this.restaurantDBList.clear();
         for (String placeId : placeIdList) {
             // Google place info
             RestaurantInfoViewModel restaurantInfoViewModel =

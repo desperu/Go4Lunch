@@ -29,7 +29,11 @@ public class UserAuthViewModel {
 
     public String getUserMail() { return currentUser.getEmail(); }
 
-    public String getUserPicture() { return Objects.requireNonNull(currentUser.getPhotoUrl()).toString(); }
+    public String getUserPicture() {
+        if (currentUser.getPhotoUrl() != null)
+            return Objects.requireNonNull(currentUser.getPhotoUrl()).toString();
+        else return "";
+    }
 
     @BindingAdapter("imageUrl") public static void setImageUrl(@NotNull ImageView imageView, String url) {
         Glide.with(imageView.getContext()).load(url).circleCrop().into(imageView);

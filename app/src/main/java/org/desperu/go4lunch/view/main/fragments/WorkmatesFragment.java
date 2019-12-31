@@ -93,7 +93,8 @@ public class WorkmatesFragment extends BaseFragment {
      */
     private void updateRecyclerView(@NotNull List<User> allUsersList) {
         assert getActivity() != null;
-        allWorkmatesList.clear();
+        this.allWorkmatesList.clear();
+        this.bookedRestaurantList.clear();
         for (User user : allUsersList) {
             // User data from firestore
             UserDBViewModel userDBViewModel = new UserDBViewModel(getActivity().getApplication(), user.getUid());
