@@ -21,6 +21,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 import static org.desperu.go4lunch.Go4LunchTools.PrefsKeys.*;
+import static org.desperu.go4lunch.Go4LunchTools.SettingsDefault.*;
 
 public class SettingsActivity extends BaseActivity {
 
@@ -62,11 +63,6 @@ public class SettingsActivity extends BaseActivity {
     // --------------
 
     @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
     protected void onPause() {
         super.onPause();
         this.savePrefs();
@@ -80,11 +76,11 @@ public class SettingsActivity extends BaseActivity {
      * Get saved prefs.
      */
     private void getSavedPrefs() {
-        isNotificationsEnabled = Go4LunchPrefs.getBoolean(getBaseContext(), NOTIFICATION_ENABLED, true);
-        isResetBookedRestaurantEnabled = Go4LunchPrefs.getBoolean(getBaseContext(), RESET_BOOKED_RESTAURANT, false);
-        zoomLevel = Go4LunchPrefs.getInt(getBaseContext(), MAP_ZOOM_LEVEL, 18);
-        isZoomButtonEnabled = Go4LunchPrefs.getBoolean(getBaseContext(), MAP_ZOOM_BUTTON, true);
-        isRefreshLocationEnabled = Go4LunchPrefs.getBoolean(getBaseContext(), MAP_AUTO_REFRESH_LOCATION, true);
+        isNotificationsEnabled = Go4LunchPrefs.getBoolean(getBaseContext(), NOTIFICATION_ENABLED, NOTIFICATION_DEFAULT);
+        isResetBookedRestaurantEnabled = Go4LunchPrefs.getBoolean(getBaseContext(), RESET_BOOKED_RESTAURANT, RESET_BOOKED_DEFAULT);
+        zoomLevel = Go4LunchPrefs.getInt(getBaseContext(), MAP_ZOOM_LEVEL, ZOOM_LEVEL_DEFAULT);
+        isZoomButtonEnabled = Go4LunchPrefs.getBoolean(getBaseContext(), MAP_ZOOM_BUTTON, ZOOM_BUTTON_DEFAULT);
+        isRefreshLocationEnabled = Go4LunchPrefs.getBoolean(getBaseContext(), MAP_AUTO_REFRESH_LOCATION, AUTO_REFRESH_DEFAULT);
     }
 
     /**
@@ -101,10 +97,6 @@ public class SettingsActivity extends BaseActivity {
     // --------------
     // ACTION
     // --------------
-
-//    @OnClick({R.id.activity_settings_notification_switch, R.id.activity_settings_notification_reset_booked_restaurant_switch,
-//            R.id.activity_settings_map_zoom_button_switch, R.id.activity_settings_map_auto_refresh_location_switch})
-//    protected void onClickNotification() { this.savePrefs(); }
 
     @OnClick(R.id.activity_settings_map_zoom_level_container)
     protected void onClickZoomSize() { this.alertDialog(ZOOM_DIALOG); }
@@ -150,7 +142,7 @@ public class SettingsActivity extends BaseActivity {
             });
         } else if (zoomOrReset == RESET_DIALOG) {
             dialog.setTitle(R.string.activity_settings_text_reset_settings);
-            dialog.setMessage(R.string.activity_settings_text_reset_settings_description);
+            dialog.setMessage(R.string.activity_settings_dialog_reset_settings_message);
 
             dialog.setPositiveButton(R.string.activity_settings_dialog_positive_button, (dialog2, which) -> this.resetSettings());
         }
@@ -166,11 +158,11 @@ public class SettingsActivity extends BaseActivity {
      * Reset settings to default value.
      */
     private void resetSettings() {
-        notificationSwitch.setChecked(true);
-        resetBookedRestaurantSwitch.setChecked(false);
-        zoomLevelTextView.setText(String.valueOf(18));
-        zoomButtonSwitch.setChecked(true);
-        refreshLocationSwitch.setChecked(true);
+        notificationSwitch.setChecked(NOTIFICATION_DEFAULT);
+        resetBookedRestaurantSwitch.setChecked(RESET_BOOKED_DEFAULT);
+        zoomLevelTextView.setText(String.valueOf(ZOOM_LEVEL_DEFAULT));
+        zoomButtonSwitch.setChecked(ZOOM_BUTTON_DEFAULT);
+        refreshLocationSwitch.setChecked(AUTO_REFRESH_DEFAULT);
         Toast.makeText(getBaseContext(), R.string.activity_settings_toast_reset_settings_default, Toast.LENGTH_SHORT).show();
     }
 }

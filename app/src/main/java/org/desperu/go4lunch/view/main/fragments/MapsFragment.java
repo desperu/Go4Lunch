@@ -6,7 +6,7 @@ import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
-import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -30,11 +30,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.model.RectangularBounds;
 
 import org.desperu.go4lunch.R;
 import org.desperu.go4lunch.models.Restaurant;
+import org.desperu.go4lunch.utils.Go4LunchPrefs;
 import org.desperu.go4lunch.utils.MarkerUtils;
 import org.desperu.go4lunch.view.base.BaseFragment;
 import org.desperu.go4lunch.viewmodel.AutocompleteViewModel;
@@ -54,9 +56,11 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 import static org.desperu.go4lunch.Go4LunchTools.GoogleMap.*;
+import static org.desperu.go4lunch.Go4LunchTools.PrefsKeys.*;
+import static org.desperu.go4lunch.Go4LunchTools.SettingsDefault.*;
 
-public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
-        GoogleMap.OnMarkerClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnCameraIdleListener {
+public class MapsFragment extends BaseFragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener,
+        GoogleMap.OnMapLongClickListener, GoogleMap.OnCameraIdleListener {
 
     // FOR DESIGN
     @BindView(R.id.map) MapView mapView;
@@ -69,11 +73,16 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
     // FOR DATA
     private SupportMapFragment mapFragment;
     private GoogleMap mMap;
-    private boolean isLocationEnabled = false;
-    private Location myLocation;
-    private boolean isRequestingLocationUpdates = false;
     private String queryTerm;
     private boolean isPlacesUpdating = false;
+
+    // FOR LOCATION
+    private boolean isLocationEnabled = false;
+    private Location myLocation;
+    // FOR LOCATION UPDATES
+    private FusedLocationProviderClient fusedLocationClient;
+    private LocationCallback locationCallback;
+    private static LocationRequest locationRequest = null;
 
     // CALLBACKS
     public interface OnNewDataOrClickListener {
@@ -118,16 +127,18 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
     public void onMapReady(GoogleMap googleMap) {
         this.mMap = googleMap;
 
-        // Check location permission, enable MyLocation button,
+        // Check location permission, enable MyLocation,
         // and hide google MyLocation button to use custom.
         this.checkLocationPermissionsStatus();
         mMap.setMyLocationEnabled(isLocationEnabled);
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
-        if (isLocationEnabled) this.setMapWithLocation();
+        if (isLocationEnabled) this.updateMapWithLocation(this.getUserLocation());
+        boolean isRefreshLocationEnabled = Go4LunchPrefs.getBoolean(getContext(), MAP_AUTO_REFRESH_LOCATION, AUTO_REFRESH_DEFAULT);
+        if (isLocationEnabled && fusedLocationClient == null && isRefreshLocationEnabled) this.startLocationUpdates();
+        else if (!isRefreshLocationEnabled) this.stopLocationUpdates();
 
         // Show zoom control, and reposition them.
-        mMap.getUiSettings().setZoomControlsEnabled(true);
-        // TODO get from shared pref on/off zoom
+        mMap.getUiSettings().setZoomControlsEnabled(Go4LunchPrefs.getBoolean(getContext(), MAP_ZOOM_BUTTON, ZOOM_BUTTON_DEFAULT));
         this.repositionMapButton(GOOGLE_MAP_ZOOM_OUT_BUTTON, (int) getResources().getDimension(R.dimen.fragment_maps_zoom_button_margin_bottom), (int) getResources().getDimension(R.dimen.fragment_maps_zoom_button_margin_end));
 
         // Set gestures for google map.
@@ -143,7 +154,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
         mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.map_style));
 
         // Restore map state, or update map with restaurant
-        if (!this.restoreState()) this.getNearbyRestaurant();
+        if (!this.restoreState()) this.startNewRequest(queryTerm);
     }
 
     @Override
@@ -152,7 +163,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
         // Forward results to EasyPermissions
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
         this.isLocationEnabled = grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED;
-        if (isLocationEnabled) this.setMapWithLocation();
+        if (isLocationEnabled) this.updateMapWithLocation(this.getUserLocation());
     }
 
     @Override
@@ -176,6 +187,12 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
         assert getActivity() != null;
         if (queryTerm != null && !isPlacesUpdating) // TODO how don't launch
             this.getAutocompleteRestaurant(queryTerm);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        this.stopLocationUpdates();
     }
 
     // --------------
@@ -227,30 +244,6 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
     }
 
     /**
-     * Set map with current location, or last know.
-     */
-    @SuppressLint("MissingPermission")
-    private void setMapWithLocation() {
-        assert getContext() != null;
-        LocationManager lm = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
-        assert lm != null;
-        myLocation = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
-        if (myLocation == null) {
-            Criteria criteria = new Criteria();
-            criteria.setAccuracy(Criteria.ACCURACY_COARSE);
-            String provider = lm.getBestProvider(criteria, true);
-            assert provider != null;
-            myLocation = lm.getLastKnownLocation(provider);
-        }
-
-        if (myLocation != null) {
-            LatLng userLocation = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 18), 1500, null);
-        }
-    }
-
-    /**
      * Check if Coarse Location and Fine Location are granted, if not, ask for them.
      */
     private void checkLocationPermissionsStatus() {
@@ -293,7 +286,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
     @OnClick(R.id.fragment_maps_floating_button_location)
     void myLocationButtonListener() {
         mMap.setMyLocationEnabled(isLocationEnabled);
-        if (isLocationEnabled) this.setMapWithLocation();
+        if (isLocationEnabled) this.updateMapWithLocation(this.getUserLocation());
         else this.checkLocationPermissionsStatus();
         this.startNewRequest(this.queryTerm);
     }
@@ -316,6 +309,8 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
      * @param query Query term.
      */
     private void startNewRequest(String query) {
+        this.isPlacesUpdating = true;
+        if (mMap != null) mMap.clear();
         if (query != null && !query.isEmpty())
             this.getAutocompleteRestaurant(query);
         else this.getNearbyRestaurant();
@@ -325,8 +320,6 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
      * Get nearby restaurants with place api.
      */
     private void getNearbyRestaurant() {
-        this.isPlacesUpdating = true;
-        if (mMap != null) mMap.clear();
         // Start nearby request
         assert getActivity() != null;
         NearbyPlaceViewModel nearbyPlaceViewModel = new NearbyPlaceViewModel(getActivity().getApplication());
@@ -349,8 +342,6 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
      * @param query Query term.
      */
     private void getAutocompleteRestaurant(@NotNull String query) {
-        this.isPlacesUpdating = true;
-        this.mMap.clear();
         // Start autocomplete request
         assert getActivity() != null;
         AutocompleteViewModel autocompleteViewModel = new AutocompleteViewModel(getActivity().getApplication());
@@ -392,6 +383,20 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
     // --------------
     // UI
     // --------------
+
+    /**
+     * Update map with user location, animate camera to this point.
+     * @param userLocation Current user location.
+     */
+    private void updateMapWithLocation(Location userLocation) {
+        if (userLocation != null) {
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                    new LatLng(userLocation.getLatitude(), userLocation.getLongitude()),
+                    Go4LunchPrefs.getInt(getContext(), MAP_ZOOM_LEVEL, 18)),
+                    1500, null);
+            this.myLocation = userLocation;
+        }
+    }
 
     /**
      * Add a new marker on the map.
@@ -471,6 +476,28 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
     // --------------
 
     /**
+     * Get current location, or last know.
+     * @return User location.
+     */
+    @SuppressLint("MissingPermission")
+    private Location getUserLocation() {
+        assert getContext() != null;
+        LocationManager lm = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+        assert lm != null;
+        myLocation = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+        if (myLocation == null) {
+            Criteria criteria = new Criteria();
+            criteria.setAccuracy(Criteria.ACCURACY_COARSE);
+            String provider = lm.getBestProvider(criteria, true);
+            assert provider != null;
+            myLocation = lm.getLastKnownLocation(provider);
+        }
+        mCallback.onNewUserLocation(myLocation);
+        return myLocation;
+    }
+
+    /**
      * Get screen global location.
      * @return Rectangular bounds for current screen.
      */
@@ -479,27 +506,17 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
         return RectangularBounds.newInstance(mMap.getProjection().getVisibleRegion().latLngBounds);
     }
 
-    // TODO finish to implement location updates and add to settings
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (!isRequestingLocationUpdates) startLocationUpdates();
-    }
 
-    private FusedLocationProviderClient fusedLocationClient;
-    private LocationCallback locationCallback;
-//    private WeakReference<LocationCallback> weakLocationCallback;
-    private static LocationRequest locationRequest = null;
-
+    /**
+     * Start location updates.
+     */
     private void startLocationUpdates() {
-        isRequestingLocationUpdates = true;
         assert getContext() != null;
-//        fusedLocationClient = new FusedLocationProviderClient(getContext());
         fusedLocationClient = getFusedLocationProviderClient(getContext());
 
         locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setInterval(40000);
+        locationRequest.setInterval(50_000L);
 
         locationCallback = new LocationCallback() {
             @Override
@@ -508,43 +525,34 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
                 mCallback.onNewUserLocation(locationResult.getLastLocation());
                 if (myLocation != null && myLocation.distanceTo(locationResult.getLastLocation()) > 10) {
                     startNewRequest(queryTerm);
-                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-                            new LatLng(
-                                    locationResult.getLastLocation().getLatitude(),
-                                    locationResult.getLastLocation().getLongitude()),
-                            18), 1500, null);
+                    updateMapWithLocation(locationResult.getLastLocation());
                 }
             }
         };
 
-//        weakLocationCallback = new WeakReference<>(locationCallback);
         fusedLocationClient.requestLocationUpdates(locationRequest,
-                locationCallback,
-//                weakLocationCallback.get(),
-                Looper.getMainLooper());
+                locationCallback, null);
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (isRequestingLocationUpdates) stopLocationUpdates();
-    }
-
+    /**
+     * Stop location updates.
+     */
     private void stopLocationUpdates() {
-        isRequestingLocationUpdates = false;
-//        fusedLocationClient.removeLocationUpdates(weakLocationCallback.get());
-        fusedLocationClient.removeLocationUpdates(locationCallback);
-        fusedLocationClient.flushLocations();
-
-        locationCallback = null;
-        locationRequest = null;
-        fusedLocationClient = null;
-    }
-
-    // TODO Probably not good because nearby place make it's own location request
-    //  try override method witch answer location request, to fake location
-    private void setMockLocation(Location location) {
-        fusedLocationClient.setMockMode(true);
-        fusedLocationClient.setMockLocation(location);
+        if (fusedLocationClient != null) {
+            try {
+                locationRequest = null;
+                fusedLocationClient.flushLocations();
+                final Task<Void> voidTask = fusedLocationClient.removeLocationUpdates(locationCallback);
+//                locationCallback = null;
+                if (voidTask.isSuccessful()) {
+                    Log.d(getClass().getSimpleName(),"StopLocation updates successful! ");
+                } else {
+                    Log.d(getClass().getSimpleName(),"StopLocation updates unsuccessful! " + voidTask.toString());
+                }
+            }
+            catch (SecurityException exp) {
+                Log.d(getClass().getSimpleName(), " Security exception while removeLocationUpdates");
+            }
+        }
     }
 }

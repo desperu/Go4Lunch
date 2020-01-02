@@ -84,11 +84,12 @@
     <string name="activity_settings_text_map_zoom_button">Enable map zoom button</string>
     <string name="activity_settings_text_map_zoom_button_description">Show map zoom button.</string>
     <string name="activity_settings_text_map_auto_refresh_location">Auto refresh location</string>
-    <string name="activity_settings_text_map_auto_refresh_location_description">Refresh user location and map every 4sec.</string>
+    <string name="activity_settings_text_map_auto_refresh_location_description">Refresh user location and map every 5sec.</string>
     <string name="activity_settings_text_category_reset_settings">Reset Settings</string>
     <string name="activity_settings_text_reset_settings">Reset Settings</string>
     <string name="activity_settings_text_reset_settings_description">Reset settings to original state.</string>
     <!-- Alert Dialog -->
+    <string name="activity_settings_dialog_reset_settings_message">Are you sure you want reset settings to default?</string>
     <string name="activity_settings_dialog_positive_button">OK</string>
     <string name="activity_settings_dialog_negative_button">Cancel</string>
     <!-- Toast -->

@@ -58,4 +58,14 @@ public final class Go4LunchTools {
         public static final String MAP_ZOOM_BUTTON = "mapZoomButton";
         public static final String MAP_AUTO_REFRESH_LOCATION = "autoRefreshLocation";
     }
+
+    public static final class SettingsDefault {
+
+        // Settings default value
+        public static final boolean NOTIFICATION_DEFAULT = true;
+        public static final boolean RESET_BOOKED_DEFAULT = false;
+        public static final int ZOOM_LEVEL_DEFAULT = 18;
+        public static final boolean ZOOM_BUTTON_DEFAULT = true;
+        public static final boolean AUTO_REFRESH_DEFAULT = true;
+    }
 }
