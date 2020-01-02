@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_settings_relative_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <include
+        layout="@layout/toolbar"
+        android:id="@+id/activity_settings_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/activity_settings_toolbar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/activity_settings_linear_container_padding_top"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/activity_settings_text_category_and_divider_margin"
+                android:text="@string/activity_settings_text_category_notification"
+                android:textStyle="bold"
+                android:textColor="@color/colorDark"
+                android:textSize="@dimen/activity_settings_text_category_text_size"
+                android:paddingStart="@dimen/activity_settings_text_category_padding_start_and_end"
+                android:paddingEnd="@dimen/activity_settings_text_category_padding_start_and_end"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.1dp"
+                android:layout_margin="@dimen/activity_settings_text_category_and_divider_margin"
+                android:background="@color/colorLightDark"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/activity_settings_constraint_container_padding"
+                android:paddingStart="@dimen/activity_settings_constraint_container_padding_start_and_end"
+                android:paddingEnd="@dimen/activity_settings_constraint_container_padding_start_and_end">
+
+                <TextView
+                    android:id="@+id/activity_settings_text_notification_state"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/activity_settings_text_notifications_state"
+                    android:textSize="@dimen/activity_settings_text_setting_title_text_size"
+                    android:textColor="@color/colorLightDark"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/activity_settings_text_setting_description_margin_top"
+                    android:text="@string/activity_settings_text_notifications_description"
+                    android:textStyle="italic"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/activity_settings_text_notification_state"/>
+
+                <Switch
+                    android:id="@+id/activity_settings_notification_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.1dp"
+                android:layout_margin="@dimen/activity_settings_text_category_and_divider_margin"
+                android:background="@color/colorLightDark"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/activity_settings_constraint_container_padding"
+                android:paddingStart="@dimen/activity_settings_constraint_container_padding_start_and_end"
+                android:paddingEnd="@dimen/activity_settings_constraint_container_padding_start_and_end">
+
+                <TextView
+                    android:id="@+id/activity_settings_text_notification_reset_booked_restaurant"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/activity_settings_text_notifications_reset_booked_restaurant"
+                    android:textSize="@dimen/activity_settings_text_setting_title_text_size"
+                    android:textColor="@color/colorLightDark"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/activity_settings_text_setting_description_margin_top"
+                    android:text="@string/activity_settings_text_notifications_reset_booked_restaurant_description"
+                    android:textStyle="italic"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/activity_settings_text_notification_reset_booked_restaurant"/>
+
+                <Switch
+                    android:id="@+id/activity_settings_notification_reset_booked_restaurant_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.1dp"
+                android:layout_margin="@dimen/activity_settings_text_category_and_divider_margin"
+                android:background="@color/colorLightDark"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/activity_settings_text_category_and_divider_margin"
+                android:text="@string/activity_settings_text_category_map"
+                android:textStyle="bold"
+                android:textColor="@color/colorDark"
+                android:textSize="@dimen/activity_settings_text_category_text_size"
+                android:paddingStart="@dimen/activity_settings_text_category_padding_start_and_end"
+                android:paddingEnd="@dimen/activity_settings_text_category_padding_start_and_end"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.1dp"
+                android:layout_margin="@dimen/activity_settings_text_category_and_divider_margin"
+                android:background="@color/colorLightDark"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/activity_settings_map_zoom_level_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/activity_settings_constraint_container_padding"
+                android:paddingStart="@dimen/activity_settings_constraint_container_padding_start_and_end"
+                android:paddingEnd="@dimen/activity_settings_constraint_container_padding_start_and_end">
+
+                <TextView
+                    android:id="@+id/activity_settings_text_map_zoom_level"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/activity_settings_text_map_zoom_size"
+                    android:textSize="@dimen/activity_settings_text_setting_title_text_size"
+                    android:textColor="@color/colorLightDark"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/activity_settings_text_setting_description_margin_top"
+                    android:text="@string/activity_settings_text_map_zoom_size_description"
+                    android:textStyle="italic"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/activity_settings_text_map_zoom_level"/>
+
+                <TextView
+                    android:id="@+id/activity_settings_text_map_zoom_level_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/activity_settings_text_zoom_value_margin_end"
+                    android:textSize="@dimen/activity_settings_text_zoom_value_text_size"
+                    android:textColor="@color/colorLightDark"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.1dp"
+                android:layout_margin="@dimen/activity_settings_text_category_and_divider_margin"
+                android:background="@color/colorLightDark"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/activity_settings_constraint_container_padding"
+                android:paddingStart="@dimen/activity_settings_constraint_container_padding_start_and_end"
+                android:paddingEnd="@dimen/activity_settings_constraint_container_padding_start_and_end">
+
+                <TextView
+                    android:id="@+id/activity_settings_text_map_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/activity_settings_text_map_zoom_button"
+                    android:textSize="@dimen/activity_settings_text_setting_title_text_size"
+                    android:textColor="@color/colorLightDark"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/activity_settings_text_setting_description_margin_top"
+                    android:text="@string/activity_settings_text_map_zoom_button_description"
+                    android:textStyle="italic"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/activity_settings_text_map_button"/>
+
+                <Switch
+                    android:id="@+id/activity_settings_map_zoom_button_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.1dp"
+                android:layout_margin="@dimen/activity_settings_text_category_and_divider_margin"
+                android:background="@color/colorLightDark"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/activity_settings_constraint_container_padding"
+                android:paddingStart="@dimen/activity_settings_constraint_container_padding_start_and_end"
+                android:paddingEnd="@dimen/activity_settings_constraint_container_padding_start_and_end">
+
+                <TextView
+                    android:id="@+id/activity_settings_text_map_auto_refresh_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/activity_settings_text_map_auto_refresh_location"
+                    android:textSize="@dimen/activity_settings_text_setting_title_text_size"
+                    android:textColor="@color/colorLightDark"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/activity_settings_text_setting_description_margin_top"
+                    android:text="@string/activity_settings_text_map_auto_refresh_location_description"
+                    android:textStyle="italic"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/activity_settings_text_map_auto_refresh_location"/>
+
+                <Switch
+                    android:id="@+id/activity_settings_map_auto_refresh_location_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.1dp"
+                android:layout_margin="@dimen/activity_settings_text_category_and_divider_margin"
+                android:background="@color/colorLightDark"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/activity_settings_text_category_and_divider_margin"
+                android:text="@string/activity_settings_text_category_reset_settings"
+                android:textStyle="bold"
+                android:textColor="@color/colorDark"
+                android:textSize="@dimen/activity_settings_text_category_text_size"
+                android:paddingStart="@dimen/activity_settings_text_category_padding_start_and_end"
+                android:paddingEnd="@dimen/activity_settings_text_category_padding_start_and_end"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.1dp"
+                android:layout_margin="@dimen/activity_settings_text_category_and_divider_margin"
+                android:background="@color/colorLightDark"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/activity_settings_reset_settings_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/activity_settings_constraint_container_padding"
+                android:paddingStart="@dimen/activity_settings_constraint_container_padding_start_and_end"
+                android:paddingEnd="@dimen/activity_settings_constraint_container_padding_start_and_end">
+
+                <TextView
+                    android:id="@+id/activity_settings_text_reset_settings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/activity_settings_text_category_reset_settings"
+                    android:textSize="@dimen/activity_settings_text_setting_title_text_size"
+                    android:textColor="@color/colorLightDark"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/activity_settings_text_setting_description_margin_top"
+                    android:text="@string/activity_settings_text_reset_settings_description"
+                    android:textStyle="italic"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/activity_settings_text_reset_settings"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.1dp"
+                android:layout_marginTop="@dimen/activity_settings_text_category_and_divider_margin"
+                android:background="@color/colorLightDark"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

@@ -460,7 +460,6 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
             return BitmapDescriptorFactory.fromBitmap(MarkerUtils.createBitmapFromView(getContext(),
                     R.layout.custom_marker_layout, getResources().getColor(R.color.colorMarkerBookedFont),
                     getResources().getColor(R.color.colorMarkerBookedCutlery)));
-
         else
             return BitmapDescriptorFactory.fromBitmap(MarkerUtils.createBitmapFromView(getContext(),
                     R.layout.custom_marker_layout, getResources().getColor(R.color.colorMarkerNotBookedFont),
@@ -548,45 +547,4 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback,
         fusedLocationClient.setMockMode(true);
         fusedLocationClient.setMockLocation(location);
     }
-
-//    private void startLocationUpdates() {
-//        assert getContext() != null;
-//
-//        // Create the location request to start receiving updates
-//        locationRequest = new LocationRequest();
-//        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-//        locationRequest.setInterval(40000);
-//        locationRequest.setFastestInterval(4000);
-//
-//        // Create LocationSettingsRequest object using location request
-//        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
-//        builder.addLocationRequest(locationRequest);
-//        LocationSettingsRequest locationSettingsRequest = builder.build();
-//
-//        // Check whether location settings are satisfied
-//        // https://developers.google.com/android/reference/com/google/android/gms/location/SettingsClient
-//        SettingsClient settingsClient = LocationServices.getSettingsClient(getContext());
-//        settingsClient.checkLocationSettings(locationSettingsRequest);
-//
-//        locationCallback = new LocationCallback() {
-//            @Override
-//            public void onLocationResult(LocationResult locationResult) {
-//                super.onLocationResult(locationResult);
-//                mCallback.onNewUserLocation(locationResult.getLastLocation());
-//                if (myLocation != null && myLocation.distanceTo(locationResult.getLastLocation()) > 10 && getActivity() != null) {
-//                    startNewRequest(queryTerm);
-//                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-//                            new LatLng(
-//                                    locationResult.getLastLocation().getLatitude(),
-//                                    locationResult.getLastLocation().getLongitude()),
-//                            18), 1500, null);
-//                }
-//            }
-//        };
-//
-//        // new Google API SDK v11 uses getFusedLocationProviderClient(this)
-//        fusedLocationClient = getFusedLocationProviderClient(getContext());
-//        fusedLocationClient.requestLocationUpdates(
-//                locationRequest, locationCallback, Looper.myLooper());
-//    }
 }

@@ -72,6 +72,29 @@
     <string name="go4lunch_utils_opening_hours_no_data">No opening hours data !</string>
     <string name="go4lunch_utils_restaurant_distance_no_data">No data</string>
 
+    <!-- SETTINGS ACTIVITY -->
+    <string name="activity_settings_text_category_notification">Notifications</string>
+    <string name="activity_settings_text_notifications_state">Enable notifications</string>
+    <string name="activity_settings_text_notifications_description">One notification per day, at 12am.</string>
+    <string name="activity_settings_text_notifications_reset_booked_restaurant">Reset booked restaurant</string>
+    <string name="activity_settings_text_notifications_reset_booked_restaurant_description">Reset every day booked restaurant.</string>
+    <string name="activity_settings_text_category_map">Map</string>
+    <string name="activity_settings_text_map_zoom_size">Map zoom level</string>
+    <string name="activity_settings_text_map_zoom_size_description">Set zoom level for the map, default 18, min 2, max 21.</string>
+    <string name="activity_settings_text_map_zoom_button">Enable map zoom button</string>
+    <string name="activity_settings_text_map_zoom_button_description">Show map zoom button.</string>
+    <string name="activity_settings_text_map_auto_refresh_location">Auto refresh location</string>
+    <string name="activity_settings_text_map_auto_refresh_location_description">Refresh user location and map every 4sec.</string>
+    <string name="activity_settings_text_category_reset_settings">Reset Settings</string>
+    <string name="activity_settings_text_reset_settings">Reset Settings</string>
+    <string name="activity_settings_text_reset_settings_description">Reset settings to original state.</string>
+    <!-- Alert Dialog -->
+    <string name="activity_settings_dialog_positive_button">OK</string>
+    <string name="activity_settings_dialog_negative_button">Cancel</string>
+    <!-- Toast -->
+    <string name="activity_settings_toast_zoom_level_wrong_value">Zoom level must be upper than 2 and lower than 21 !</string>
+    <string name="activity_settings_toast_reset_settings_default">Settings Reset to default !</string>
+
     <!-- FACEBOOK PURPOSE -->
     <string name="facebook_application_id" translatable="false">2475450979175039</string>
     <string name="facebook_login_protocol_scheme" translatable="false" tools:ignore="UnusedResources">fb2475450979175039</string>

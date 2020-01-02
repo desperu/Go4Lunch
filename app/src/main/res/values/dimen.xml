@@ -70,6 +70,18 @@
     <dimen name="fragment_restaurant_detail_item_text_user_margin">15dp</dimen>
     <dimen name="fragment_restaurant_detail_item_text_user_size">16sp</dimen>
 
+    <!-- Settings Activity -->
+    <dimen name="activity_settings_linear_container_padding_top">10dp</dimen>
+    <dimen name="activity_settings_text_category_and_divider_margin">10dp</dimen>
+    <dimen name="activity_settings_text_category_text_size">18sp</dimen>
+    <dimen name="activity_settings_text_category_padding_start_and_end">5dp</dimen>
+    <dimen name="activity_settings_constraint_container_padding">10dp</dimen>
+    <dimen name="activity_settings_constraint_container_padding_start_and_end">15dp</dimen>
+    <dimen name="activity_settings_text_setting_title_text_size">16sp</dimen>
+    <dimen name="activity_settings_text_setting_description_margin_top">10dp</dimen>
+    <dimen name="activity_settings_text_zoom_value_margin_end">15sp</dimen>
+    <dimen name="activity_settings_text_zoom_value_text_size">18sp</dimen>
+
     <!-- MENU -->
 
     <!-- Menu Drawer -->

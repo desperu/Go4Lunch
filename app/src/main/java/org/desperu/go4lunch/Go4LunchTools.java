@@ -35,17 +35,27 @@ public final class Go4LunchTools {
 
     public static final class RestaurantDetail {
 
-        // FOR PERMISSION (call phone)
+        // FOR PERMISSION (call phone).
         public static final String[] PERMS = {Manifest.permission.CALL_PHONE};
         public static final int PERM_CALL_PHONE = 200;
     }
 
     public static final class OpeningHoursState {
 
-        //Opening hours text color
+        // Opening hours text color.
         public static final int OPEN = 0;
         public static final int OPEN_AT = 1;
         public static final int CLOSE = 2;
         public static final int NO_DATA = 3;
+    }
+
+    public static final class PrefsKeys {
+
+        // Shared preferences keys
+        public static final String NOTIFICATION_ENABLED = "notificationEnabled";
+        public static final String RESET_BOOKED_RESTAURANT = "resetBookedRestaurant";
+        public static final String MAP_ZOOM_LEVEL = "mapZoomLevel";
+        public static final String MAP_ZOOM_BUTTON = "mapZoomButton";
+        public static final String MAP_AUTO_REFRESH_LOCATION = "autoRefreshLocation";
     }
 }

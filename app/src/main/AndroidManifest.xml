@@ -18,7 +18,7 @@
         android:roundIcon="@drawable/ic_go4lunch"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning">
+        tools:ignore="AllowBackup,GoogleAppIndexingWarning">
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -50,6 +50,13 @@
                 <action android:name="android.intent.action.CALL"/>
             </intent-filter>
         </activity>
+
+        <!-- SETTINGS ACTIVITY -->
+        <activity
+            android:name=".view.settings.SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".view.main.MainActivity"/>
+
     </application>
 
 </manifest>

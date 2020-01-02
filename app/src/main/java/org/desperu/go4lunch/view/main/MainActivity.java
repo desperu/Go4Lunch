@@ -34,6 +34,7 @@ import org.desperu.go4lunch.view.main.fragments.MapsFragment;
 import org.desperu.go4lunch.view.main.fragments.RestaurantListFragment;
 import org.desperu.go4lunch.view.main.fragments.WorkmatesFragment;
 import org.desperu.go4lunch.view.restaurantdetail.RestaurantDetailActivity;
+import org.desperu.go4lunch.view.settings.SettingsActivity;
 import org.desperu.go4lunch.viewmodel.UserAuthViewModel;
 import org.desperu.go4lunch.viewmodel.UserDBViewModel;
 import org.jetbrains.annotations.NotNull;
@@ -215,7 +216,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 this.onClickYourLunch();
                 break;
             case R.id.activity_main_menu_drawer_settings:
-//                this.showNotificationsActivity();
+                this.showSettingsActivity();
                 break;
             case R.id.activity_main_menu_drawer_log_out:
                 this.logOut();
@@ -333,20 +334,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     // ACTIVITY
     // -----------------
 
-//    /**
-//     * Start chat activity.
-//     */
-//    private void showChatActivity() {
-//        startActivity(new Intent(this, ChatActivity.class));
-//    }
-
-//    /**
-//     * Start settings activity.
-//     */
-//    private void showSettingsActivity() {
-//        startActivity(new Intent(this, SettingsActivity.class));
-//    }
-
     /**
      * Start restaurant detail activity.
      * @param id Place id.
@@ -354,6 +341,20 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private void showRestaurantDetailActivity(String id) {
         startActivity(new Intent(this, RestaurantDetailActivity.class).putExtra(RestaurantDetailActivity.RESTAURANT_ID, id));
     }
+
+    /**
+     * Start settings activity.
+     */
+    private void showSettingsActivity() {
+        startActivity(new Intent(this, SettingsActivity.class));
+    }
+
+    //    /**
+//     * Start chat activity.
+//     */
+//    private void showChatActivity() {
+//        startActivity(new Intent(this, ChatActivity.class));
+//    }
 
     // --------------------
     // LOGIN
