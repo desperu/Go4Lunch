@@ -89,7 +89,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         this.configureDrawerLayout();
         this.configureNavigationView();
         this.configureBottomNavigationView();
-        this.configureDataBindingForHeader();
     }
 
     // -----------------
@@ -177,13 +176,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
      * Configure data binding for Navigation View Header with user info.
      */
     private void configureDataBindingForHeader() {
-        if (isCurrentUserLogged()) {
-            // Enable Data binding for user info
+        // Enable Data binding for user info
+        if (activityMainNavHeaderBinding == null) {
             View headerView = navigationView.getHeaderView(0);
             activityMainNavHeaderBinding = ActivityMainNavHeaderBinding.bind(headerView);
-            userAuthViewModel = new UserAuthViewModel();
-            activityMainNavHeaderBinding.setUserAuthViewModel(userAuthViewModel);
         }
+        userAuthViewModel = new UserAuthViewModel();
+        activityMainNavHeaderBinding.setUserAuthViewModel(userAuthViewModel);
     }
 
     // -----------------
@@ -196,6 +195,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         super.onResume();
         if (this.isCurrentUserLogged()) {
             this.configureAndShowFragment(this.currentFragment >= 0 ? currentFragment : MAP_FRAGMENT);
+            this.configureDataBindingForHeader();
             this.loadUserDataFromFirestore();
         }
         else this.startSignInActivity();
@@ -391,14 +391,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     /**
-     * Load user data from firebase authentication, and refresh header with data binding.
-     */
-    private void loadUserDataFirebaseAuth() {
-        userAuthViewModel = new UserAuthViewModel();
-        activityMainNavHeaderBinding.setUserAuthViewModel(userAuthViewModel);
-    }
-
-    /**
      * Log out of current login, and start Login Activity.
      */
     private void logOut() {
@@ -464,8 +456,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_OK) { // SUCCESS
-                this.loadUserDataFirebaseAuth();
-                this.loadUserDataFromFirestore();
                 showToast(getString(R.string.connection_succeed));
             } else { // ERRORS
                 if (response == null) {
