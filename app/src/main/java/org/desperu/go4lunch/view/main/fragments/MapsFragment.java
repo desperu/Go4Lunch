@@ -392,7 +392,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
         if (userLocation != null) {
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
                     new LatLng(userLocation.getLatitude(), userLocation.getLongitude()),
-                    Go4LunchPrefs.getInt(getContext(), MAP_ZOOM_LEVEL, 18)),
+                    Go4LunchPrefs.getInt(getContext(), MAP_ZOOM_LEVEL, ZOOM_LEVEL_DEFAULT)),
                     1500, null);
             this.myLocation = userLocation;
         }

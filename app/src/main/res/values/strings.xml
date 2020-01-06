@@ -75,9 +75,9 @@
     <!-- SETTINGS ACTIVITY -->
     <string name="activity_settings_text_category_notification">Notifications</string>
     <string name="activity_settings_text_notifications_state">Enable notifications</string>
-    <string name="activity_settings_text_notifications_description">One notification per day, at 12am.</string>
+    <string name="activity_settings_text_notifications_description">One notification per day, at 12am, when a restaurant is booked.</string>
     <string name="activity_settings_text_notifications_reset_booked_restaurant">Reset booked restaurant</string>
-    <string name="activity_settings_text_notifications_reset_booked_restaurant_description">Reset every day booked restaurant.</string>
+    <string name="activity_settings_text_notifications_reset_booked_restaurant_description">Reset booked restaurant every day, after lunch.</string>
     <string name="activity_settings_text_category_map">Map</string>
     <string name="activity_settings_text_map_zoom_size">Map zoom level</string>
     <string name="activity_settings_text_map_zoom_size_description">Set zoom level for the map, default 18, min 2, max 21.</string>
@@ -95,6 +95,13 @@
     <!-- Toast -->
     <string name="activity_settings_toast_zoom_level_wrong_value">Zoom level must be upper than 2 and lower than 21 !</string>
     <string name="activity_settings_toast_reset_settings_default">Settings Reset to default !</string>
+
+
+    <!-- NOTIFICATION -->
+    <string name="notification_title">You lunch at %1$s</string>
+    <string name="notification_text">"Joining workmates : "</string>
+    <string name="notification_text_joining_users_and">", and "</string>
+    <string name="notification_text_no_joining_user">Nobody lunch with you …</string>
 
     <!-- FACEBOOK PURPOSE -->
     <string name="facebook_application_id" translatable="false">2475450979175039</string>

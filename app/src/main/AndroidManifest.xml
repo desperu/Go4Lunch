@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <!-- TODO needed?? -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -56,6 +57,13 @@
             android:name=".view.settings.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".view.main.MainActivity"/>
+
+        <!-- NOTIFICATIONS RECEIVER -->
+        <receiver android:name=".notifications.NotificationReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
 
     </application>
 

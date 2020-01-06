@@ -14,7 +14,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/activity_settings_toolbar">
+        android:layout_below="@+id/activity_settings_toolbar">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -57,13 +57,14 @@
                     app:layout_constraintTop_toTopOf="parent"/>
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/activity_settings_text_setting_description_margin_top"
                     android:text="@string/activity_settings_text_notifications_description"
                     android:textStyle="italic"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/activity_settings_text_notification_state"/>
+                    app:layout_constraintEnd_toStartOf="@+id/activity_settings_notification_switch"
+                    app:layout_constraintTop_toBottomOf="@+id/activity_settings_text_notification_state"/>
 
                 <Switch
                     android:id="@+id/activity_settings_notification_switch"
@@ -99,13 +100,14 @@
                     app:layout_constraintTop_toTopOf="parent"/>
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/activity_settings_text_setting_description_margin_top"
                     android:text="@string/activity_settings_text_notifications_reset_booked_restaurant_description"
                     android:textStyle="italic"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/activity_settings_text_notification_reset_booked_restaurant"/>
+                    app:layout_constraintEnd_toStartOf="@+id/activity_settings_notification_reset_booked_restaurant_switch"
+                    app:layout_constraintTop_toBottomOf="@+id/activity_settings_text_notification_reset_booked_restaurant"/>
 
                 <Switch
                     android:id="@+id/activity_settings_notification_reset_booked_restaurant_switch"
@@ -159,13 +161,14 @@
                     app:layout_constraintTop_toTopOf="parent"/>
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/activity_settings_text_setting_description_margin_top"
                     android:text="@string/activity_settings_text_map_zoom_size_description"
                     android:textStyle="italic"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/activity_settings_text_map_zoom_level"/>
+                    app:layout_constraintEnd_toStartOf="@+id/activity_settings_text_map_zoom_level_value"
+                    app:layout_constraintTop_toBottomOf="@+id/activity_settings_text_map_zoom_level"/>
 
                 <TextView
                     android:id="@+id/activity_settings_text_map_zoom_level_value"
@@ -204,13 +207,14 @@
                     app:layout_constraintTop_toTopOf="parent"/>
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/activity_settings_text_setting_description_margin_top"
                     android:text="@string/activity_settings_text_map_zoom_button_description"
                     android:textStyle="italic"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/activity_settings_text_map_button"/>
+                    app:layout_constraintEnd_toStartOf="@+id/activity_settings_map_zoom_button_switch"
+                    app:layout_constraintTop_toBottomOf="@+id/activity_settings_text_map_button"/>
 
                 <Switch
                     android:id="@+id/activity_settings_map_zoom_button_switch"
@@ -246,13 +250,14 @@
                     app:layout_constraintTop_toTopOf="parent"/>
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/activity_settings_text_setting_description_margin_top"
                     android:text="@string/activity_settings_text_map_auto_refresh_location_description"
                     android:textStyle="italic"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/activity_settings_text_map_auto_refresh_location"/>
+                    app:layout_constraintEnd_toStartOf="@+id/activity_settings_map_auto_refresh_location_switch"
+                    app:layout_constraintTop_toBottomOf="@+id/activity_settings_text_map_auto_refresh_location"/>
 
                 <Switch
                     android:id="@+id/activity_settings_map_auto_refresh_location_switch"
@@ -306,12 +311,13 @@
                     app:layout_constraintTop_toTopOf="parent"/>
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/activity_settings_text_setting_description_margin_top"
                     android:text="@string/activity_settings_text_reset_settings_description"
                     android:textStyle="italic"
                     app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/activity_settings_text_reset_settings"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>

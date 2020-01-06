@@ -32,7 +32,7 @@
                     android:scaleType="fitXY"
                     android:src="@{restaurantInfoViewModel.picture}"
                     app:layout_constraintHeight_percent="0.4"
-                    app:layout_constraintBottom_toTopOf="@id/activity_restaurant_detail_info_container"/>
+                    app:layout_constraintBottom_toTopOf="@+id/activity_restaurant_detail_info_container"/>
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/activity_restaurant_detail_button_booked"
@@ -42,7 +42,7 @@
                     android:scaleType="center"
                     app:maxImageSize="@dimen/activity_restaurant_detail_floating_button_max_image_size"
                     app:layout_constraintBottom_toTopOf="@+id/activity_restaurant_detail_info_container"
-                    app:layout_constraintTop_toTopOf="@id/activity_restaurant_detail_info_container"
+                    app:layout_constraintTop_toTopOf="@+id/activity_restaurant_detail_info_container"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:srcCompat="@drawable/ic_baseline_check_circle_outline_black_48"
                     app:backgroundTint="@android:color/white"/>
@@ -54,7 +54,7 @@
                     android:background="@color/colorPrimary"
                     android:padding="@dimen/activity_restaurant_detail_info_container_padding"
                     app:layout_constraintHeight_percent="0.13"
-                    app:layout_constraintTop_toBottomOf="@id/activity_restaurant_detail_image_restaurant">
+                    app:layout_constraintTop_toBottomOf="@+id/activity_restaurant_detail_image_restaurant">
 
                     <TextView
                         android:id="@+id/activity_restaurant_detail_text_view_restaurant_name"
@@ -220,13 +220,13 @@
                     android:layout_height="0dp"
                     android:background="@color/colorExtraLightGrey"
                     app:layout_constraintHeight_percent="0.001"
-                    app:layout_constraintTop_toBottomOf="@id/activity_restaurant_detail_button_container"/>
+                    app:layout_constraintTop_toBottomOf="@+id/activity_restaurant_detail_button_container"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/activity_restaurant_detail_recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/activity_restaurant_detail_divider"
+                    app:layout_constraintTop_toBottomOf="@+id/activity_restaurant_detail_divider"
                     tools:layout_editor_absoluteX="0dp" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

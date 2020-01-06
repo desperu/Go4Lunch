@@ -29,6 +29,8 @@ import com.google.android.material.snackbar.Snackbar;
 import org.desperu.go4lunch.R;
 import org.desperu.go4lunch.databinding.ActivityMainNavHeaderBinding;
 import org.desperu.go4lunch.models.User;
+import org.desperu.go4lunch.notifications.NotificationAlarmManager;
+import org.desperu.go4lunch.utils.Go4LunchPrefs;
 import org.desperu.go4lunch.view.base.BaseActivity;
 import org.desperu.go4lunch.view.main.fragments.MapsFragment;
 import org.desperu.go4lunch.view.main.fragments.RestaurantListFragment;
@@ -47,6 +49,8 @@ import butterknife.BindView;
 import icepick.State;
 
 import static org.desperu.go4lunch.Go4LunchTools.FragmentKey.*;
+import static org.desperu.go4lunch.Go4LunchTools.PrefsKeys.IS_FIRST_APK_START;
+import static org.desperu.go4lunch.Go4LunchTools.SettingsDefault.FIRST_APK_START_DEFAULT;
 import static org.desperu.go4lunch.view.main.fragments.MapsFragment.*;
 import static org.desperu.go4lunch.view.main.fragments.RestaurantListFragment.*;
 
@@ -185,6 +189,16 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         activityMainNavHeaderBinding.setUserAuthViewModel(userAuthViewModel);
     }
 
+    /**
+     * Enable notification at first apk start.
+     */
+    private void enableNotifications() {
+        if (Go4LunchPrefs.getBoolean(getBaseContext(), IS_FIRST_APK_START, FIRST_APK_START_DEFAULT)) {
+            NotificationAlarmManager.startNotificationsAlarm(getBaseContext());
+            Go4LunchPrefs.savePref(getBaseContext(), IS_FIRST_APK_START, false);
+        }
+    }
+
     // -----------------
     // METHODS OVERRIDE
     // -----------------
@@ -197,6 +211,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             this.configureAndShowFragment(this.currentFragment >= 0 ? currentFragment : MAP_FRAGMENT);
             this.configureDataBindingForHeader();
             this.loadUserDataFromFirestore();
+            this.enableNotifications();
         }
         else this.startSignInActivity();
     }

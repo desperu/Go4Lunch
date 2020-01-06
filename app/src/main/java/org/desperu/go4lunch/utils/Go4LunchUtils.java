@@ -331,4 +331,25 @@ public class Go4LunchUtils {
     public static int getRatingStarState(double ratingDB, double ratingPlace, int starPosition) {
         return (ratingDB + ratingPlace) >= (starPosition * 1.5) ? View.VISIBLE : View.GONE;
     }
+
+    // --------------
+    // NOTIFICATION
+    // --------------
+
+    /**
+     * Get joining users name for notification.
+     * @param bookedUserNameList Booked users name list.
+     * @return Joining users names.
+     */
+    @NotNull
+    public static String getJoiningUsersName(Context context, @NotNull List<String> bookedUserNameList) {
+        StringBuilder bookedUsersName = new StringBuilder();
+        for (int i = 0; i < bookedUserNameList.size(); i++) {
+            bookedUsersName.append(bookedUserNameList.get(i));
+            if (i < bookedUserNameList.size() - 2) bookedUsersName.append(", ");
+            else if (i < bookedUserNameList.size() - 1) bookedUsersName.append(context.getString(R.string.notification_text_joining_users_and));
+            else bookedUsersName.append(".");
+        }
+        return String.valueOf(bookedUsersName);
+    }
 }

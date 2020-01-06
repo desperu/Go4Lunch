@@ -54,6 +54,9 @@ public class Go4LunchUtilsTest {
     private String closingSoon = "Closing soon !";
     private String noData = "No opening hours data !";
 
+    // Notification
+    private String notificationAnd = ", and ";
+
     @Before
     public void before() {
         when(mockContext.getString(R.string.go4lunch_utils_text_user_joining, userName)).thenReturn(joiningUser);
@@ -66,6 +69,7 @@ public class Go4LunchUtilsTest {
         when(mockContext.getString(R.string.go4lunch_utils_opening_hours_next_open_hour, "Friday")).thenReturn(openFridayAt);
         when(mockContext.getString(R.string.go4lunch_utils_opening_hours_close)).thenReturn(closingSoon);
         when(mockContext.getString(R.string.go4lunch_utils_opening_hours_no_data)).thenReturn(noData);
+        when(mockContext.getString(R.string.notification_text_joining_users_and)).thenReturn(notificationAnd);
     }
 
     @Test
@@ -121,11 +125,12 @@ public class Go4LunchUtilsTest {
 
     @Test
     public void Given_restaurantAddress_When_getRestaurantStreetAddress_Then_checkRestaurantStreetAddress() {
+        String expected = "12 rue de la mairie";
+
         String restaurantAddress = "12, rue de la mairie, 35000 Rennes";
         String output = Go4LunchUtils.getRestaurantStreetAddress(restaurantAddress);
 
-        String restaurantStreetAddress = "12 rue de la mairie";
-        assertEquals(restaurantStreetAddress, output);
+        assertEquals(expected, output);
     }
 
     @Test
@@ -199,12 +204,14 @@ public class Go4LunchUtilsTest {
 
     @Test
     public void Given_monday20h_When_getOpeningHours_Then_checkOpeningHoursString() {
+        String expected = openTuesdayAt + "8h30";
+
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
         cal.set(Calendar.HOUR_OF_DAY, 20);
         String output = Go4LunchUtils.getOpeningHours(mockContext, this.getOpeningHoursObject(), cal);
 
-        assertEquals(openTuesdayAt + "8h30", output);
+        assertEquals(expected, output);
     }
 
     @Test
@@ -219,22 +226,26 @@ public class Go4LunchUtilsTest {
 
     @Test
     public void Given_thursday22h_When_getOpeningHours_Then_checkOpeningHoursString() {
+        String expected = openFridayAt + "8h30";
+
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.DAY_OF_WEEK, Calendar.THURSDAY);
         cal.set(Calendar.HOUR_OF_DAY, 22);
         String output = Go4LunchUtils.getOpeningHours(mockContext, this.getOpeningHoursObject(), cal);
 
-        assertEquals(openFridayAt + "8h30", output);
+        assertEquals(expected, output);
     }
 
     @Test
     public void Given_saturday12h_When_getOpeningHours_Then_checkOpeningHoursString() {
+        String expected = "Open 24/24";
+
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
         cal.set(Calendar.HOUR_OF_DAY, 12);
         String output = Go4LunchUtils.getOpeningHours(mockContext, this.getOpeningHoursObject(), cal);
 
-        assertEquals("Open 24/24", output);
+        assertEquals(expected, output);
     }
 
     @Test
@@ -346,25 +357,31 @@ public class Go4LunchUtilsTest {
 
     @Test
     public void Given_userAndRestaurantPositions_When_getRestaurantDistance_Then_checkDistance() {
+//        String expected = "50m";
+        // TODO problem don't calculate distance !!!!!
+        String expected = "0m";
+
         LatLng userPosition = new LatLng(48.11462, -1.6808367);
         LatLng restaurantPosition = new LatLng(48.11435650000001, -1.6813809);
         String output = Go4LunchUtils.getRestaurantDistance(mockContext, userPosition, restaurantPosition);
 
-        assertEquals("0m", output);
-        // TODO problem don't calculate distance !!!!!
-//        assertEquals("50m", output);
+        assertEquals(expected, output);
     }
 
     @Test
     public void Given_nullRestaurant_When_getBookedUsersNumber_Then_zeroBookedUser() {
+        String expected = "(0)";
+
         Restaurant restaurant = new Restaurant();
         String output = Go4LunchUtils.getBookedUsersNumber(restaurant);
 
-        assertEquals("(0)", output);
+        assertEquals(expected, output);
     }
 
     @Test
     public void Given_restaurantDB_When_getBookedUsersNumber_Then_bookedUsersNumber() {
+        String expected = "(3)";
+
         List<String> bookedUsersList = new ArrayList<>();
         bookedUsersList.add("user1");
         bookedUsersList.add("user2");
@@ -372,7 +389,7 @@ public class Go4LunchUtilsTest {
         Restaurant restaurant = new Restaurant(null, null, bookedUsersList,null, null);
         String output = Go4LunchUtils.getBookedUsersNumber(restaurant);
 
-        assertEquals("(3)", output);
+        assertEquals(expected, output);
     }
 
     @Test
@@ -387,5 +404,18 @@ public class Go4LunchUtilsTest {
         int output = Go4LunchUtils.getRatingStarState(0.5, 4.0, 3);
 
         assertEquals(View.VISIBLE, output);
+    }
+
+    @Test
+    public void Given_bookedUsersNameList_When_getJoiningUserName_Then_joiningUsersName() {
+        String expected = "user1, user2, and user3.";
+
+        List<String> bookedUsersList = new ArrayList<>();
+        bookedUsersList.add("user1");
+        bookedUsersList.add("user2");
+        bookedUsersList.add("user3");
+        String output = Go4LunchUtils.getJoiningUsersName(mockContext, bookedUsersList);
+
+        assertEquals(expected, output);
     }
 }

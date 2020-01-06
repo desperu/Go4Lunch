@@ -4,6 +4,13 @@ import android.Manifest;
 
 public final class Go4LunchTools {
 
+    public static final class FragmentKey {
+
+        public static final int MAP_FRAGMENT = 0;
+        public static final int LIST_FRAGMENT = 1;
+        public static final int WORKMATES_FRAGMENT = 2;
+    }
+
     public static final class GoogleMap {
 
         // FOR PERMISSION (location)
@@ -17,6 +24,13 @@ public final class Go4LunchTools {
         public static final String GOOGLE_MAP_ZOOM_OUT_BUTTON = "GoogleMapZoomOutButton";
     }
 
+    public static final class RestaurantDetail {
+
+        // FOR PERMISSION (call phone).
+        public static final String[] PERMS = {Manifest.permission.CALL_PHONE};
+        public static final int PERM_CALL_PHONE = 200;
+    }
+
     public static final class CodeResponse {
 
         // Code response for booking restaurant.
@@ -26,23 +40,9 @@ public final class Go4LunchTools {
         public static final int NO_DATA = 3;
     }
 
-    public static final class FragmentKey {
-
-        public static final int MAP_FRAGMENT = 0;
-        public static final int LIST_FRAGMENT = 1;
-        public static final int WORKMATES_FRAGMENT = 2;
-    }
-
-    public static final class RestaurantDetail {
-
-        // FOR PERMISSION (call phone).
-        public static final String[] PERMS = {Manifest.permission.CALL_PHONE};
-        public static final int PERM_CALL_PHONE = 200;
-    }
-
     public static final class OpeningHoursState {
 
-        // Opening hours text color.
+        // Opening hours restaurant state.
         public static final int OPEN = 0;
         public static final int OPEN_AT = 1;
         public static final int CLOSE = 2;
@@ -52,6 +52,7 @@ public final class Go4LunchTools {
     public static final class PrefsKeys {
 
         // Shared preferences keys
+        public static final String IS_FIRST_APK_START = "isFirstApkStart";
         public static final String NOTIFICATION_ENABLED = "notificationEnabled";
         public static final String RESET_BOOKED_RESTAURANT = "resetBookedRestaurant";
         public static final String MAP_ZOOM_LEVEL = "mapZoomLevel";
@@ -62,6 +63,7 @@ public final class Go4LunchTools {
     public static final class SettingsDefault {
 
         // Settings default value
+        public static final boolean FIRST_APK_START_DEFAULT = true;
         public static final boolean NOTIFICATION_DEFAULT = true;
         public static final boolean RESET_BOOKED_DEFAULT = false;
         public static final int ZOOM_LEVEL_DEFAULT = 18;

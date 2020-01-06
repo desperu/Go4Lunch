@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 
 import org.desperu.go4lunch.R;
+import org.desperu.go4lunch.notifications.NotificationAlarmManager;
 import org.desperu.go4lunch.utils.Go4LunchPrefs;
 import org.desperu.go4lunch.view.base.BaseActivity;
 
@@ -56,6 +57,7 @@ public class SettingsActivity extends BaseActivity {
         this.configureUpButton();
         this.getSavedPrefs();
         this.updateUiWithSavedPrefs();
+        this.onCheckedNotificationChangeListener();
     }
 
     // --------------
@@ -98,6 +100,13 @@ public class SettingsActivity extends BaseActivity {
     // ACTION
     // --------------
 
+    /**
+     * Notification checked change listener.
+     */
+    private void onCheckedNotificationChangeListener() {
+        notificationSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> manageNotificationAlarm(isChecked));
+    }
+
     @OnClick(R.id.activity_settings_map_zoom_level_container)
     protected void onClickZoomSize() { this.alertDialog(ZOOM_DIALOG); }
 
@@ -126,14 +135,17 @@ public class SettingsActivity extends BaseActivity {
     private void alertDialog(int zoomOrReset) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this, R.style.AlertDialogTheme);
         if (zoomOrReset == ZOOM_DIALOG) {
+            // Create dialog for zoom level
             dialog.setTitle(R.string.activity_settings_text_map_zoom_size);
             dialog.setMessage(R.string.activity_settings_text_map_zoom_size_description);
 
+            // Add edit text to dialog
             View editView = LayoutInflater.from(this).inflate(R.layout.alert_dialog, linearRoot);
             final EditText editText = editView.findViewById(R.id.alert_dialog_input_text);
             editText.setText(String.valueOf(zoomLevel));
             dialog.setView(editView);
 
+            // Set positive button
             dialog.setPositiveButton(R.string.activity_settings_dialog_positive_button, (dialog1, which) -> {
                 String newZoomLevel = editText.getText().toString();
                 if (!newZoomLevel.isEmpty() && Integer.parseInt(newZoomLevel) >= 2 && Integer.parseInt(newZoomLevel) <= 21)
@@ -141,11 +153,14 @@ public class SettingsActivity extends BaseActivity {
                 else Toast.makeText(this, R.string.activity_settings_toast_zoom_level_wrong_value, Toast.LENGTH_LONG).show();
             });
         } else if (zoomOrReset == RESET_DIALOG) {
+            // Create dialog for reset settings
             dialog.setTitle(R.string.activity_settings_text_reset_settings);
             dialog.setMessage(R.string.activity_settings_dialog_reset_settings_message);
 
+            // Set positive button
             dialog.setPositiveButton(R.string.activity_settings_dialog_positive_button, (dialog2, which) -> this.resetSettings());
         }
+        // Set negative button
         dialog.setNegativeButton(R.string.activity_settings_dialog_negative_button, (dialog3, which) -> dialog3.cancel());
         dialog.show();
     }
@@ -155,10 +170,20 @@ public class SettingsActivity extends BaseActivity {
     // --------------
 
     /**
+     * Manage notification alarm.
+     * @param isNotificationsEnabled Notification state.
+     */
+    private void manageNotificationAlarm(boolean isNotificationsEnabled) {
+        if (isNotificationsEnabled) NotificationAlarmManager.startNotificationsAlarm(getBaseContext());
+        else NotificationAlarmManager.stopNotificationsAlarm(getBaseContext());
+    }
+
+    /**
      * Reset settings to default value.
      */
     private void resetSettings() {
         notificationSwitch.setChecked(NOTIFICATION_DEFAULT);
+        manageNotificationAlarm(NOTIFICATION_DEFAULT);
         resetBookedRestaurantSwitch.setChecked(RESET_BOOKED_DEFAULT);
         zoomLevelTextView.setText(String.valueOf(ZOOM_LEVEL_DEFAULT));
         zoomButtonSwitch.setChecked(ZOOM_BUTTON_DEFAULT);
