@@ -8,7 +8,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -48,11 +47,9 @@ public class NotificationReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, @NotNull Intent intent) {
         this.context = context;
-        if (intent.getAction() != null && intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
-            Toast.makeText(context, "boot completed", Toast.LENGTH_SHORT).show(); // TODO to remove, for test
-            if (Go4LunchPrefs.getBoolean(context, NOTIFICATION_ENABLED, NOTIFICATION_DEFAULT))
+        if (intent.getAction() != null && intent.getAction().equals("android.intent.action.BOOT_COMPLETED")
+                && Go4LunchPrefs.getBoolean(context, NOTIFICATION_ENABLED, NOTIFICATION_DEFAULT))
                 NotificationAlarmManager.startNotificationsAlarm(context);
-        }
         else if (checkTime()) getBookedRestaurantId();
     }
 

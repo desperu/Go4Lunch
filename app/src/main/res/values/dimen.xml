@@ -79,7 +79,8 @@
     <dimen name="activity_settings_constraint_container_padding_start_and_end">15dp</dimen>
     <dimen name="activity_settings_text_setting_title_text_size">16sp</dimen>
     <dimen name="activity_settings_text_setting_description_margin_top">10dp</dimen>
-    <dimen name="activity_settings_text_zoom_value_margin_end">15sp</dimen>
+    <dimen name="activity_settings_text_setting_description_margin_end">10dp</dimen>
+    <dimen name="activity_settings_text_zoom_value_margin_end">15dp</dimen>
     <dimen name="activity_settings_text_zoom_value_text_size">18sp</dimen>
 
     <!-- MENU -->

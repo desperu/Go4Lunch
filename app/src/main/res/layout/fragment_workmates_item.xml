@@ -45,8 +45,6 @@
                 android:textSize="@dimen/fragment_restaurant_detail_item_text_user_size"
                 android:text="@{obj.getUserEating(obj2.restaurant.name)}"
                 tools:userEatingStyle="@{obj.userEatingDecided}"/>
-<!--                tools:userEatingAt="@{obj2.restaurant.name}"-->
-<!--                tools:userEatingStyle="@{obj.userEatingDecided}"/>-->
 
         </LinearLayout>
 
