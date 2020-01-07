@@ -61,7 +61,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/activity_restaurant_detail_text_restaurant_name_margin_end"
-                        android:text="@{restaurantInfoViewModel.place.name}"
+                        android:text="@{restaurantInfoViewModel.simpleName}"
                         android:textSize="@dimen/activity_restaurant_detail_text_restaurant_name_text_size"
                         android:textColor="@android:color/white"
                         android:maxLines="1"

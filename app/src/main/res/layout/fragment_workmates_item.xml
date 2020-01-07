@@ -7,9 +7,6 @@
         <variable
             name="obj"
             type="org.desperu.go4lunch.viewmodel.UserDBViewModel" />
-        <variable
-            name="obj2"
-            type="org.desperu.go4lunch.viewmodel.RestaurantDBViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -43,7 +40,7 @@
                 android:layout_gravity="center"
                 android:layout_margin="@dimen/fragment_restaurant_detail_item_text_user_margin"
                 android:textSize="@dimen/fragment_restaurant_detail_item_text_user_size"
-                android:text="@{obj.getUserEating(obj2.restaurant.name)}"
+                android:text="@{obj.userEating}"
                 tools:userEatingStyle="@{obj.userEatingDecided}"/>
 
         </LinearLayout>

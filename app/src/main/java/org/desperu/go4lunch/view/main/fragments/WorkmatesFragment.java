@@ -8,7 +8,6 @@ import org.desperu.go4lunch.R;
 import org.desperu.go4lunch.view.base.BaseFragment;
 import org.desperu.go4lunch.models.User;
 import org.desperu.go4lunch.view.adapter.WorkmatesAdapter;
-import org.desperu.go4lunch.viewmodel.RestaurantDBViewModel;
 import org.desperu.go4lunch.viewmodel.UserDBViewModel;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -25,7 +24,6 @@ public class WorkmatesFragment extends BaseFragment {
 
     private WorkmatesAdapter adapter;
     private List<UserDBViewModel> allWorkmatesList = new ArrayList<>();
-    private List<RestaurantDBViewModel> bookedRestaurantList = new ArrayList<>();
 
     // --------------
     // BASE METHODS
@@ -59,7 +57,7 @@ public class WorkmatesFragment extends BaseFragment {
      */
     private void configureRecyclerView() {
         // Create adapter passing in the sample user data
-        this.adapter = new WorkmatesAdapter(R.layout.fragment_workmates_item, allWorkmatesList, bookedRestaurantList);
+        this.adapter = new WorkmatesAdapter(R.layout.fragment_workmates_item, allWorkmatesList);
         // Attach the adapter to the recyclerView to populate items
         this.recyclerView.setAdapter(this.adapter);
         // Set layout manager to position the items
@@ -73,7 +71,7 @@ public class WorkmatesFragment extends BaseFragment {
         assert getActivity() != null;
         UserDBViewModel allUsers = new UserDBViewModel(getActivity().getApplication());
         allUsers.fetchAllUsers();
-        allUsers.getAllUsersListLiveData().observe(this, this::updateRecyclerView);
+        allUsers.getAllUsersListLiveData().observe(this, users -> this.updateRecyclerView(this.sortWorkmatesList(users)));
     }
 
     /**
@@ -94,19 +92,37 @@ public class WorkmatesFragment extends BaseFragment {
     private void updateRecyclerView(@NotNull List<User> allUsersList) {
         assert getActivity() != null;
         this.allWorkmatesList.clear();
-        this.bookedRestaurantList.clear();
         for (User user : allUsersList) {
             // User data from firestore
             UserDBViewModel userDBViewModel = new UserDBViewModel(getActivity().getApplication(), user.getUid());
             userDBViewModel.fetchUser();
             this.allWorkmatesList.add(userDBViewModel);
-
-            // Restaurant data from firestore
-            RestaurantDBViewModel restaurantDBViewModel = new RestaurantDBViewModel(user.getBookedRestaurantId());
-            if (user.getBookedRestaurantId() != null) restaurantDBViewModel.fetchRestaurant();
-            this.bookedRestaurantList.add(restaurantDBViewModel);
         }
         adapter.notifyDataSetChanged();
         swipeRefreshLayout.setRefreshing(false);
+    }
+
+    // --------------
+    // UTILS
+    // --------------
+
+    /**
+     * Sort workmates list to show at top decided user for lunch.
+     * @param allUsersList All users list.
+     * @return All users list sorted.
+     */
+    @Contract("_ -> param1")
+    private List<User> sortWorkmatesList(@NotNull List<User> allUsersList) {
+        List<User> decidedUsers = new ArrayList<>();
+        List<User> notDecidedUsers = new ArrayList<>();
+        for (User user : allUsersList) {
+            if (user.getBookedRestaurantId() != null)
+                decidedUsers.add(user);
+            else notDecidedUsers.add(user);
+        }
+        allUsersList.clear();
+        allUsersList.addAll(decidedUsers);
+        allUsersList.addAll(notDecidedUsers);
+        return allUsersList;
     }
 }

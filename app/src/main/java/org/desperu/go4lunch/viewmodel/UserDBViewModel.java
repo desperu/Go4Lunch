@@ -31,9 +31,8 @@ public class UserDBViewModel extends AndroidViewModel {
 
     private String uid;
     private ObservableField<User> user = new ObservableField<>();
-    private ObservableField<String> userName = new ObservableField<>();
-    private ObservableField<String> userEating = new ObservableField<>();
     private ObservableField<String> joiningName = new ObservableField<>();
+    private ObservableField<String> userEating = new ObservableField<>();
     private ObservableBoolean userEatingDecided = new ObservableBoolean();
     private MutableLiveData<User> userLiveData = new MutableLiveData<>();
     private MutableLiveData<List<User>> allUsersList = new MutableLiveData<>();
@@ -65,12 +64,25 @@ public class UserDBViewModel extends AndroidViewModel {
         UserHelper.getUser(uid).addOnSuccessListener(documentSnapshot -> {
             this.user.set(documentSnapshot.toObject(User.class));
             this.userLiveData.postValue(documentSnapshot.toObject(User.class));
-            if (user.get() != null && Objects.requireNonNull(user.get()).getUserName() != null) {
-                userName.set(Objects.requireNonNull(this.user.get()).getUserName());
-                this.joiningName.set(Go4LunchUtils.getJoiningName(getApplication(),
-                        Objects.requireNonNull(user.get()).getUserName()));
-            }
+            this.setJoiningName(Objects.requireNonNull(user.get()).getUserName());
+            this.fetchBookedRestaurant();
         });
+    }
+
+    /**
+     * Fetch booked restaurant name from firestore.
+     */
+    private void fetchBookedRestaurant() {
+        if (Objects.requireNonNull(this.user.get()).getBookedRestaurantId() != null) {
+            RestaurantDBViewModel restaurantDBViewModel = new RestaurantDBViewModel(
+                    Objects.requireNonNull(this.user.get()).getBookedRestaurantId());
+            restaurantDBViewModel.fetchRestaurant();
+            restaurantDBViewModel.getRestaurantLiveData().observeForever(restaurant ->
+                    this.setUserEating(Objects.requireNonNull(
+                            this.user.get()).getUserName(), restaurant.getName())
+            );
+        } else this.setUserEating(Objects.requireNonNull(
+                this.user.get()).getUserName(), null);
     }
 
     /**
@@ -114,10 +126,22 @@ public class UserDBViewModel extends AndroidViewModel {
         }).addOnFailureListener(e -> updateBookedResponse.postValue(ERROR));
     }
 
+    // --- SETTERS ---
+    private void setJoiningName(String userName) {
+        this.joiningName.set(Go4LunchUtils.getJoiningName(getApplication(), userName));
+    }
+
+    private void setUserEating(String userName, String restaurantName) {
+        this.userEating.set(Go4LunchUtils.getUserEatingAt(getApplication(), userName, restaurantName));
+        this.userEatingDecided.set(Go4LunchUtils.getUserDecided());
+    }
+
     // --- GETTERS ---
     public ObservableField<User> getUser() { return this.user; }
 
     public ObservableField<String> getJoiningName() { return this.joiningName; }
+
+    public ObservableField<String> getUserEating() { return this.userEating; }
 
     public ObservableBoolean getUserEatingDecided() { return userEatingDecided; }
 
@@ -131,18 +155,6 @@ public class UserDBViewModel extends AndroidViewModel {
     public static void setImageUrl(@NotNull ImageView imageView, String url) {
         Glide.with(imageView.getContext()).load(url).circleCrop().into(imageView);
     }
-
-    public ObservableField<String> getUserEating(String restaurantName) {
-        this.userEating.set(Go4LunchUtils.getUserEatingAt(getApplication(), this.userName.get(), restaurantName));
-        this.userEatingDecided.set(Go4LunchUtils.getUserDecided());
-        return this.userEating;
-    }
-
-//    @BindingAdapter("userEatingAt")
-//    public static void setUserEatingAt(@NotNull TextView textView, String restaurantName) {
-//        textView.setText(Go4LunchUtils.getUserEatingAt(textView.getContext(), userName.get(), restaurantName));
-//        userEatingDecided.set(Go4LunchUtils.getUserDecided());
-//    }
 
     @BindingAdapter("userEatingStyle")
     public static void setUserEatingStyle(@NotNull TextView textView, boolean userEatingDecided) {
