@@ -270,7 +270,7 @@ public class RestaurantListFragment extends BaseFragment {
             this.restaurantInfoList.add(restaurantInfoViewModel);
 
             // Restaurant data base
-            RestaurantDBViewModel restaurantDBViewModel = new RestaurantDBViewModel(placeId);
+            RestaurantDBViewModel restaurantDBViewModel = new RestaurantDBViewModel(getActivity().getApplication(), placeId);
             restaurantDBViewModel.fetchRestaurant();
             this.restaurantDBList.add(restaurantDBViewModel);
         }

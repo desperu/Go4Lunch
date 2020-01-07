@@ -111,7 +111,7 @@
                         android:contentDescription="@null"
                         app:srcCompat="@drawable/ic_baseline_star_black_18"
                         android:tint="@color/colorStar"
-                        android:visibility="@{obj2.getLikeUsersNumberString(obj.place.rating, 3)}"/>
+                        android:visibility="@{obj2.starThreeState}"/>
 
                     <ImageView
                         android:id="@+id/fragment_restaurant_list_item_image_restaurant_stars_2"
@@ -120,7 +120,7 @@
                         android:contentDescription="@null"
                         app:srcCompat="@drawable/ic_baseline_star_black_18"
                         android:tint="@color/colorStar"
-                        android:visibility="@{obj2.getLikeUsersNumberString(obj.place.rating, 2)}"/>
+                        android:visibility="@{obj2.starTwoState}"/>
 
                     <ImageView
                         android:id="@+id/fragment_restaurant_list_item_image_restaurant_stars_1"
@@ -129,7 +129,7 @@
                         android:contentDescription="@null"
                         app:srcCompat="@drawable/ic_baseline_star_black_18"
                         android:tint="@color/colorStar"
-                        android:visibility="@{obj2.getLikeUsersNumberString(obj.place.rating, 1)}"/>
+                        android:visibility="@{obj2.starOneState}"/>
 
                 </LinearLayout>
 

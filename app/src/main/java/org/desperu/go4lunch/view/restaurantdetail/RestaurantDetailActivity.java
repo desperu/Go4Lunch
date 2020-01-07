@@ -100,7 +100,7 @@ public class RestaurantDetailActivity extends BaseActivity {
         restaurantInfoViewModel = new RestaurantInfoViewModel(getApplication(), this.getIdFromIntentData());
         restaurantDetailBinding.setRestaurantInfoViewModel(restaurantInfoViewModel);
 
-        restaurantDBViewModel = new RestaurantDBViewModel(this.getIdFromIntentData());
+        restaurantDBViewModel = new RestaurantDBViewModel(getApplication(), this.getIdFromIntentData());
         restaurantDBViewModel.fetchRestaurant();
         restaurantDetailBinding.setRestaurantDBViewModel(restaurantDBViewModel);
         ButterKnife.bind(this);
@@ -124,7 +124,6 @@ public class RestaurantDetailActivity extends BaseActivity {
     private void configureSwipeRefreshLayout() {
         swipeRefreshLayout.setOnRefreshListener(() -> {
             restaurantInfoViewModel.restartRequest();
-            restaurantDBViewModel.fetchRestaurant();
             this.reloadRestaurantData();
         });
     }

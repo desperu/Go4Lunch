@@ -62,27 +62,23 @@ public class UserDBViewModel extends AndroidViewModel {
      */
     public void fetchUser() {
         UserHelper.getUser(uid).addOnSuccessListener(documentSnapshot -> {
-            this.user.set(documentSnapshot.toObject(User.class));
-            this.userLiveData.postValue(documentSnapshot.toObject(User.class));
-            this.setJoiningName(Objects.requireNonNull(user.get()).getUserName());
-            this.fetchBookedRestaurant();
+            this.setUserData(Objects.requireNonNull(documentSnapshot.toObject(User.class)));
+            this.fetchBookedRestaurant(Objects.requireNonNull(documentSnapshot.toObject(User.class)));
         });
     }
 
     /**
-     * Fetch booked restaurant name from firestore.
+     * Fetch user booked restaurant from firestore.
      */
-    private void fetchBookedRestaurant() {
-        if (Objects.requireNonNull(this.user.get()).getBookedRestaurantId() != null) {
+    private void fetchBookedRestaurant(@NotNull User user) {
+        if (user.getBookedRestaurantId() != null) {
             RestaurantDBViewModel restaurantDBViewModel = new RestaurantDBViewModel(
-                    Objects.requireNonNull(this.user.get()).getBookedRestaurantId());
+                    getApplication(), user.getBookedRestaurantId());
             restaurantDBViewModel.fetchRestaurant();
             restaurantDBViewModel.getRestaurantLiveData().observeForever(restaurant ->
-                    this.setUserEating(Objects.requireNonNull(
-                            this.user.get()).getUserName(), restaurant.getName())
+                    this.setUserEating(user.getUserName(), restaurant.getName())
             );
-        } else this.setUserEating(Objects.requireNonNull(
-                this.user.get()).getUserName(), null);
+        } else this.setUserEating(user.getUserName(), null);
     }
 
     /**
@@ -99,7 +95,7 @@ public class UserDBViewModel extends AndroidViewModel {
      * @param newBookedRestaurantDB New booked restaurant data base object.
      */
     public void updateBookedRestaurant(@NotNull Place newBookedRestaurant, Restaurant newBookedRestaurantDB) {
-        RestaurantDBViewModel restaurantDBViewModel = new RestaurantDBViewModel(newBookedRestaurant.getId());
+        RestaurantDBViewModel restaurantDBViewModel = new RestaurantDBViewModel(getApplication(), newBookedRestaurant.getId());
 
         UserHelper.getUser(uid).addOnSuccessListener(documentSnapshot -> {
             // Get old booked restaurant before update.
@@ -127,10 +123,22 @@ public class UserDBViewModel extends AndroidViewModel {
     }
 
     // --- SETTERS ---
-    private void setJoiningName(String userName) {
-        this.joiningName.set(Go4LunchUtils.getJoiningName(getApplication(), userName));
+
+    /**
+     * Set user data when received response.
+     * @param user Received user object.
+     */
+    private void setUserData(@NotNull User user) {
+        this.user.set(user);
+        this.userLiveData.postValue(user);
+        this.joiningName.set(Go4LunchUtils.getJoiningName(getApplication(), user.getUserName()));
     }
 
+    /**
+     * Set user eating string and decided for string style.
+     * @param userName User name.
+     * @param restaurantName Booked restaurant name.
+     */
     private void setUserEating(String userName, String restaurantName) {
         this.userEating.set(Go4LunchUtils.getUserEatingAt(getApplication(), userName, restaurantName));
         this.userEatingDecided.set(Go4LunchUtils.getUserDecided());

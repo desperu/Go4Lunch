@@ -1,8 +1,11 @@
 package org.desperu.go4lunch.viewmodel;
 
+import android.app.Application;
+
 import androidx.databinding.ObservableDouble;
 import androidx.databinding.ObservableField;
 import androidx.databinding.ObservableInt;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -16,18 +19,24 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class RestaurantDBViewModel {
+public class RestaurantDBViewModel extends AndroidViewModel {
 
     // FOR DATA
     private String restaurantId;
     private ObservableField<Restaurant> restaurant = new ObservableField<>();
     private ObservableField<String> bookedUsersNumber = new ObservableField<>();
     private ObservableDouble likeUsersNumber = new ObservableDouble();
-    private ObservableInt likeUsersNumberString = new ObservableInt();
+    private ObservableInt starOneState = new ObservableInt();
+    private ObservableInt starTwoState = new ObservableInt();
+    private ObservableInt starThreeState = new ObservableInt();
     private MutableLiveData<Restaurant> restaurantLiveData = new MutableLiveData<>();
 
     // CONSTRUCTOR
-    public RestaurantDBViewModel(String restaurantId) { this.restaurantId = restaurantId; }
+    public RestaurantDBViewModel(Application application, String restaurantId) {
+        super(application);
+        this.restaurantId = restaurantId;
+        this.setStarsStates(0); // Hide stars before fetch data.
+    }
 
     // --------------
     // REQUEST
@@ -46,12 +55,18 @@ public class RestaurantDBViewModel {
      */
     public void fetchRestaurant() {
         RestaurantHelper.getRestaurant(restaurantId).addOnSuccessListener(documentSnapshot -> {
-            this.restaurant.set(documentSnapshot.toObject(Restaurant.class));
-            this.restaurantLiveData.postValue(documentSnapshot.toObject(Restaurant.class));
-            this.bookedUsersNumber.set(Go4LunchUtils.getBookedUsersNumber(documentSnapshot.toObject(Restaurant.class)));
-            if (restaurant.get() != null && Objects.requireNonNull(restaurant.get()).getLikeUsers() != null)
-                this.likeUsersNumber.set(Objects.requireNonNull(restaurant.get()).getLikeUsers().size() / (double) 10);
+            this.setRestaurantData(documentSnapshot.toObject(Restaurant.class));
+            this.fetchRestaurantInfoRating();
         });
+    }
+
+    /**
+     * Fetch restaurant info rating, from google place.
+     */
+    private void fetchRestaurantInfoRating() {
+        RestaurantInfoViewModel restaurantInfoViewModel = new RestaurantInfoViewModel(getApplication(), restaurantId);
+        restaurantInfoViewModel.getPlaceLiveData().observeForever(place ->
+                this.setStarsStates(Objects.requireNonNull(place.getRating())));
     }
 
     /**
@@ -89,15 +104,40 @@ public class RestaurantDBViewModel {
         RestaurantHelper.removeLikeUser(restaurantId, userId);
     }
 
+    // --- SETTERS ---
+
+    /**
+     * Set restaurant data when received response.
+     * @param restaurant Received restaurant object.
+     */
+    private void setRestaurantData(Restaurant restaurant) {
+        this.restaurant.set(restaurant);
+        this.restaurantLiveData.postValue(restaurant);
+        this.bookedUsersNumber.set(Go4LunchUtils.getBookedUsersNumber(restaurant));
+        if (restaurant != null && restaurant.getLikeUsers() != null)
+            this.likeUsersNumber.set(restaurant.getLikeUsers().size() / (double) 10);
+    }
+
+    /**
+     * Set Stars states.
+     * @param placeRating Restaurant rating from google place.
+     */
+    private void setStarsStates(double placeRating) {
+        this.starOneState.set(Go4LunchUtils.getRatingStarState(this.likeUsersNumber.get(), placeRating, 1));
+        this.starTwoState.set(Go4LunchUtils.getRatingStarState(this.likeUsersNumber.get(), placeRating, 2));
+        this.starThreeState.set(Go4LunchUtils.getRatingStarState(this.likeUsersNumber.get(), placeRating, 3));
+    }
+
     // --- GETTERS ---
     public ObservableField<Restaurant> getRestaurant() { return this.restaurant; }
 
     public ObservableField<String> getBookedUsersNumber() { return this.bookedUsersNumber; }
 
-    public ObservableInt getLikeUsersNumberString(double placeRating, int starPosition) { // TODO BindingAdapter
-        this.likeUsersNumberString.set(Go4LunchUtils.getRatingStarState(this.likeUsersNumber.get(), placeRating, starPosition));
-        return this.likeUsersNumberString;
-    }
+    public ObservableInt getStarOneState() { return this.starOneState; }
+
+    public ObservableInt getStarTwoState() { return this.starTwoState; }
+
+    public ObservableInt getStarThreeState() { return this.starThreeState; }
 
     public LiveData<Restaurant> getRestaurantLiveData() { return this.restaurantLiveData; }
 }

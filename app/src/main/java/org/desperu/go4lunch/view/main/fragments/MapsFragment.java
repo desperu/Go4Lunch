@@ -372,8 +372,9 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
      * @param place Restaurant place object.
      */
     private void getRestaurantDB(@NotNull Place place) {
+        assert getActivity() != null;
         // Start DB request
-        RestaurantDBViewModel restaurantDBViewModel = new RestaurantDBViewModel(place.getId());
+        RestaurantDBViewModel restaurantDBViewModel = new RestaurantDBViewModel(getActivity().getApplication(), place.getId());
         restaurantDBViewModel.fetchRestaurant();
         // Get DB request result
         restaurantDBViewModel.getRestaurantLiveData().observe(this, restaurant ->
