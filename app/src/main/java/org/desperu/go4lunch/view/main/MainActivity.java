@@ -53,6 +53,7 @@ import static org.desperu.go4lunch.Go4LunchTools.PrefsKeys.IS_FIRST_APK_START;
 import static org.desperu.go4lunch.Go4LunchTools.SettingsDefault.FIRST_APK_START_DEFAULT;
 import static org.desperu.go4lunch.view.main.fragments.MapsFragment.*;
 import static org.desperu.go4lunch.view.main.fragments.RestaurantListFragment.*;
+import static org.desperu.go4lunch.view.main.fragments.WorkmatesFragment.QUERY_TERM_WORKMATES;
 
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener,
@@ -70,15 +71,18 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private ActivityMainNavHeaderBinding activityMainNavHeaderBinding;
     private UserAuthViewModel userAuthViewModel;
     private UserDBViewModel userDBViewModel;
-    @State RectangularBounds nearbyBounds;
-    @State Location userLocation;
-    @State ArrayList<String> placeList;
-    @State RectangularBounds bounds;
-    @State CameraPosition cameraPosition;
-    @State String queryTerm;
     @State int currentFragment = -1;
     private Fragment fragment;
     private static final int RC_SIGN_IN = 1234;
+
+    // FOR FRAGMENTS COMMUNICATION
+    @State RectangularBounds nearbyBounds;
+    @State Location userLocation;
+    @State ArrayList<String> placeIdList;
+    @State RectangularBounds bounds;
+    @State CameraPosition cameraPosition;
+    @State String queryTerm;
+    @State boolean isQueryForRestaurant = false;
 
     // --------------
     // BASE METHODS
@@ -144,25 +148,30 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             switch (fragmentKey) {
                 case MAP_FRAGMENT:
                     fragment = MapsFragment.newInstance();
-                    bundle.putStringArrayList(PLACE_ID_LIST_MAPS, placeList);
+                    bundle.putStringArrayList(PLACE_ID_LIST_MAPS, placeIdList);
                     if (this.bounds != null)
                         bundle.putParcelable(CAMERA_POSITION, cameraPosition);
                     if (this.queryTerm != null && !this.queryTerm.isEmpty())
                         bundle.putString(QUERY_TERM_MAPS, queryTerm);
+                    bundle.putBoolean(MapsFragment.IS_QUERY_FOR_RESTAURANT_MAPS, isQueryForRestaurant);
                     fragment.setArguments(bundle);
                     break;
                 case LIST_FRAGMENT:
                     fragment = RestaurantListFragment.newInstance();
-                    bundle.putParcelable(NEARBY_BOUNDS, nearbyBounds);
-                    bundle.putStringArrayList(PLACE_ID_LIST_RESTAURANT_LIST, placeList);
+                    bundle.putStringArrayList(PLACE_ID_LIST_RESTAURANT_LIST, placeIdList);
                     bundle.putParcelable(BOUNDS, bounds);
                     if (this.queryTerm != null && !this.queryTerm.isEmpty())
                         bundle.putString(QUERY_TERM_LIST, queryTerm);
+                    bundle.putBoolean(IS_QUERY_FOR_RESTAURANT_LIST, isQueryForRestaurant);
+                    bundle.putParcelable(NEARBY_BOUNDS, nearbyBounds);
                     bundle.putParcelable(USER_LOCATION, userLocation);
                     fragment.setArguments(bundle);
                     break;
                 case WORKMATES_FRAGMENT:
                     fragment = WorkmatesFragment.newInstance();
+                    if (this.queryTerm != null && !this.queryTerm.isEmpty())
+                        bundle.putString(QUERY_TERM_WORKMATES, queryTerm);
+                    fragment.setArguments(bundle);
                     titleActivity = getString(R.string.title_fragment_workmates);
                     break;
             }
@@ -260,9 +269,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     public void onBackPressed() {
         if (this.drawerLayout.isDrawerOpen(GravityCompat.START))
             this.drawerLayout.closeDrawer(GravityCompat.START);
-        else if (this.searchView != null && this.searchView.isShown())
+        else if (this.searchView != null && this.searchView.isShown()) {
             this.searchView.setVisibility(View.GONE);
-        else
+            this.searchView.setQuery(null, true);
+        } else
             super.onBackPressed();
     }
 
@@ -287,7 +297,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     public boolean onOptionsItemSelected(@NotNull MenuItem item) {
-        if (item.getItemId() == R.id.activity_main_menu_search && !fragment.getClass().equals(WorkmatesFragment.class)) {
+        if (item.getItemId() == R.id.activity_main_menu_search) {
             searchView.setVisibility(View.VISIBLE);
             searchView.onActionViewExpanded();
             return true;
@@ -303,13 +313,16 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     public void onClickedMarker(String id) { this.showRestaurantDetailActivity(id); }
 
     @Override
+    public void onNewQuerySearch(boolean isQueryForRestaurant) { this.isQueryForRestaurant = isQueryForRestaurant; }
+
+    @Override
     public void saveNearbyBounds(RectangularBounds nearbyBounds) { this.nearbyBounds = nearbyBounds; }
 
     @Override
     public void onNewUserLocation(Location userLocation) { this.userLocation = userLocation; }
 
     @Override
-    public void onNewPlacesIdList(ArrayList<String> placeList) { this.placeList = placeList; }
+    public void onNewPlacesIdList(ArrayList<String> placeIdList) { this.placeIdList = placeIdList; }
 
     @Override
     public void onNewBounds(RectangularBounds bounds) { this.bounds = bounds; }
@@ -337,11 +350,17 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private void onSearchTextChange(String query) {
         this.queryTerm = query;
         if (fragment.getClass() == MapsFragment.class) {
+            isQueryForRestaurant = true;
             MapsFragment mapsFragment = (MapsFragment) this.fragment;
             mapsFragment.onSearchQueryTextChange(query);
         } else if (fragment.getClass() == RestaurantListFragment.class) {
+            isQueryForRestaurant = true;
             RestaurantListFragment restaurantListFragment = (RestaurantListFragment) this.fragment;
             restaurantListFragment.onSearchQueryTextChange(query);
+        } else if (fragment.getClass() == WorkmatesFragment.class) {
+            isQueryForRestaurant = false;
+            WorkmatesFragment workmatesFragment = (WorkmatesFragment) this.fragment;
+            workmatesFragment.onSearchQueryTextChange(query);
         }
     }
 

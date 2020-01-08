@@ -35,11 +35,12 @@ public class RestaurantListFragment extends BaseFragment {
     @BindView(R.id.fragment_recycler_view) RecyclerView recyclerView;
 
     // FOR BUNDLE
+    public static final String PLACE_ID_LIST_RESTAURANT_LIST = "placesIdList";
+    public static final String BOUNDS = "bounds";
+    public static final String QUERY_TERM_LIST = "queryTerm";
+    public static final String IS_QUERY_FOR_RESTAURANT_LIST = "isQueryForRestaurant";
     public static final String NEARBY_BOUNDS = "nearbyBounds";
     public static final String USER_LOCATION = "userLocation";
-    public static final String PLACE_ID_LIST_RESTAURANT_LIST = "placesIdList";
-    public static final String QUERY_TERM_LIST = "queryTerm";
-    public static final String BOUNDS = "bounds";
 
     // FOR DATA
     private ArrayList<String> placesIdList;
@@ -53,6 +54,7 @@ public class RestaurantListFragment extends BaseFragment {
     public interface OnNewDataListener {
         void onNewPlacesIdList(ArrayList<String> placeIdList);
         void onNewBounds(RectangularBounds bounds);
+        void onNewQuerySearch(boolean isQueryForRestaurant);
     }
 
     public interface OnClickListener {
@@ -77,7 +79,7 @@ public class RestaurantListFragment extends BaseFragment {
         this.setDataFromBundle();
         this.configureRecyclerView();
         this.configureOnClickRecyclerViewItem();
-        this.updateRecyclerViewWithMapsData();
+        this.updateRecyclerViewWithData();
         this.configureSwipeRefresh();
     }
 
@@ -104,6 +106,15 @@ public class RestaurantListFragment extends BaseFragment {
     }
 
     /**
+     * Get query term last use, for restaurant search or not.
+     * @return Query term last use.
+     */
+    private boolean getIsQueryForRestaurant() {
+        assert getArguments() != null;
+        return getArguments().getBoolean(IS_QUERY_FOR_RESTAURANT_LIST);
+    }
+
+    /**
      * Get nearby rectangular bounds from bundle.
      * @return Nearby rectangular bounds.
      */
@@ -117,7 +128,7 @@ public class RestaurantListFragment extends BaseFragment {
      * @return User location.
      */
     @Nullable
-    private Location getUserLocation() { // TODO use public method to get user location
+    private Location getUserLocation() {
         return getArguments() != null ? getArguments().getParcelable(USER_LOCATION) : null;
     }
 
@@ -131,14 +142,6 @@ public class RestaurantListFragment extends BaseFragment {
         this.recyclerView.setAdapter(this.adapter);
         // Set layout manager to position the items
         this.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-    }
-
-    /**
-     * Update recycler view with data from maps fragment.
-     */
-    private void updateRecyclerViewWithMapsData() {
-        if (this.placesIdList != null && !this.placesIdList.isEmpty())
-            this.updateRecyclerView(this.placesIdList);
     }
 
     /**
@@ -202,9 +205,9 @@ public class RestaurantListFragment extends BaseFragment {
             this.updateRecyclerView(placesIdList);
             this.placesIdList = placesIdList;
         });
-        this.bounds = this.getNearbyBounds();
-        dataCallback.onNewBounds(null);
-        Snackbar.make(swipeRefreshLayout, R.string.fragment_restaurant_list_snackbar_refresh_nearby_restaurant, Snackbar.LENGTH_SHORT).show();
+        dataCallback.onNewBounds(this.bounds = this.getNearbyBounds());
+        if (swipeRefreshLayout.isShown())
+            Snackbar.make(swipeRefreshLayout, R.string.fragment_restaurant_list_snackbar_refresh_nearby_restaurant, Snackbar.LENGTH_SHORT).show();
     }
 
     /**
@@ -212,6 +215,7 @@ public class RestaurantListFragment extends BaseFragment {
      * @param query Query term.
      */
     private void getAutocompleteRestaurant(String query) {
+        dataCallback.onNewQuerySearch(true);
         // Start request
         assert getActivity() != null;
         AutocompleteViewModel autocompleteViewModel = new AutocompleteViewModel(getActivity().getApplication());
@@ -243,14 +247,21 @@ public class RestaurantListFragment extends BaseFragment {
      */
     public void onSearchQueryTextChange(String query) {
         this.queryTerm = query;
-        if (query != null && !query.isEmpty())
-            this.getAutocompleteRestaurant(query);
-        else this.updateRecyclerViewWithMapsData();
+        this.reloadRestaurantList();
     }
 
     // --------------
     // UI
     // --------------
+
+    /**
+     * Update recycler view with corresponding data, from maps fragment or search with query term.
+     */
+    private void updateRecyclerViewWithData() {
+        if (this.placesIdList != null && !this.placesIdList.isEmpty() && this.getIsQueryForRestaurant())
+            this.updateRecyclerView(this.placesIdList);
+        else reloadRestaurantList();
+    }
 
     /**
      * Update recycler view.

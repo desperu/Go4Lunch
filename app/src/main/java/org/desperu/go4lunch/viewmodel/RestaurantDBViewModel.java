@@ -66,7 +66,7 @@ public class RestaurantDBViewModel extends AndroidViewModel {
     private void fetchRestaurantInfoRating() {
         RestaurantInfoViewModel restaurantInfoViewModel = new RestaurantInfoViewModel(getApplication(), restaurantId);
         restaurantInfoViewModel.getPlaceLiveData().observeForever(place ->
-                this.setStarsStates(Objects.requireNonNull(place.getRating())));
+                this.setStarsStates(place.getRating() != null ? place.getRating() : 0));
     }
 
     /**

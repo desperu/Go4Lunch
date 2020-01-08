@@ -67,6 +67,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
 
     // FOR BUNDLE
     public static final String QUERY_TERM_MAPS = "queryTerm";
+    public static final String IS_QUERY_FOR_RESTAURANT_MAPS = "isQueryForRestaurant";
     public static final String PLACE_ID_LIST_MAPS = "placeIdList";
     public static final String CAMERA_POSITION = "cameraPosition";
 
@@ -87,6 +88,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
     // CALLBACKS
     public interface OnNewDataOrClickListener {
         void onClickedMarker(String id);
+        void onNewQuerySearch(boolean isQueryForRestaurant);
         void saveNearbyBounds(RectangularBounds nearbyBounds);
         void onNewUserLocation(Location userLocation);
         void onNewPlacesIdList(ArrayList<String> placesIdList);
@@ -105,9 +107,9 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
 
     @Override
     protected void configureDesign() {
+        this.setQueryTermFromBundle();
         this.configureMapFragment();
         this.createCallbackToParentActivity();
-        this.setQueryTermFromBundle();
     }
 
 
@@ -232,8 +234,9 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
      * @return If a previous state is restored.
      */
     private boolean restoreState() {
-        if (this.getPlaceIdList() != null && this.getCameraPosition() != null
-                && this.queryTerm != null && !this.queryTerm.isEmpty()) {
+        if (this.getPlaceIdList() != null && !this.getPlaceIdList().isEmpty()
+                && this.queryTerm != null && !this.queryTerm.isEmpty()
+                && this.getIsQueryForRestaurant() && this.getCameraPosition() != null) {
             this.isPlacesUpdating = true;
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(this.getCameraPosition()));
             for (String restaurantId : this.getPlaceIdList())
@@ -259,6 +262,15 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
      */
     private void setQueryTermFromBundle() {
         this.queryTerm = getArguments() != null ? getArguments().getString(QUERY_TERM_MAPS) : null;
+    }
+
+    /**
+     * Get query term last use, for restaurant search or not.
+     * @return Query term last use.
+     */
+    private boolean getIsQueryForRestaurant() {
+        assert getArguments() != null;
+        return getArguments().getBoolean(IS_QUERY_FOR_RESTAURANT_MAPS);
     }
 
     /**
@@ -333,7 +345,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
                 placesIdList.add(place.getId());
             }
             mCallback.onNewPlacesIdList(placesIdList);
-            mCallback.saveNearbyBounds(this.getRectangularBounds()); // TODO correct, put in location listener method, problem when play between custom map position en fragment,
+            mCallback.saveNearbyBounds(this.getRectangularBounds());
         });
     }
 
@@ -342,6 +354,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
      * @param query Query term.
      */
     private void getAutocompleteRestaurant(@NotNull String query) {
+        mCallback.onNewQuerySearch(true);
         // Start autocomplete request
         assert getActivity() != null;
         AutocompleteViewModel autocompleteViewModel = new AutocompleteViewModel(getActivity().getApplication());
@@ -544,7 +557,6 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
                 locationRequest = null;
                 fusedLocationClient.flushLocations();
                 final Task<Void> voidTask = fusedLocationClient.removeLocationUpdates(locationCallback);
-//                locationCallback = null;
                 if (voidTask.isSuccessful()) {
                     Log.d(getClass().getSimpleName(),"StopLocation updates successful! ");
                 } else {

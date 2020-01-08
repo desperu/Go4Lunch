@@ -19,11 +19,18 @@ import butterknife.BindView;
 
 public class WorkmatesFragment extends BaseFragment {
 
+    // FOR DESIGN
     @BindView(R.id.fragment_recycler_view_swipe_refresh) SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.fragment_recycler_view) RecyclerView recyclerView;
 
+    // FOR BUNDLE
+    public static final String QUERY_TERM_WORKMATES = "queryTerm";
+
+    // FOR DATA
     private WorkmatesAdapter adapter;
     private List<UserDBViewModel> allWorkmatesList = new ArrayList<>();
+    private List<User> allUsersList = new ArrayList<>();
+    private String queryTerm;
 
     // --------------
     // BASE METHODS
@@ -34,6 +41,7 @@ public class WorkmatesFragment extends BaseFragment {
 
     @Override
     protected void configureDesign() {
+        this.setDataFromBundle();
         this.configureRecyclerView();
         this.getAllWorkmatesList();
         this.configureSwipeRefresh();
@@ -53,6 +61,13 @@ public class WorkmatesFragment extends BaseFragment {
     // --------------
 
     /**
+     * Set data from bundle.
+     */
+    private void setDataFromBundle() {
+        this.queryTerm = getArguments() != null ? getArguments().getString(QUERY_TERM_WORKMATES) : null;
+    }
+
+    /**
      * Configure recycler view.
      */
     private void configureRecyclerView() {
@@ -65,20 +80,37 @@ public class WorkmatesFragment extends BaseFragment {
     }
 
     /**
+     * Configure swipe to refresh.
+     */
+    private void configureSwipeRefresh() {
+        swipeRefreshLayout.setOnRefreshListener(this::getAllWorkmatesList);
+    }
+
+    // --------------
+    // REQUEST
+    // --------------
+
+    /**
      * Load all workmates list.
      */
     private void getAllWorkmatesList() {
         assert getActivity() != null;
         UserDBViewModel allUsers = new UserDBViewModel(getActivity().getApplication());
         allUsers.fetchAllUsers();
-        allUsers.getAllUsersListLiveData().observe(this, users -> this.updateRecyclerView(this.sortWorkmatesList(users)));
+        allUsers.getAllUsersListLiveData().observe(this, this::manageRequestResponse);
     }
 
+    // --------------
+    // ACTION
+    // --------------
+
     /**
-     * Configure swipe to refresh.
+     * Method called when query term changed.
+     * @param query Query term.
      */
-    private void configureSwipeRefresh() {
-        swipeRefreshLayout.setOnRefreshListener(this::getAllWorkmatesList);
+    public void onSearchQueryTextChange(String query) {
+        this.queryTerm = query;
+        this.updateRecyclerView(this.searchQueryInList());
     }
 
     // --------------
@@ -107,6 +139,17 @@ public class WorkmatesFragment extends BaseFragment {
     // --------------
 
     /**
+     * Manage request response.
+     * @param allUsersList All users list.
+     */
+    private void manageRequestResponse(List<User> allUsersList) {
+        this.allUsersList = this.sortWorkmatesList(allUsersList);
+        if (queryTerm != null && !queryTerm.isEmpty())
+            this.updateRecyclerView(this.searchQueryInList());
+        else this.updateRecyclerView(this.allUsersList);
+    }
+
+    /**
      * Sort workmates list to show at top decided user for lunch.
      * @param allUsersList All users list.
      * @return All users list sorted.
@@ -124,5 +167,18 @@ public class WorkmatesFragment extends BaseFragment {
         allUsersList.addAll(decidedUsers);
         allUsersList.addAll(notDecidedUsers);
         return allUsersList;
+    }
+
+    /**
+     * Search query term on name of user in allUsersList.
+     * @return Found users list.
+     */
+    private List<User> searchQueryInList() {
+        List<User> foundUsers = new ArrayList<>();
+        for (User user : allUsersList) {
+            if (user.getUserName().toLowerCase().contains(queryTerm.toLowerCase()))
+                foundUsers.add(user);
+        }
+        return foundUsers;
     }
 }
