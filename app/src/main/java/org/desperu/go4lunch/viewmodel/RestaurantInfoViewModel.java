@@ -49,7 +49,7 @@ public class RestaurantInfoViewModel extends AndroidViewModel {
 
     public RestaurantInfoViewModel(Application application, String placeId) {
         super(application);
-        this.placeId = placeId; // TODO put in method witch need placeId...
+        this.placeId = placeId;
         this.fetchPlaceInfo();
     }
 
@@ -121,9 +121,9 @@ public class RestaurantInfoViewModel extends AndroidViewModel {
             // Create a FetchPhotoRequest.
             FetchPhotoRequest photoRequest = FetchPhotoRequest.builder(photoMetadata).build();
 
-            placesClient.fetchPhoto(photoRequest).addOnSuccessListener((fetchPhotoResponse) -> {
-                this.picture.set(new BitmapDrawable(getApplication().getResources(), fetchPhotoResponse.getBitmap()));
-            }).addOnFailureListener((exception) -> {
+            placesClient.fetchPhoto(photoRequest).addOnSuccessListener((fetchPhotoResponse) ->
+                    this.picture.set(new BitmapDrawable(getApplication().getResources(), fetchPhotoResponse.getBitmap()))
+            ).addOnFailureListener((exception) -> {
                 if (exception instanceof ApiException) {
                     // Handle error with given status code.
                     Log.e(getClass().getSimpleName(), "Place not found: " + exception.getMessage());
@@ -139,6 +139,9 @@ public class RestaurantInfoViewModel extends AndroidViewModel {
      * @param userPosition Current user position.
      */
     public void setLocationData(LatLng userPosition) { this.userPosition = userPosition; }
+
+    // For live data test only
+    void setPlaceMutableLiveData(Place place) { this.placeMutableLiveData.setValue(place); }
 
     // --- GETTERS ---
     public ObservableField<Place> getPlace() { return this.place; }

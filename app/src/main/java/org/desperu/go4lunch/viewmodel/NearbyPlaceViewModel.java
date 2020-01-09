@@ -80,6 +80,9 @@ public class NearbyPlaceViewModel extends AndroidViewModel {
         });
     }
 
+    // For live data test only
+    void setPlacesList(ArrayList<Place> placesList) { this.placesList.setValue(placesList); }
+
     // --- GETTERS ---
     public LiveData<ArrayList<Place>> getPlacesList() { return this.placesList; }
 }

@@ -17,7 +17,6 @@ import org.desperu.go4lunch.utils.Go4LunchUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class RestaurantDBViewModel extends AndroidViewModel {
 
@@ -127,6 +126,9 @@ public class RestaurantDBViewModel extends AndroidViewModel {
         this.starTwoState.set(Go4LunchUtils.getRatingStarState(this.likeUsersNumber.get(), placeRating, 2));
         this.starThreeState.set(Go4LunchUtils.getRatingStarState(this.likeUsersNumber.get(), placeRating, 3));
     }
+
+    // For live data test only
+    void setRestaurantLiveData(Restaurant restaurant) { this.restaurantLiveData.setValue(restaurant); }
 
     // --- GETTERS ---
     public ObservableField<Restaurant> getRestaurant() { return this.restaurant; }

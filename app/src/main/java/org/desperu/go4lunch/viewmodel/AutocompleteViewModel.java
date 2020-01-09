@@ -44,7 +44,7 @@ public class AutocompleteViewModel extends AndroidViewModel {
         // Use the builder to create a FindAutocompletePredictionsRequest.
         FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
                 .setLocationRestriction(bounds)
-                .setTypeFilter(TypeFilter.ESTABLISHMENT) // TODO test other
+                .setTypeFilter(TypeFilter.ESTABLISHMENT)
                 .setSessionToken(token)
                 .setQuery(query)
                 .build();
@@ -67,6 +67,9 @@ public class AutocompleteViewModel extends AndroidViewModel {
             }
         });
     }
+
+    // For live data test only
+    void setPlacesIdListLiveData(ArrayList<String> placesIdList) { this.placesIdListLiveData.setValue(placesIdList); }
 
     // --- GETTERS ---
     public LiveData<ArrayList<String>> getPlacesIdListLiveData() { return this.placesIdListLiveData; }

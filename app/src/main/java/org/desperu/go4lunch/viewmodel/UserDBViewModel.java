@@ -144,6 +144,13 @@ public class UserDBViewModel extends AndroidViewModel {
         this.userEatingDecided.set(Go4LunchUtils.getUserDecided());
     }
 
+    // For live data test only
+    void setUserLiveData(User user) { this.userLiveData.setValue(user); }
+
+    void setAllUsersList(List<User> allUsersList) { this.allUsersList.setValue(allUsersList);}
+
+    void setUpdateBookedResponse(int bookedResponse) { this.updateBookedResponse.setValue(bookedResponse); }
+
     // --- GETTERS ---
     public ObservableField<User> getUser() { return this.user; }
 
