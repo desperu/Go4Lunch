@@ -2,17 +2,14 @@ package org.desperu.go4lunch.viewmodel;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
+import androidx.test.core.app.ApplicationProvider;
 
 import com.google.android.libraries.places.api.model.Place;
 
-import org.desperu.go4lunch.view.main.MainActivity;
 import org.jetbrains.annotations.NotNull;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.android.controller.ActivityController;
 import org.robolectric.annotation.Config;
 
 import java.util.concurrent.CountDownLatch;
@@ -25,27 +22,12 @@ import static org.junit.Assert.assertNotNull;
 @Config(sdk = 28, manifest=Config.NONE)
 public class RestaurantInfoLiveDataTest {
 
-    private ActivityController<MainActivity> controller;
-    private MainActivity activity;
-
-    private void createMainActivityWithIntent() {
-        activity = controller
-                .create()
-                .start()
-                .get();
-    }
-
-    @Before
-    public void setUp() {
-        controller = Robolectric.buildActivity(MainActivity.class);
-    }
-
     @Test
     public void testPlaceLiveData() throws InterruptedException {
         Place place = Place.builder().build();
-        createMainActivityWithIntent();
 
-        RestaurantInfoViewModel restaurantInfoViewModel = new RestaurantInfoViewModel(activity.getApplication(), "test");
+        RestaurantInfoViewModel restaurantInfoViewModel = new RestaurantInfoViewModel(
+                ApplicationProvider.getApplicationContext());
         restaurantInfoViewModel.setPlaceMutableLiveData(place);
 
         restaurantInfoViewModel.getPlaceLiveData().observeForever(place1 -> {

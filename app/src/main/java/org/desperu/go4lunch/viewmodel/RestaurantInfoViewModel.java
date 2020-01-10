@@ -47,6 +47,9 @@ public class RestaurantInfoViewModel extends AndroidViewModel {
     private ObservableField<String> restaurantDistance = new ObservableField<>();
     private MutableLiveData<Place> placeMutableLiveData = new MutableLiveData<>();
 
+    // For live data test only
+    public RestaurantInfoViewModel(Application application) { super(application); }
+
     public RestaurantInfoViewModel(Application application, String placeId) {
         super(application);
         this.placeId = placeId;

@@ -1,5 +1,7 @@
 package org.desperu.go4lunch.viewmodel;
 
+import androidx.test.core.app.ApplicationProvider;
+
 import org.desperu.go4lunch.models.User;
 import org.desperu.go4lunch.view.main.MainActivity;
 import org.junit.Before;
@@ -33,9 +35,9 @@ public class UserDBLiveDataTest {
 
     @Before
     public void setUp() {
-        controller = Robolectric.buildActivity(MainActivity.class);
-        createMainActivityWithIntent();
-        userDBViewModel = new UserDBViewModel(activity.getApplication(), "uid");
+//        controller = Robolectric.buildActivity(MainActivity.class);
+//        createMainActivityWithIntent();
+        userDBViewModel = new UserDBViewModel(ApplicationProvider.getApplicationContext(), "uid");
     }
 
     @Test
