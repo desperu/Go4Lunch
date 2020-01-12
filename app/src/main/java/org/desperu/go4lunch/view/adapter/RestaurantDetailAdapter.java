@@ -7,7 +7,6 @@ import java.util.List;
 
 public class RestaurantDetailAdapter extends BaseAdapter {
 
-
     private final int layoutId;
     private List<UserDBViewModel> restaurantList;
 
