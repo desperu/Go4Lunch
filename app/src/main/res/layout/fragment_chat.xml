@@ -35,8 +35,8 @@
     <!-- IMAGE CHOSEN PREVIEW -->
     <ImageView
         android:id="@+id/fragment_chat_image_chosen_preview"
-        android:layout_width="50dip"
-        android:layout_height="50dip"
+        android:layout_width="@dimen/fragment_chat_image_chosen_preview_width"
+        android:layout_height="@dimen/fragment_chat_image_chosen_preview_height"
         android:layout_margin="@dimen/default_margin"
         android:layout_above="@id/fragment_chat_add_message_container"
         android:contentDescription="@null"/>

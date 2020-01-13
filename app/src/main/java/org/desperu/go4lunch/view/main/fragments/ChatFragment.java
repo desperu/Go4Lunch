@@ -1,6 +1,5 @@
 package org.desperu.go4lunch.view.main.fragments;
 
-import android.Manifest;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -45,6 +44,7 @@ import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
 import static android.app.Activity.RESULT_OK;
+import static org.desperu.go4lunch.Go4LunchTools.ChatFragment.*;
 
 public class ChatFragment extends BaseFragment implements BaseChangeEventListener {
 
@@ -65,11 +65,6 @@ public class ChatFragment extends BaseFragment implements BaseChangeEventListene
     private User modelCurrentUser;
     // Uri of image selected by user
     private Uri uriImageSelected;
-
-    // STATIC DATA FOR PICTURE
-    private static final String PERMS = Manifest.permission.READ_EXTERNAL_STORAGE;
-    private static final int RC_IMAGE_PERMS = 100;
-    private static final int RC_CHOOSE_PHOTO = 200;
 
     // --------------
     // BASE METHODS
@@ -162,7 +157,7 @@ public class ChatFragment extends BaseFragment implements BaseChangeEventListene
 
     @OnClick(R.id.fragment_chat_add_file_button)
     // Calling the appropriate method
-    @AfterPermissionGranted(RC_IMAGE_PERMS)
+    @AfterPermissionGranted(PERMS_STORAGE)
     void onClickAddFile() { this.chooseImageFromPhone(); }
 
     // --------------------
@@ -175,7 +170,7 @@ public class ChatFragment extends BaseFragment implements BaseChangeEventListene
     private void chooseImageFromPhone(){
         assert getActivity() != null;
         if (!EasyPermissions.hasPermissions(getActivity(), PERMS)) {
-            EasyPermissions.requestPermissions(this, getString(R.string.fragment_chat_popup_title_permission_files_access), RC_IMAGE_PERMS, PERMS);
+            EasyPermissions.requestPermissions(this, getString(R.string.fragment_chat_popup_title_permission_files_access), PERMS_STORAGE, PERMS);
             return;
         }
         // Launch an "Selection Image" Activity

@@ -32,6 +32,15 @@ public final class Go4LunchTools {
         public static final int PERM_CALL_PHONE = 200;
     }
 
+    public static final class ChatFragment {
+
+        // FOR PERMISSION (storage)
+        public static final String PERMS = Manifest.permission.READ_EXTERNAL_STORAGE;
+        public static final int PERMS_STORAGE = 300;
+        public static final int RC_CHOOSE_PHOTO = 400;
+
+    }
+
     public static final class CodeResponse {
 
         // Code response for booking restaurant.
