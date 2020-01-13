@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="obj"
+            type="org.desperu.go4lunch.viewmodel.MessageViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:id="@+id/fragment_chat_message_item_root_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin">
+
+        <!-- PROFILE CONTAINER -->
+        <LinearLayout
+            android:id="@+id/fragment_chat_message_item_profile_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="@dimen/default_margin"
+            tools:linearAlignParent="@{obj.isCurrentUser}"
+            tools:ignore="UseCompoundDrawables">
+
+            <!-- IMAGE VIEW PROFILE -->
+            <ImageView
+                android:id="@+id/fragment_chat_message_item_profile_container_profile_image"
+                android:layout_width="50dip"
+                android:layout_height="50dip"
+                app:srcCompat="@drawable/ic_anon_user_48dp"
+                android:contentDescription="@null"
+                tools:senderPicture="@{obj.senderUrlPicture}" />
+
+            <!-- SENDER NAME -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/default_text_size_mini"
+                android:layout_gravity="center"
+                android:text="@{obj.userSenderName}"
+                android:maxLength="10"/>
+
+        </LinearLayout>
+
+        <!-- MESSAGE CONTAINER -->
+        <RelativeLayout
+            android:id="@+id/fragment_chat_message_item_message_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
+            tools:relativeAlignOf="@{obj.isCurrentUser}">
+
+            <!-- IMAGE SENT CONTAINER -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/fragment_chat_message_item_container_image_sent_cardview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:background="@drawable/button_radius_primary_color"
+                android:visibility="@{obj.messageImageState}"
+                tools:cardViewAlignTo="@{obj.isCurrentUser}">
+
+                <!-- IMAGE SENT -->
+                <ImageView
+                    android:id="@+id/fragment_chat_message_item_container_image_sent_cardview_image"
+                    android:layout_width="100dip"
+                    android:layout_height="100dip"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="@null"
+                    android:visibility="@{obj.messageImageState}"
+                    tools:messagePicture="@{obj.messageUrlPicture}"/>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- TEXT MESSAGE CONTAINER -->
+            <LinearLayout
+                android:id="@+id/fragment_chat_message_item_container_text_message_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/default_margin"
+                android:layout_marginLeft="@dimen/default_margin"
+                android:layout_below="@id/fragment_chat_message_item_container_image_sent_cardview"
+                android:background="@drawable/ic_chat_message_sender_background"
+                android:orientation="horizontal"
+                android:layout_margin="@dimen/default_margin"
+                android:visibility="@{obj.messageTextState}"
+                tools:messageBackground="@{obj.isCurrentUser}"
+                tools:linearAlignment="@{obj.isCurrentUser}">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_gravity="start"
+                    android:padding="@dimen/default_margin">
+
+                    <!-- TEXT MESSAGE -->
+                    <TextView
+                        android:id="@+id/fragment_chat_message_item_container_text_message_container_text_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textIsSelectable="true"
+                        android:textSize="@dimen/default_text_size"
+                        android:text="@{obj.textMessage}"
+                        android:textAlignment="@{obj.textAlignment}"
+                        tools:text="Text example" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+            <!-- DATE MESSAGE -->
+            <TextView
+                android:id="@+id/fragment_chat_message_item_container_text_view_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/fragment_chat_message_item_message_container"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="65dp"
+                android:layout_marginEnd="65dp"
+                android:textStyle="bold"
+                android:textSize="@dimen/default_text_size_mini"
+                android:text="@{obj.dateMessage}"
+                android:maxLines="1"
+                tools:textAlignment="@{obj.isCurrentUser}"/>
+
+    </RelativeLayout>
+
+</layout>

@@ -101,6 +101,9 @@ dependencies {
     // Firestore BDD NoSQL
     implementation 'com.firebaseui:firebase-ui-firestore:6.0.1'
 
+    // FirebaseUI Storage
+    implementation 'com.firebaseui:firebase-ui-storage:6.0.1'
+
     // Google map
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
 

@@ -28,10 +28,10 @@ import com.google.android.material.snackbar.Snackbar;
 
 import org.desperu.go4lunch.R;
 import org.desperu.go4lunch.databinding.ActivityMainNavHeaderBinding;
-import org.desperu.go4lunch.models.User;
 import org.desperu.go4lunch.notifications.NotificationAlarmManager;
 import org.desperu.go4lunch.utils.Go4LunchPrefs;
 import org.desperu.go4lunch.view.base.BaseActivity;
+import org.desperu.go4lunch.view.main.fragments.ChatFragment;
 import org.desperu.go4lunch.view.main.fragments.MapsFragment;
 import org.desperu.go4lunch.view.main.fragments.RestaurantListFragment;
 import org.desperu.go4lunch.view.main.fragments.WorkmatesFragment;
@@ -130,7 +130,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
      */
     private void configureBottomNavigationView() {
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
-        //TODO add method to select the item when back from an activity. (onUserInteraction)
     }
 
     /**
@@ -174,6 +173,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     fragment.setArguments(bundle);
                     titleActivity = getString(R.string.title_fragment_workmates);
                     break;
+                case CHAT_FRAGMENT:
+                    fragment = ChatFragment.newInstance();
+                    this.hideSearchViewIfVisible();
+                    titleActivity = getString(R.string.title_fragment_chat);
+                    break;
             }
 
             getSupportFragmentManager().beginTransaction()
@@ -181,6 +185,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     .commit();
 
             this.setTitleActivity(titleActivity);
+            if (toolbar.findViewById(R.id.activity_main_menu_search) != null)
+                toolbar.findViewById(R.id.activity_main_menu_search).setVisibility(
+                    fragmentKey != CHAT_FRAGMENT ? View.VISIBLE : View.GONE);
         }
         currentFragment = fragmentKey;
     }
@@ -219,7 +226,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         if (this.isCurrentUserLogged()) {
             this.configureAndShowFragment(this.currentFragment >= 0 ? currentFragment : MAP_FRAGMENT);
             this.configureDataBindingForHeader();
-            this.loadUserDataFromFirestore();
+            this.createUserInFirestore();
             this.enableNotifications();
         }
         else this.startSignInActivity();
@@ -256,7 +263,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 this.configureAndShowFragment(WORKMATES_FRAGMENT);
                 break;
             case R.id.activity_main_menu_bottom_chat:
-                Toast.makeText(this, "test chat", Toast.LENGTH_SHORT).show();
+                this.configureAndShowFragment(CHAT_FRAGMENT);
                 break;
             default:
                 break;
@@ -270,8 +277,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         if (this.drawerLayout.isDrawerOpen(GravityCompat.START))
             this.drawerLayout.closeDrawer(GravityCompat.START);
         else if (this.searchView != null && this.searchView.isShown()) {
-            this.searchView.setVisibility(View.GONE);
-            this.searchView.setQuery(null, true);
+            this.hideSearchViewIfVisible();
         } else
             super.onBackPressed();
     }
@@ -383,13 +389,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         startActivity(new Intent(this, SettingsActivity.class));
     }
 
-    //    /**
-//     * Start chat activity.
-//     */
-//    private void showChatActivity() {
-//        startActivity(new Intent(this, ChatActivity.class));
-//    }
-
     // --------------------
     // LOGIN
     // --------------------
@@ -439,21 +438,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     /**
      * Create user in firestore.
      */
-    private void createUserInFirestore(User user) {
-        if (user == null) {
-            userDBViewModel = new UserDBViewModel(getApplication(), userAuthViewModel.getUid());
-            userDBViewModel.createUserInFirestore(userAuthViewModel.getUid(),
-                    userAuthViewModel.getUserName(), userAuthViewModel.getUserPicture());
-        }
-    }
-
-    /**
-     * Load user data from firestore.
-     */
-    private void loadUserDataFromFirestore() {
+    private void createUserInFirestore() {
         userDBViewModel = new UserDBViewModel(getApplication(), userAuthViewModel.getUid());
-        userDBViewModel.fetchUser();
-        userDBViewModel.getUserLiveData().observe(this, this::createUserInFirestore);
+        userDBViewModel.createUserInFirestore(userAuthViewModel.getUid(),
+                userAuthViewModel.getUserName(), userAuthViewModel.getUserPicture());
     }
 
     // -----------------
@@ -465,6 +453,16 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
      * @param titleActivity Fragment title.
      */
     private void setTitleActivity(String titleActivity) { this.setTitle(titleActivity); }
+
+    /**
+     * Hide search view if visible, and clear query.
+     */
+    private void hideSearchViewIfVisible() {
+        if (searchView != null && searchView.isShown()) {
+            this.searchView.setVisibility(View.GONE);
+            this.searchView.setQuery(null, true);
+        }
+    }
 
     /**
      * Show Toast with corresponding message.

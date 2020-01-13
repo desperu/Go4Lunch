@@ -4,6 +4,7 @@
     <string name="app_name">Go4Lunch</string>
     <string name="title_activity_main">I\'m Hungry!</string>
     <string name="title_fragment_workmates">Available workmates</string>
+    <string name="title_fragment_chat">Chat</string>
     <string name="title_activity_settings">Settings</string>
 
     <!-- MENU -->
@@ -44,8 +45,15 @@
 
     <!-- RESTAURANT LIST FRAGMENT -->
     <string name="fragment_restaurant_list_snackbar_refresh_nearby_restaurant">Only restaurant nearby your position !</string>
+
+    <!-- CHAT FRAGMENT -->
+    <string name="fragment_chat_text_input_title">Write your message</string>
+    <string name="fragment_chat_button_title">SEND</string>
+    <string name="fragment_chat_text_view_error">There isn\'t message in this chat for now&#8230;</string>
+    <string name="fragment_chat_popup_title_permission_files_access">This application need storage permission.</string>
+    <string name="fragment_chat_toast_title_no_image_chosen">No image chosen&#8230;</string>
     
-    <!-- RESTAURANT DETAIL -->
+    <!-- RESTAURANT DETAIL ACTIVITY -->
     <string name="activity_restaurant_detail_popup_title_permission_call">This application need call permission.</string>
     <string name="activity_restaurant_detail_text_call">Call</string>
     <string name="activity_restaurant_detail_text_like">Like</string>

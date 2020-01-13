@@ -9,6 +9,7 @@ public final class Go4LunchTools {
         public static final int MAP_FRAGMENT = 0;
         public static final int LIST_FRAGMENT = 1;
         public static final int WORKMATES_FRAGMENT = 2;
+        public static final int CHAT_FRAGMENT = 3;
     }
 
     public static final class GoogleMap {

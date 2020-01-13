@@ -22,6 +22,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -358,7 +359,7 @@ public class Go4LunchUtilsTest {
     @Test
     public void Given_userAndRestaurantPositions_When_getRestaurantDistance_Then_checkDistance() {
 //        String expected = "50m";
-        // TODO problem don't calculate distance !!!!!
+        // TODO problem don't calculate distance !!!!! But good in apk ...
         String expected = "0m";
 
         LatLng userPosition = new LatLng(48.11462, -1.6808367);
@@ -393,14 +394,14 @@ public class Go4LunchUtilsTest {
     }
 
     @Test
-    public void Given_lowRating_When_getRatingStarState_Then_startGone() {
+    public void Given_lowRating_When_getRatingStarState_Then_starGone() {
         int output = Go4LunchUtils.getRatingStarState(0.1, 1.0, 1);
 
         assertEquals(View.GONE, output);
     }
 
     @Test
-    public void Given_highRating_When_getRatingStarState_Then_startVisible() {
+    public void Given_highRating_When_getRatingStarState_Then_starVisible() {
         int output = Go4LunchUtils.getRatingStarState(0.5, 4.0, 3);
 
         assertEquals(View.VISIBLE, output);
@@ -415,6 +416,63 @@ public class Go4LunchUtilsTest {
         bookedUsersList.add("user2");
         bookedUsersList.add("user3");
         String output = Go4LunchUtils.getJoiningUsersName(mockContext, bookedUsersList);
+
+        assertEquals(expected, output);
+    }
+
+    @Test
+    public void Given_givenDateToday_When_convertDateToHour_Then_checkString() {
+        String expected = "10:45";
+
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, 10);
+        cal.set(Calendar.MINUTE, 45);
+        Date date = new Date();
+        date.setTime(cal.getTimeInMillis());
+
+        String output = Go4LunchUtils.convertDateToString(date, date);
+
+        assertEquals(expected, output);
+    }
+
+    @Test
+    public void Given_givenDateWeek_When_convertDateToHour_Then_checkString() {
+        String expected = "ven., 10:45";
+
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, 2020);
+        cal.set(Calendar.DAY_OF_YEAR, 10);
+        cal.set(Calendar.HOUR_OF_DAY, 10);
+        cal.set(Calendar.MINUTE, 45);
+        Date messageDate = new Date();
+        messageDate.setTime(cal.getTimeInMillis());
+
+        cal.set(Calendar.DAY_OF_YEAR, 15);
+        Date testDate = new Date();
+        testDate.setTime(cal.getTimeInMillis());
+
+        String output = Go4LunchUtils.convertDateToString(messageDate, testDate);
+
+        assertEquals(expected, output);
+    }
+
+    @Test
+    public void Given_givenDateLastWeek_When_convertDateToHour_Then_checkString() {
+        String expected = "2020-01-10, 10:45";
+
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, 2020);
+        cal.set(Calendar.DAY_OF_YEAR, 10);
+        cal.set(Calendar.HOUR_OF_DAY, 10);
+        cal.set(Calendar.MINUTE, 45);
+        Date messageDate = new Date();
+        messageDate.setTime(cal.getTimeInMillis());
+
+        cal.set(Calendar.DAY_OF_YEAR, 20);
+        Date testDate = new Date();
+        testDate.setTime(cal.getTimeInMillis());
+
+        String output = Go4LunchUtils.convertDateToString(messageDate, testDate);
 
         assertEquals(expected, output);
     }

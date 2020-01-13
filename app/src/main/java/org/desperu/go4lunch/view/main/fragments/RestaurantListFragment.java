@@ -288,4 +288,6 @@ public class RestaurantListFragment extends BaseFragment {
         adapter.notifyDataSetChanged();
         swipeRefreshLayout.setRefreshing(false);
     }
+
+    // TODO sort restaurant by distance.
 }

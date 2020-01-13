@@ -1,5 +1,6 @@
 package org.desperu.go4lunch.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.location.Location;
@@ -17,8 +18,11 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -351,5 +355,40 @@ public class Go4LunchUtils {
             else bookedUsersName.append(".");
         }
         return String.valueOf(bookedUsersName);
+    }
+
+    // --------------
+    // CHAT
+    // --------------
+
+    /**
+     * Convert Date object to string.
+     * @param givenDate Given date, here created message date.
+     * @param currentDate Current date.
+     * @return String date.
+     */
+    @SuppressLint("SimpleDateFormat")
+    @NotNull
+    public static String convertDateToString(@NotNull Date givenDate, Date currentDate){
+        DateFormat dfTime;
+
+        // Set calendar with given date.
+        Calendar givenCal = Calendar.getInstance();
+        givenCal.setTime(givenDate);
+
+        // Set calendar for current date.
+        Calendar currentCal = Calendar.getInstance();
+        currentCal.setTime(currentDate);
+
+        if (givenCal.get(Calendar.DAY_OF_YEAR) == currentCal.get(Calendar.DAY_OF_YEAR))
+            // If it's today
+            dfTime = new SimpleDateFormat("HH:mm");
+        else if (currentCal.get(Calendar.DAY_OF_YEAR) - givenCal.get(Calendar.DAY_OF_YEAR) < 7)
+            // If it's in the same week
+            dfTime = new SimpleDateFormat("EEE, HH:mm");
+        else
+            dfTime = new SimpleDateFormat("yyyy-MM-dd, HH:mm");
+
+        return dfTime.format(givenDate);
     }
 }
