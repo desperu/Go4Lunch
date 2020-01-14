@@ -125,6 +125,17 @@ public class Go4LunchUtilsTest {
     }
 
     @Test
+    public void Given_restaurantNameWithSpecialCharacter_When_getSimpleRestaurantName_Then_checkSimpleRestaurantNameString() {
+        String expected = "Le Piccadilly Rennes";
+
+        String restaurantNameSpecial = "Le Piccadilly Rennes | Brasserie - Terrasse - Bar";
+        String output = Go4LunchUtils.getSimpleRestaurantName(restaurantNameSpecial);
+
+        assertEquals(expected, output);
+    }
+
+
+    @Test
     public void Given_restaurantAddress_When_getRestaurantStreetAddress_Then_checkRestaurantStreetAddress() {
         String expected = "12 rue de la mairie";
 

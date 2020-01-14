@@ -50,7 +50,7 @@ public class RestaurantListFragment extends BaseFragment {
     private RestaurantListAdapter adapter;
     private ArrayList<RestaurantInfoViewModel> restaurantInfoList = new ArrayList<>();
     private ArrayList<RestaurantDBViewModel> restaurantDBList = new ArrayList<>();
-    private ArrayList<LatLng> placePositionList = new ArrayList<>();
+    private ArrayList<Integer> placeDistanceList = new ArrayList<>();
 
     // CALLBACKS
     public interface OnNewDataListener {
@@ -272,8 +272,7 @@ public class RestaurantListFragment extends BaseFragment {
     private void updateRecyclerView(ArrayList<String> placeIdList) {
         dataCallback.onNewPlacesIdList(placeIdList);
         this.setRestaurantInfoAndDBList(placeIdList);
-        this.setRestaurantPositionList();
-//        adapter.notifyDataSetChanged();
+        this.setRestaurantDistanceList();
         swipeRefreshLayout.setRefreshing(false);
     }
 
@@ -305,14 +304,18 @@ public class RestaurantListFragment extends BaseFragment {
     }
 
     /**
-     * Set place position list.
+     * Set place distance list.
      */
-    private void setRestaurantPositionList() {
-        placePositionList.clear();
+    private void setRestaurantDistanceList() {
+        assert getUserLocation() != null;
+        placeDistanceList.clear();
         for (RestaurantInfoViewModel restaurantInfoViewModel : restaurantInfoList) {
             restaurantInfoViewModel.getPlaceLiveData().observe(this, place -> {
-                placePositionList.add(place.getLatLng());
-                if (restaurantInfoList.size() == placePositionList.size())
+                placeDistanceList.add(Integer.parseInt(
+                        Go4LunchUtils.getRestaurantDistance(getContext(),
+                        new LatLng(this.getUserLocation().getLatitude(),
+                        getUserLocation().getLongitude()), place.getLatLng()).replace("m", "")));
+                if (restaurantInfoList.size() == placeDistanceList.size())
                     this.sortRestaurantByDistance();
             });
         }
@@ -322,23 +325,16 @@ public class RestaurantListFragment extends BaseFragment {
      * Sort restaurant info and DB list by distance from user position.
      */
     private void sortRestaurantByDistance() {
-        for (int i = 0; i < placePositionList.size(); i++) {
-            for (int j = 0; j < placePositionList.size(); j++) {
-                assert getUserLocation() != null;
-                int distance1 = Integer.parseInt(Go4LunchUtils.getRestaurantDistance(getContext(),
-                        new LatLng(this.getUserLocation().getLatitude(),
-                                getUserLocation().getLongitude()), placePositionList.get(j)).replace("m", ""));
-                int distance2 = Integer.parseInt(Go4LunchUtils.getRestaurantDistance(getContext(),
-                        new LatLng(this.getUserLocation().getLatitude(),
-                                getUserLocation().getLongitude()), placePositionList.get(i)).replace("m", ""));
-
-                if (distance1 < distance2 && j >= i) {
+        for (int i = 0; i < placeDistanceList.size(); i++) {
+            for (int j = 0; j < placeDistanceList.size(); j++) {
+                // Compare distances to sort minus to upper
+                if (placeDistanceList.get(j) < placeDistanceList.get(i) && j >= i) {
                     restaurantInfoList.add(i, restaurantInfoList.get(j));
                     restaurantInfoList.remove(j + 1);
                     restaurantDBList.add(i, restaurantDBList.get(j));
                     restaurantDBList.remove(j + 1);
-                    placePositionList.add(i, placePositionList.get(j));
-                    placePositionList.remove(j + 1);
+                    placeDistanceList.add(i, placeDistanceList.get(j));
+                    placeDistanceList.remove(j + 1);
                 }
             }
         }

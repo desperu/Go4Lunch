@@ -94,7 +94,8 @@ public class Go4LunchUtils {
     public static String getSimpleRestaurantName(@NotNull String restaurantName) {
         restaurantType = null;
         List<String> str = Arrays.asList(restaurantName.split(" - "));
-        if (str.size() > 1) restaurantType = str.get(1);
+        if (str.size() > 1 && str.get(1).toLowerCase().contains("restaurant")) restaurantType = str.get(1);
+        else if (restaurantName.contains("|")) str.set(0, Arrays.asList(restaurantName.split(" \\| ")).get(0));
         return str.get(0);
     }
 
