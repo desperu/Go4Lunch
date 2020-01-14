@@ -182,7 +182,7 @@ public class Go4LunchUtils {
             if (openDay.compareTo(getDayOfWeek(dayOfWeekNumber)) == 0) {
                 // If current time >= open hour and, close hour > current time or close day > today
                 if (localTime.compareTo(openTime) >= 0 && (closeTime.compareTo(localTime) > 0
-                        || closeDay.compareTo(getDayOfWeek(dayOfWeekNumber)) > 0)) { // TODO check that and modification
+                        || closeDay.compareTo(getDayOfWeek(dayOfWeekNumber)) > 0)) {
                     openingHoursColor = OPEN;
                     return context.getString(R.string.go4lunch_utils_opening_hours_open_until, setTimeFormat(closeTime.getHours(), closeTime.getMinutes()));
                     // Else if open hour > now

@@ -226,7 +226,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         if (this.isCurrentUserLogged()) {
             this.configureAndShowFragment(this.currentFragment >= 0 ? currentFragment : MAP_FRAGMENT);
             this.configureDataBindingForHeader();
-            this.createUserInFirestore();
+            this.loadOrCreateUserInFirestore();
             this.enableNotifications();
         }
         else this.startSignInActivity();
@@ -436,12 +436,16 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     // --------------------
 
     /**
-     * Create user in firestore.
+     * Load or create user in firestore.
      */
-    private void createUserInFirestore() {
+    private void loadOrCreateUserInFirestore() {
         userDBViewModel = new UserDBViewModel(getApplication(), userAuthViewModel.getUid());
-        userDBViewModel.createUserInFirestore(userAuthViewModel.getUid(),
-                userAuthViewModel.getUserName(), userAuthViewModel.getUserPicture());
+        userDBViewModel.fetchUser();
+        userDBViewModel.getUserLiveData().observe(this, user -> {
+            if (user == null)
+                userDBViewModel.createUserInFirestore(userAuthViewModel.getUid(),
+                        userAuthViewModel.getUserName(), userAuthViewModel.getUserPicture());
+        });
     }
 
     // -----------------

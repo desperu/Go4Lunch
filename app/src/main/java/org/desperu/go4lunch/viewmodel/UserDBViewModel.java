@@ -168,7 +168,10 @@ public class UserDBViewModel extends AndroidViewModel {
 
     @BindingAdapter("pictureUrl")
     public static void setImageUrl(@NotNull ImageView imageView, String url) {
-        Glide.with(imageView.getContext()).load(url).circleCrop().into(imageView);
+        Glide.with(imageView.getContext())
+                .load(url != null && !url.isEmpty() ? url : R.drawable.ic_anon_user_48dp)
+                .circleCrop()
+                .into(imageView);
     }
 
     @BindingAdapter("userEatingStyle")

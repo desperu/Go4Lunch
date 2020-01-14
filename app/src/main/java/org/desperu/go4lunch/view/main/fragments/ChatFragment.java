@@ -257,6 +257,7 @@ public class ChatFragment extends BaseFragment implements BaseChangeEventListene
     /**
      * Observe firebase snapshot message array list.
      */
+    @SuppressWarnings("unchecked")
     private void observeSnapshotArray() {
         observableSnapshotArray = new FirestoreArray<>(
                 getMessageViewModel().getAllMessage(), MetadataChanges.EXCLUDE,

@@ -8,6 +8,7 @@ import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import org.desperu.go4lunch.R;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -36,7 +37,10 @@ public class UserAuthViewModel {
     }
 
     @BindingAdapter("imageUrl") public static void setImageUrl(@NotNull ImageView imageView, String url) {
-        Glide.with(imageView.getContext()).load(url).circleCrop().into(imageView);
+        Glide.with(imageView.getContext())
+                .load(url != null && !url.isEmpty() ? url : R.drawable.ic_anon_user_48dp)
+                .circleCrop()
+                .into(imageView);
     }
 
     public void userLogOut() { FirebaseAuth.getInstance().signOut(); }

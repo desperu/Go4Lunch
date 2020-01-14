@@ -12,6 +12,7 @@ import com.google.android.libraries.places.api.model.RectangularBounds;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.desperu.go4lunch.R;
+import org.desperu.go4lunch.utils.Go4LunchUtils;
 import org.desperu.go4lunch.utils.ItemClickSupport;
 import org.desperu.go4lunch.view.adapter.RestaurantListAdapter;
 import org.desperu.go4lunch.view.base.BaseFragment;
@@ -49,6 +50,7 @@ public class RestaurantListFragment extends BaseFragment {
     private RestaurantListAdapter adapter;
     private ArrayList<RestaurantInfoViewModel> restaurantInfoList = new ArrayList<>();
     private ArrayList<RestaurantDBViewModel> restaurantDBList = new ArrayList<>();
+    private ArrayList<LatLng> placePositionList = new ArrayList<>();
 
     // CALLBACKS
     public interface OnNewDataListener {
@@ -268,9 +270,24 @@ public class RestaurantListFragment extends BaseFragment {
      * @param placeIdList List of restaurant id.
      */
     private void updateRecyclerView(ArrayList<String> placeIdList) {
+        dataCallback.onNewPlacesIdList(placeIdList);
+        this.setRestaurantInfoAndDBList(placeIdList);
+        this.setRestaurantPositionList();
+//        adapter.notifyDataSetChanged();
+        swipeRefreshLayout.setRefreshing(false);
+    }
+
+    // --------------
+    // UTILS
+    // --------------
+
+    /**
+     * Set restaurant info and DB list from place id list.
+     * @param placeIdList List of place id.
+     */
+    private void setRestaurantInfoAndDBList(@NotNull ArrayList<String> placeIdList) {
         assert getActivity() != null;
         assert this.getUserLocation() != null;
-        dataCallback.onNewPlacesIdList(placeIdList);
         this.restaurantInfoList.clear();
         this.restaurantDBList.clear();
         for (String placeId : placeIdList) {
@@ -285,9 +302,47 @@ public class RestaurantListFragment extends BaseFragment {
             restaurantDBViewModel.fetchRestaurant();
             this.restaurantDBList.add(restaurantDBViewModel);
         }
-        adapter.notifyDataSetChanged();
-        swipeRefreshLayout.setRefreshing(false);
     }
 
-    // TODO sort restaurant by distance.
+    /**
+     * Set place position list.
+     */
+    private void setRestaurantPositionList() {
+        placePositionList.clear();
+        for (RestaurantInfoViewModel restaurantInfoViewModel : restaurantInfoList) {
+            restaurantInfoViewModel.getPlaceLiveData().observe(this, place -> {
+                placePositionList.add(place.getLatLng());
+                if (restaurantInfoList.size() == placePositionList.size())
+                    this.sortRestaurantByDistance();
+            });
+        }
+    }
+
+    /**
+     * Sort restaurant info and DB list by distance from user position.
+     */
+    private void sortRestaurantByDistance() {
+        for (int i = 0; i < placePositionList.size(); i++) {
+            for (int j = 0; j < placePositionList.size(); j++) {
+                assert getUserLocation() != null;
+                int distance1 = Integer.parseInt(Go4LunchUtils.getRestaurantDistance(getContext(),
+                        new LatLng(this.getUserLocation().getLatitude(),
+                                getUserLocation().getLongitude()), placePositionList.get(j)).replace("m", ""));
+                int distance2 = Integer.parseInt(Go4LunchUtils.getRestaurantDistance(getContext(),
+                        new LatLng(this.getUserLocation().getLatitude(),
+                                getUserLocation().getLongitude()), placePositionList.get(i)).replace("m", ""));
+
+                if (distance1 < distance2 && j >= i) {
+                    restaurantInfoList.add(i, restaurantInfoList.get(j));
+                    restaurantInfoList.remove(j + 1);
+                    restaurantDBList.add(i, restaurantDBList.get(j));
+                    restaurantDBList.remove(j + 1);
+                    placePositionList.add(i, placePositionList.get(j));
+                    placePositionList.remove(j + 1);
+                }
+            }
+        }
+
+        adapter.notifyDataSetChanged();
+    }
 }
