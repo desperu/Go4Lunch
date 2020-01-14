@@ -13,7 +13,7 @@
 
         <item
             android:id="@+id/activity_main_menu_drawer_settings"
-            android:icon="@drawable/ic_baseline_settings_applications_round_white_24"
+            android:icon="@drawable/ic_baseline_settings_applications_white_24"
             android:title="@string/navigation_drawer_settings"/>
 
         <item

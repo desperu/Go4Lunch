@@ -31,6 +31,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Objects;
 
 public class RestaurantInfoViewModel extends AndroidViewModel {
 
@@ -82,7 +83,7 @@ public class RestaurantInfoViewModel extends AndroidViewModel {
         placesClient.fetchPlace(request).addOnSuccessListener((response) -> {
             this.setRestaurantData(response);
             this.setPicture();
-            Log.i(getClass().getSimpleName(), "Place found: " + place.get().getName());
+            Log.i(getClass().getSimpleName(), "Place found: " + Objects.requireNonNull(place.get()).getName());
         }).addOnFailureListener((exception) -> {
             if (exception instanceof ApiException) {
                 // Handle error with given status code.
@@ -97,6 +98,8 @@ public class RestaurantInfoViewModel extends AndroidViewModel {
      * @param response Fetch place response.
      */
     private void setRestaurantData(@NotNull FetchPlaceResponse response) {
+        assert response.getPlace().getName() != null;
+        assert response.getPlace().getAddress() != null;
         this.place.set(response.getPlace());
         this.simpleName.set(Go4LunchUtils.getSimpleRestaurantName(response.getPlace().getName()));
         this.typeAndAddress.set(Go4LunchUtils.getRestaurantType(response.getPlace().getName())

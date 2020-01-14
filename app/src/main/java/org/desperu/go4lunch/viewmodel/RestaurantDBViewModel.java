@@ -2,6 +2,8 @@ package org.desperu.go4lunch.viewmodel;
 
 import android.app.Application;
 
+import androidx.databinding.BindingAdapter;
+import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableDouble;
 import androidx.databinding.ObservableField;
 import androidx.databinding.ObservableInt;
@@ -10,7 +12,9 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.libraries.places.api.model.Place;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import org.desperu.go4lunch.R;
 import org.desperu.go4lunch.api.firestore.RestaurantHelper;
 import org.desperu.go4lunch.models.Restaurant;
 import org.desperu.go4lunch.utils.Go4LunchUtils;
@@ -22,8 +26,10 @@ public class RestaurantDBViewModel extends AndroidViewModel {
 
     // FOR DATA
     private String restaurantId;
+    private String userId;
     private ObservableField<Restaurant> restaurant = new ObservableField<>();
     private ObservableField<String> bookedUsersNumber = new ObservableField<>();
+    private ObservableBoolean isUserBookedRestaurant = new ObservableBoolean();
     private ObservableDouble likeUsersNumber = new ObservableDouble();
     private ObservableInt starOneState = new ObservableInt();
     private ObservableInt starTwoState = new ObservableInt();
@@ -113,8 +119,12 @@ public class RestaurantDBViewModel extends AndroidViewModel {
         this.restaurant.set(restaurant);
         this.restaurantLiveData.postValue(restaurant);
         this.bookedUsersNumber.set(Go4LunchUtils.getBookedUsersNumber(restaurant));
-        if (restaurant != null && restaurant.getLikeUsers() != null)
-            this.likeUsersNumber.set(restaurant.getLikeUsers().size() / (double) 10);
+        if (restaurant != null) {
+            if (restaurant.getBookedUsersId() != null)
+                this.isUserBookedRestaurant.set(restaurant.getBookedUsersId().contains(userId));
+            if (restaurant.getLikeUsers() != null)
+                this.likeUsersNumber.set(restaurant.getLikeUsers().size() / (double) 10);
+        }
     }
 
     /**
@@ -127,6 +137,12 @@ public class RestaurantDBViewModel extends AndroidViewModel {
         this.starThreeState.set(Go4LunchUtils.getRatingStarState(this.likeUsersNumber.get(), placeRating, 3));
     }
 
+    /**
+     * Set current user id.
+     * @param userId User id.
+     */
+    public void setUserId(String userId) { this.userId = userId; }
+
     // For live data test only
     void setRestaurantLiveData(Restaurant restaurant) { this.restaurantLiveData.setValue(restaurant); }
 
@@ -134,6 +150,15 @@ public class RestaurantDBViewModel extends AndroidViewModel {
     public ObservableField<Restaurant> getRestaurant() { return this.restaurant; }
 
     public ObservableField<String> getBookedUsersNumber() { return this.bookedUsersNumber; }
+
+    public ObservableBoolean getIsUserBookedRestaurant() { return this.isUserBookedRestaurant; }
+
+    @BindingAdapter("setFloatingImage")
+    public static void setFloatingImage(@NotNull FloatingActionButton floatingActionButton, boolean isUserBookedRestaurant) {
+        floatingActionButton.setImageResource(isUserBookedRestaurant ?
+                R.drawable.ic_baseline_check_circle_green_24 :
+                R.drawable.ic_baseline_check_circle_outline_black_48);
+    }
 
     public ObservableInt getStarOneState() { return this.starOneState; }
 

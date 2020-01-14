@@ -17,7 +17,8 @@
 
     <!-- Restaurant Detail and List colors -->
     <color name="colorExtraLightGrey">#C4C4C4</color>
-    <color name="colorStar">#f8e71c</color>
+    <color name="colorStarLight">#f8e71c</color>
+    <color name="colorStar">#F0E00C</color>
     <color name="colorLightDark">#323232</color>
     <color name="colorOpen">#12B613</color>
     <color name="colorOpenAt">#FC6215</color>

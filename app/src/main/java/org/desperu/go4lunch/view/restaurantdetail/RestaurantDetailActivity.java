@@ -96,12 +96,14 @@ public class RestaurantDetailActivity extends BaseActivity {
      * Configure data binding.
      */
     private void configureDataBinding() {
+        assert getCurrentUser() != null;
         ActivityRestaurantDetailBinding restaurantDetailBinding = DataBindingUtil.setContentView(this, this.getActivityLayout());
         restaurantInfoViewModel = new RestaurantInfoViewModel(getApplication(), this.getIdFromIntentData());
         restaurantDetailBinding.setRestaurantInfoViewModel(restaurantInfoViewModel);
 
         restaurantDBViewModel = new RestaurantDBViewModel(getApplication(), this.getIdFromIntentData());
         restaurantDBViewModel.fetchRestaurant();
+        restaurantDBViewModel.setUserId(this.getCurrentUser().getUid());
         restaurantDetailBinding.setRestaurantDBViewModel(restaurantDBViewModel);
         ButterKnife.bind(this);
     }
@@ -248,9 +250,7 @@ public class RestaurantDetailActivity extends BaseActivity {
     /**
      * Reload restaurant data from firestore.
      */
-    private void reloadRestaurantData() {
-        restaurantDBViewModel.fetchRestaurant();
-    }
+    private void reloadRestaurantData() { restaurantDBViewModel.fetchRestaurant(); }
 
     /**
      * Observe restaurant data, and update data and ui when received data.

@@ -44,8 +44,8 @@
                     app:layout_constraintBottom_toTopOf="@+id/activity_restaurant_detail_info_container"
                     app:layout_constraintTop_toTopOf="@+id/activity_restaurant_detail_info_container"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:srcCompat="@drawable/ic_baseline_check_circle_outline_black_48"
-                    app:backgroundTint="@android:color/white"/>
+                    app:backgroundTint="@android:color/white"
+                    tools:setFloatingImage="@{restaurantDBViewModel.isUserBookedRestaurant}"/>
 
                 <RelativeLayout
                     android:id="@+id/activity_restaurant_detail_info_container"
@@ -98,7 +98,7 @@
                         android:layout_alignBottom="@id/activity_restaurant_detail_text_view_restaurant_name"
                         android:contentDescription="@null"
                         app:srcCompat="@drawable/ic_baseline_star_black_24"
-                        android:tint="@color/colorStar"
+                        android:tint="@color/colorStarLight"
                         android:visibility="@{restaurantDBViewModel.starThreeState}"/>
 
                     <TextView
