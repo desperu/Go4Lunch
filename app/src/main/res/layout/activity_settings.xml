@@ -40,6 +40,7 @@
                 android:background="@color/colorLightDark"/>
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/activity_settings_container_notification_state"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/activity_settings_constraint_container_padding"
@@ -83,7 +84,25 @@
                 android:layout_margin="@dimen/activity_settings_text_category_and_divider_margin"
                 android:background="@color/colorLightDark"/>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/activity_settings_text_category_and_divider_margin"
+                android:text="@string/activity_settings_text_category_reset_booked_restaurant"
+                android:textStyle="bold"
+                android:textColor="@color/colorDark"
+                android:textSize="@dimen/activity_settings_text_category_text_size"
+                android:paddingStart="@dimen/activity_settings_text_category_padding_start_and_end"
+                android:paddingEnd="@dimen/activity_settings_text_category_padding_start_and_end"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.1dp"
+                android:layout_margin="@dimen/activity_settings_text_category_and_divider_margin"
+                android:background="@color/colorLightDark"/>
+
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/activity_settings_container_reset_booked_restaurant"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/activity_settings_constraint_container_padding"
@@ -94,7 +113,7 @@
                     android:id="@+id/activity_settings_text_notification_reset_booked_restaurant"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/activity_settings_text_notifications_reset_booked_restaurant"
+                    android:text="@string/activity_settings_text_reset_booked_restaurant"
                     android:textSize="@dimen/activity_settings_text_setting_title_text_size"
                     android:textColor="@color/colorLightDark"
                     app:layout_constraintStart_toStartOf="parent"
@@ -105,7 +124,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/activity_settings_text_setting_description_margin_top"
                     android:layout_marginEnd="@dimen/activity_settings_text_setting_description_margin_end"
-                    android:text="@string/activity_settings_text_notifications_reset_booked_restaurant_description"
+                    android:text="@string/activity_settings_text_reset_booked_restaurant_description"
                     android:textStyle="italic"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/activity_settings_notification_reset_booked_restaurant_switch"
@@ -145,7 +164,7 @@
                 android:background="@color/colorLightDark"/>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/activity_settings_map_zoom_level_container"
+                android:id="@+id/activity_settings_container_map_zoom_level"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/activity_settings_constraint_container_padding"
@@ -193,6 +212,7 @@
                 android:background="@color/colorLightDark"/>
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/activity_settings_container_map_zoom_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/activity_settings_constraint_container_padding"
@@ -237,6 +257,7 @@
                 android:background="@color/colorLightDark"/>
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/activity_settings_container_auto_refresh_location"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/activity_settings_constraint_container_padding"
@@ -298,7 +319,7 @@
                 android:background="@color/colorLightDark"/>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/activity_settings_reset_settings_container"
+                android:id="@+id/activity_settings_container_reset_settings"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/activity_settings_constraint_container_padding"

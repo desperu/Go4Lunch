@@ -88,7 +88,7 @@ public class SettingsActivity extends BaseActivity {
     /**
      * Save current prefs.
      */
-    private void savePrefs() { // TODO save date for reset booked restaurant
+    private void savePrefs() {
         Go4LunchPrefs.savePref(getBaseContext(), NOTIFICATION_ENABLED, notificationSwitch.isChecked());
         Go4LunchPrefs.savePref(getBaseContext(), RESET_BOOKED_RESTAURANT, resetBookedRestaurantSwitch.isChecked());
         Go4LunchPrefs.savePref(getBaseContext(), MAP_ZOOM_LEVEL, Integer.parseInt(zoomLevelTextView.getText().toString()));
@@ -104,13 +104,34 @@ public class SettingsActivity extends BaseActivity {
      * Notification checked change listener.
      */
     private void onCheckedNotificationChangeListener() {
-        notificationSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> manageNotificationAlarm(isChecked));
+        notificationSwitch.setOnCheckedChangeListener((buttonView, isChecked) ->
+                manageNotificationAlarm(isChecked));
     }
 
-    @OnClick(R.id.activity_settings_map_zoom_level_container)
+    @OnClick(R.id.activity_settings_container_notification_state)
+    protected void onClickNotificationContainer() {
+        notificationSwitch.setChecked(!notificationSwitch.isChecked());
+    }
+
+    @OnClick(R.id.activity_settings_container_reset_booked_restaurant)
+    protected void onClickResetBookedRestaurantContainer() {
+        resetBookedRestaurantSwitch.setChecked(!resetBookedRestaurantSwitch.isChecked());
+    }
+
+    @OnClick(R.id.activity_settings_container_map_zoom_level)
     protected void onClickZoomSize() { this.alertDialog(ZOOM_DIALOG); }
 
-    @OnClick(R.id.activity_settings_reset_settings_container)
+    @OnClick(R.id.activity_settings_container_map_zoom_button)
+    protected void onClickMapZoomButton() {
+        zoomButtonSwitch.setChecked(!zoomButtonSwitch.isChecked());
+    }
+
+    @OnClick(R.id.activity_settings_container_auto_refresh_location)
+    protected void onClickAutoRefreshContainer() {
+        refreshLocationSwitch.setChecked(!refreshLocationSwitch.isChecked());
+    }
+
+    @OnClick(R.id.activity_settings_container_reset_settings)
     protected void onclickResetSettings() { this.alertDialog(RESET_DIALOG); }
 
     // --------------
@@ -143,6 +164,7 @@ public class SettingsActivity extends BaseActivity {
             View editView = LayoutInflater.from(this).inflate(R.layout.alert_dialog, linearRoot);
             final EditText editText = editView.findViewById(R.id.alert_dialog_input_text);
             editText.setText(String.valueOf(zoomLevel));
+            editText.setSelection(editText.getText().length());
             dialog.setView(editView);
 
             // Set positive button

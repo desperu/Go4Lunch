@@ -21,7 +21,7 @@
     <string name="activity_main_menu_bottom_map">Map View</string>
     <string name="activity_main_menu_bottom_list">List View</string>
     <string name="activity_main_menu_bottom_workmates">Workmates</string>
-    <string name="activity_main_menu_bottom_chat">Chat</string>
+    <string name="activity_main_menu_bottom_chat" translatable="false">Chat</string>
 
     <!-- MAIN ACTIVITY -->
     <!-- Layout Login -->
@@ -84,8 +84,9 @@
     <string name="activity_settings_text_category_notification">Notifications</string>
     <string name="activity_settings_text_notifications_state">Enable notifications</string>
     <string name="activity_settings_text_notifications_description">One notification per day, at 12am, when a restaurant is booked.</string>
-    <string name="activity_settings_text_notifications_reset_booked_restaurant">Reset booked restaurant</string>
-    <string name="activity_settings_text_notifications_reset_booked_restaurant_description">Reset booked restaurant every day, after lunch.</string>
+    <string name="activity_settings_text_category_reset_booked_restaurant">Booked Restaurant</string>
+    <string name="activity_settings_text_reset_booked_restaurant">Reset booked restaurant</string>
+    <string name="activity_settings_text_reset_booked_restaurant_description">Reset booked restaurant every day, after lunch, at 2.30pm.</string>
     <string name="activity_settings_text_category_map">Map</string>
     <string name="activity_settings_text_map_zoom_size">Map zoom level</string>
     <string name="activity_settings_text_map_zoom_size_description">Set zoom level for the map, default 18, min 2, max 21.</string>
@@ -98,7 +99,7 @@
     <string name="activity_settings_text_reset_settings_description">Reset settings to original state.</string>
     <!-- Alert Dialog -->
     <string name="activity_settings_dialog_reset_settings_message">Are you sure you want reset settings to default?</string>
-    <string name="activity_settings_dialog_positive_button">OK</string>
+    <string name="activity_settings_dialog_positive_button" translatable="false">OK</string>
     <string name="activity_settings_dialog_negative_button">Cancel</string>
     <!-- Toast -->
     <string name="activity_settings_toast_zoom_level_wrong_value">Zoom level must be upper than 2 and lower than 21 !</string>
