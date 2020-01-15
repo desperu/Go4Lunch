@@ -266,7 +266,7 @@ public class RestaurantListFragment extends BaseFragment {
     }
 
     /**
-     * Update recycler view.
+     * Update recycler view with sort list, by distance.
      * @param placeIdList List of restaurant id.
      */
     private void updateRecyclerView(ArrayList<String> placeIdList) {

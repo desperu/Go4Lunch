@@ -4,16 +4,24 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.android.libraries.places.api.model.Place;
+
 import org.desperu.go4lunch.R;
 import org.desperu.go4lunch.view.base.BaseFragment;
 import org.desperu.go4lunch.models.User;
 import org.desperu.go4lunch.view.adapter.WorkmatesAdapter;
+import org.desperu.go4lunch.viewmodel.RestaurantInfoViewModel;
 import org.desperu.go4lunch.viewmodel.UserDBViewModel;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.TreeSet;
 
 import butterknife.BindView;
 
@@ -30,6 +38,7 @@ public class WorkmatesFragment extends BaseFragment {
     private WorkmatesAdapter adapter;
     private List<UserDBViewModel> allWorkmatesList = new ArrayList<>();
     private List<User> allUsersList = new ArrayList<>();
+    private List<User> notDecidedUsers = new ArrayList<>();
     private String queryTerm;
 
     // --------------
@@ -97,7 +106,7 @@ public class WorkmatesFragment extends BaseFragment {
         assert getActivity() != null;
         UserDBViewModel allUsers = new UserDBViewModel(getActivity().getApplication());
         allUsers.fetchAllUsers();
-        allUsers.getAllUsersListLiveData().observe(this, this::manageRequestResponse);
+        allUsers.getAllUsersListLiveData().observe(this, this::sortWorkmatesList);
     }
 
     // --------------
@@ -123,6 +132,7 @@ public class WorkmatesFragment extends BaseFragment {
      */
     private void updateRecyclerView(@NotNull List<User> allUsersList) {
         assert getActivity() != null;
+        this.allUsersList = allUsersList;
         this.allWorkmatesList.clear();
         for (User user : allUsersList) {
             // User data from firestore
@@ -143,30 +153,111 @@ public class WorkmatesFragment extends BaseFragment {
      * @param allUsersList All users list.
      */
     private void manageRequestResponse(List<User> allUsersList) {
-        this.allUsersList = this.sortWorkmatesList(allUsersList);
         if (queryTerm != null && !queryTerm.isEmpty())
             this.updateRecyclerView(this.searchQueryInList());
-        else this.updateRecyclerView(this.allUsersList);
+        else this.updateRecyclerView(allUsersList);
     }
 
     /**
      * Sort workmates list to show at top decided user for lunch.
      * @param allUsersList All users list.
-     * @return All users list sorted.
      */
-    @Contract("_ -> param1")
-    private List<User> sortWorkmatesList(@NotNull List<User> allUsersList) {
+    private void sortWorkmatesList(@NotNull List<User> allUsersList) {
         List<User> decidedUsers = new ArrayList<>();
         List<User> notDecidedUsers = new ArrayList<>();
+
+        // Sort booked and unbooked users
         for (User user : allUsersList) {
             if (user.getBookedRestaurantId() != null)
                 decidedUsers.add(user);
             else notDecidedUsers.add(user);
         }
-        allUsersList.clear();
-        allUsersList.addAll(decidedUsers);
+        setSortedRestaurantNameList(decidedUsers);
+        sortNotDecidedUserList(notDecidedUsers);
+    }
+
+    /**
+     * Set restaurant name list, and sort alphabetically.
+     * @param userList User list.
+     */
+    private void setSortedRestaurantNameList(@NotNull List<User> userList) {
+        assert getActivity() != null;
+        List<Place> placeList = new ArrayList<>();
+        List<String> restaurantNamesList = new ArrayList<>();
+        for (User user : userList) {
+            RestaurantInfoViewModel restaurantInfoViewModel = new RestaurantInfoViewModel(
+                    getActivity().getApplication(), user.getBookedRestaurantId());
+            restaurantInfoViewModel.getPlaceLiveData().observe(this, place -> {
+                placeList.add(place);
+                restaurantNamesList.add(place.getName());
+                if (restaurantNamesList.size() == userList.size()) {
+                    Collections.sort(restaurantNamesList);
+                    this.sortUserList(userList, placeList, restaurantNamesList);
+                }
+            });
+        }
+    }
+
+    /**
+     * Sort user list by booked restaurant name.
+     * @param userList User list.
+     * @param placeList Booked place list.
+     * @param sortedRestaurantNames Restaurant name list sorted.
+     */
+    private void sortUserList(List<User> userList, List<Place> placeList,
+                              @NotNull Collection<String> sortedRestaurantNames) {
+        List<User> allUsersList = new ArrayList<>();
+        // Sort place list with sorted restaurant names list
+        int position = -1;
+        for (String restaurantName : sortedRestaurantNames) {
+            position++;
+            for (int i = 0; i < placeList.size(); i++) {
+                if (restaurantName.equals(placeList.get(i).getName())) {
+                    placeList.add(position, placeList.get(i));
+                    placeList.remove(i + 1);
+                }
+            }
+        }
+
+        // Sort userList with sorted place list
+        position = -1;
+        for (Place place : placeList) {
+            position++;
+            for (int i = 0; i < userList.size(); i++) {
+                if (Objects.equals(place.getId(), userList.get(i).getBookedRestaurantId())) {
+                    userList.add(position, userList.get(i));
+                    userList.remove(i + 1);
+                }
+            }
+        }
+        allUsersList.addAll(userList);
         allUsersList.addAll(notDecidedUsers);
-        return allUsersList;
+        this.manageRequestResponse(allUsersList);
+    }
+
+    /**
+     * Sort not decided user list alphabetically.
+     * @param userList Not decider user list.
+     */
+    private void sortNotDecidedUserList(@NotNull List<User> userList) {
+        // Create sorted user name list
+        Collection<String> sortedUserNames = new TreeSet<>(Collator.getInstance());
+        for (User user : userList)
+            sortedUserNames.add(user.getUserName());
+
+        // Sort user list with sorted user name list
+        int position = -1;
+        for (String userName : sortedUserNames) {
+            position++;
+            for (int i = 0; i < userList.size(); i++) {
+                if (userName.equals(userList.get(i).getUserName())) {
+                    userList.add(position, userList.get(i));
+                    userList.remove(i + 1);
+                }
+            }
+        }
+        notDecidedUsers.clear();
+        notDecidedUsers.addAll(userList);
     }
 
     /**
