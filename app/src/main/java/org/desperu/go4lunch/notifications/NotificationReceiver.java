@@ -31,7 +31,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 
-import static org.desperu.go4lunch.Go4LunchTools.PrefsKeys.NOTIFICATION_ENABLED;
+import static org.desperu.go4lunch.Go4LunchTools.PrefsKeys.*;
 import static org.desperu.go4lunch.Go4LunchTools.SettingsDefault.NOTIFICATION_DEFAULT;
 
 public class NotificationReceiver extends BroadcastReceiver {
@@ -92,6 +92,9 @@ public class NotificationReceiver extends BroadcastReceiver {
             notificationManagerCompat.createNotificationChannel(mChannel);
         }
 
+        // Save that notification is sent
+        Go4LunchPrefs.savePref(context, IS_BOOKED_NOTIFICATION_SENT, true);
+
         // Show notification.
         notificationManagerCompat.notify(NOTIFICATION_ID, builder.build());
     }
@@ -100,7 +103,7 @@ public class NotificationReceiver extends BroadcastReceiver {
      * Check that current time is lower than 12.15am.
      * @return If current time is lower than 12.15am.
      */
-    private boolean checkTime() {
+    private boolean checkTime() { // TODO disable notification for week end ok other day
         Calendar cal = Calendar.getInstance();
         return cal.get(Calendar.HOUR_OF_DAY) <= 12 && cal.get(Calendar.MINUTE) <= 15;
     }

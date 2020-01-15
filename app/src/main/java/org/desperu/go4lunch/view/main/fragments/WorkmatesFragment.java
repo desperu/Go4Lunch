@@ -117,9 +117,11 @@ public class WorkmatesFragment extends BaseFragment {
      * Method called when query term changed.
      * @param query Query term.
      */
-    public void onSearchQueryTextChange(String query) {
+    public void onSearchQueryTextChange(@NotNull String query) {
         this.queryTerm = query;
-        this.updateRecyclerView(this.searchQueryInList());
+        if (!query.isEmpty())
+            this.updateRecyclerView(this.searchQueryInList());
+        else getAllWorkmatesList();
     }
 
     // --------------
@@ -224,13 +226,13 @@ public class WorkmatesFragment extends BaseFragment {
         for (Place place : placeList) {
             position++;
             for (int i = 0; i < userList.size(); i++) {
-                if (Objects.equals(place.getId(), userList.get(i).getBookedRestaurantId())) {
-                    userList.add(position, userList.get(i));
-                    userList.remove(i + 1);
+                if (Objects.equals(place.getId(), userList.get(i).getBookedRestaurantId())
+                        && !allUsersList.contains(userList.get(i))) {
+                    allUsersList.add(position, userList.get(i));
                 }
             }
         }
-        allUsersList.addAll(userList);
+
         allUsersList.addAll(notDecidedUsers);
         this.manageRequestResponse(allUsersList);
     }

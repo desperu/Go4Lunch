@@ -19,6 +19,7 @@ import org.desperu.go4lunch.R;
 import org.desperu.go4lunch.api.firestore.UserHelper;
 import org.desperu.go4lunch.models.Restaurant;
 import org.desperu.go4lunch.models.User;
+import org.desperu.go4lunch.utils.Go4LunchPrefs;
 import org.desperu.go4lunch.utils.Go4LunchUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,6 +27,8 @@ import java.util.List;
 import java.util.Objects;
 
 import static org.desperu.go4lunch.Go4LunchTools.CodeResponse.*;
+import static org.desperu.go4lunch.Go4LunchTools.PrefsKeys.*;
+import static org.desperu.go4lunch.Go4LunchTools.SettingsDefault.BOOKED_NOTIFICATION_SENT_DEFAULT;
 
 public class UserDBViewModel extends AndroidViewModel {
 
@@ -99,15 +102,16 @@ public class UserDBViewModel extends AndroidViewModel {
 
         UserHelper.getUser(uid).addOnSuccessListener(documentSnapshot -> {
             // Get old booked restaurant before update.
-            String oldBookedRestaurant = Objects.requireNonNull(documentSnapshot.toObject(User.class)).getBookedRestaurantId();
+            String oldBookedRestaurantId = Objects.requireNonNull(documentSnapshot.toObject(User.class)).getBookedRestaurantId();
 
-            if (oldBookedRestaurant != null)
-                // Remove user id from old booked restaurant.
-                restaurantDBViewModel.removeRestaurantBookedUser(oldBookedRestaurant, uid);
+            if (oldBookedRestaurantId != null)
+                // Remove user id from old booked restaurant list.
+                restaurantDBViewModel.removeRestaurantBookedUser(oldBookedRestaurantId, uid);
 
-            if (oldBookedRestaurant != null && oldBookedRestaurant.equals(newBookedRestaurant.getId())) {
+            if (oldBookedRestaurantId != null && oldBookedRestaurantId.equals(newBookedRestaurant.getId())
+                    || newBookedRestaurantDB != null && newBookedRestaurantDB.getName().equals(RESET_BOOKED_RESTAURANT)) {
                 // If clicked when already booked, remove booked restaurant.
-                UserHelper.updateBookedRestaurant(uid, null); // TODO modify floating button
+                UserHelper.updateBookedRestaurant(uid, null);
                 updateBookedResponse.postValue(UNBOOKED);
             } else {
                 // Update user's bookedRestaurantId in firestore.
@@ -115,8 +119,13 @@ public class UserDBViewModel extends AndroidViewModel {
 
                 // Update restaurant's bookedUsersId in firestore.
                 if (newBookedRestaurantDB == null) restaurantDBViewModel.createRestaurant(newBookedRestaurant);
-
                 restaurantDBViewModel.updateRestaurantBookedUser(uid);
+
+                // Save booked time, and reset notification sent marker
+                Go4LunchPrefs.savePref(getApplication(), BOOKED_RESTAURANT_TIME, System.currentTimeMillis());
+                Go4LunchPrefs.savePref(getApplication(), IS_BOOKED_NOTIFICATION_SENT, BOOKED_NOTIFICATION_SENT_DEFAULT);
+
+                // Handle action response
                 updateBookedResponse.postValue(BOOKED);
             }
         }).addOnFailureListener(e -> updateBookedResponse.postValue(ERROR));

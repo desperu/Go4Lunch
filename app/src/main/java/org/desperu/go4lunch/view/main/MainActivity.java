@@ -21,6 +21,7 @@ import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.model.RectangularBounds;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
@@ -28,6 +29,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import org.desperu.go4lunch.R;
 import org.desperu.go4lunch.databinding.ActivityMainNavHeaderBinding;
+import org.desperu.go4lunch.models.Restaurant;
 import org.desperu.go4lunch.notifications.NotificationAlarmManager;
 import org.desperu.go4lunch.utils.Go4LunchPrefs;
 import org.desperu.go4lunch.view.base.BaseActivity;
@@ -43,14 +45,15 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Objects;
 
 import butterknife.BindView;
 import icepick.State;
 
 import static org.desperu.go4lunch.Go4LunchTools.FragmentKey.*;
-import static org.desperu.go4lunch.Go4LunchTools.PrefsKeys.IS_FIRST_APK_START;
-import static org.desperu.go4lunch.Go4LunchTools.SettingsDefault.FIRST_APK_START_DEFAULT;
+import static org.desperu.go4lunch.Go4LunchTools.PrefsKeys.*;
+import static org.desperu.go4lunch.Go4LunchTools.SettingsDefault.*;
 import static org.desperu.go4lunch.view.main.fragments.MapsFragment.*;
 import static org.desperu.go4lunch.view.main.fragments.RestaurantListFragment.*;
 import static org.desperu.go4lunch.view.main.fragments.WorkmatesFragment.QUERY_TERM_WORKMATES;
@@ -208,7 +211,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     /**
      * Enable notification at first apk start.
      */
-    private void enableNotifications() {
+    private void enableNotifications() { // TODO if notification didn't sent use handler to resent and marker is_notification_sent
         if (Go4LunchPrefs.getBoolean(getBaseContext(), IS_FIRST_APK_START, FIRST_APK_START_DEFAULT)) {
             NotificationAlarmManager.startNotificationsAlarm(getBaseContext());
             Go4LunchPrefs.savePref(getBaseContext(), IS_FIRST_APK_START, false);
@@ -228,6 +231,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             this.configureDataBindingForHeader();
             this.loadOrCreateUserInFirestore();
             this.enableNotifications();
+            this.manageResetBookedRestaurant();
         }
         else this.startSignInActivity();
     }
@@ -504,6 +508,37 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     showToast(getString(R.string.error_unknown_error));
                     this.startSignInActivity();
                 }
+            }
+        }
+    }
+
+    /**
+     * Manage reset booked restaurant function.
+     */
+    private void manageResetBookedRestaurant() {
+        if (Go4LunchPrefs.getBoolean(getBaseContext(), RESET_BOOKED_RESTAURANT, RESET_BOOKED_DEFAULT)) {
+            boolean isNotificationSent = Go4LunchPrefs.getBoolean(getBaseContext(),
+                    IS_BOOKED_NOTIFICATION_SENT, BOOKED_NOTIFICATION_SENT_DEFAULT);
+
+            // Set calendar with booked time
+            long bookedTime = Go4LunchPrefs.getLong(getBaseContext(),
+                    BOOKED_RESTAURANT_TIME, BOOKED_TIME_DEFAULT);
+            Calendar bookedCal = Calendar.getInstance();
+            bookedCal.setTimeInMillis(bookedTime);
+
+            // Set calendar with current time
+            Calendar resetBookedCal = Calendar.getInstance();
+            resetBookedCal.set(Calendar.HOUR_OF_DAY, 14);
+            resetBookedCal.set(Calendar.MINUTE, 30);
+
+            // If notification was sent, booked time not null,
+            // and current time over 2.30pm, reset booked restaurant
+            if (isNotificationSent && bookedTime != 0 && resetBookedCal.compareTo(bookedCal) > 0) {
+                userDBViewModel.updateBookedRestaurant(Place.builder().build(),
+                        new Restaurant(RESET_BOOKED_RESTAURANT, "",
+                                new ArrayList<>(), 0.0,new ArrayList<>()));
+                Go4LunchPrefs.clear(getBaseContext(), IS_BOOKED_NOTIFICATION_SENT);
+                Go4LunchPrefs.clear(getBaseContext(), BOOKED_RESTAURANT_TIME);
             }
         }
     }

@@ -65,6 +65,8 @@ public final class Go4LunchTools {
         public static final String IS_FIRST_APK_START = "isFirstApkStart";
         public static final String NOTIFICATION_ENABLED = "notificationEnabled";
         public static final String RESET_BOOKED_RESTAURANT = "resetBookedRestaurant";
+        public static final String BOOKED_RESTAURANT_TIME = "bookedRestaurantTime";
+        public static final String IS_BOOKED_NOTIFICATION_SENT = "isBookedNotificationSent";
         public static final String MAP_ZOOM_LEVEL = "mapZoomLevel";
         public static final String MAP_ZOOM_BUTTON = "mapZoomButton";
         public static final String MAP_AUTO_REFRESH_LOCATION = "autoRefreshLocation";
@@ -76,6 +78,8 @@ public final class Go4LunchTools {
         public static final boolean FIRST_APK_START_DEFAULT = true;
         public static final boolean NOTIFICATION_DEFAULT = true;
         public static final boolean RESET_BOOKED_DEFAULT = false;
+        public static final long BOOKED_TIME_DEFAULT = 0;
+        public static final boolean BOOKED_NOTIFICATION_SENT_DEFAULT = false;
         public static final int ZOOM_LEVEL_DEFAULT = 18;
         public static final boolean ZOOM_BUTTON_DEFAULT = true;
         public static final boolean AUTO_REFRESH_DEFAULT = true;

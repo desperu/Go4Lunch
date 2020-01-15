@@ -28,7 +28,6 @@ import org.desperu.go4lunch.viewmodel.UserDBViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,8 +40,8 @@ import static org.desperu.go4lunch.Go4LunchTools.RestaurantDetail.*;
 public class RestaurantDetailActivity extends BaseActivity {
 
     //FOR DESIGN
-    @BindView(R.id.activity_restaurant_detail_recycler_view) RecyclerView recyclerView;
     @BindView(R.id.activity_restaurant_detail_swipe_container) SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.activity_restaurant_detail_recycler_view) RecyclerView recyclerView;
 
     // FOR DATA
     public static final String RESTAURANT_ID = "restaurant id";
@@ -125,6 +124,7 @@ public class RestaurantDetailActivity extends BaseActivity {
      */
     private void configureSwipeRefreshLayout() {
         swipeRefreshLayout.setOnRefreshListener(() -> {
+            swipeRefreshLayout.setEnabled(recyclerView.getScrollY() == 0);
             restaurantInfoViewModel.restartRequest();
             this.reloadRestaurantData();
         });
@@ -158,10 +158,11 @@ public class RestaurantDetailActivity extends BaseActivity {
 
     @OnClick(R.id.activity_restaurant_detail_button_booked)
     protected void onClickBookRestaurant() {
+        assert this.getCurrentUser() != null;
         if (restaurantInfo == null) restaurantInfo = restaurantInfoViewModel.getPlace().get();
 
         if (restaurantInfo != null && restaurantInfo.getId() != null) {
-            UserDBViewModel userDBViewModel = new UserDBViewModel(getApplication(), Objects.requireNonNull(this.getCurrentUser()).getUid());
+            UserDBViewModel userDBViewModel = new UserDBViewModel(getApplication(), this.getCurrentUser().getUid());
             userDBViewModel.updateBookedRestaurant(restaurantInfo, restaurantDB);
             userDBViewModel.getUpdateBookedResponse().observe(this, this::handleResponseAfterAction);
             // Wait before reload actualised data from firestore.
@@ -182,6 +183,7 @@ public class RestaurantDetailActivity extends BaseActivity {
 
     @OnClick(R.id.activity_restaurant_detail_like_button)
     protected void onClickLikeRestaurant() {
+        assert this.getCurrentUser() != null;
         boolean isAlreadyLike = false;
         if (restaurantInfo == null) restaurantInfo = restaurantInfoViewModel.getPlace().get();
 
@@ -189,12 +191,12 @@ public class RestaurantDetailActivity extends BaseActivity {
             // Check if current user already like restaurant
             if (restaurantDB != null && restaurantDB.getLikeUsers() != null) {
                 for (String userId : restaurantDB.getLikeUsers())
-                    isAlreadyLike = userId.equals(Objects.requireNonNull(this.getCurrentUser()).getUid());
+                    isAlreadyLike = userId.equals(this.getCurrentUser().getUid());
             }
 
             if (!isAlreadyLike) {
                 // Like restaurant
-                restaurantDBViewModel.updateRestaurantLikeUsers(restaurantInfo, Objects.requireNonNull(this.getCurrentUser()).getUid());
+                restaurantDBViewModel.updateRestaurantLikeUsers(restaurantInfo, this.getCurrentUser().getUid());
                 this.showSnackbar(getString(R.string.activity_restaurant_detail_snackbar_add_like));
                 this.reloadRestaurantData();
             } else {
@@ -217,8 +219,8 @@ public class RestaurantDetailActivity extends BaseActivity {
     protected void onClickWebsiteRestaurant() {
         if (restaurantInfo == null) restaurantInfo = restaurantInfoViewModel.getPlace().get();
 
-        if (restaurantInfo != null)
-            this.showWebsite(Objects.requireNonNull(restaurantInfo.getWebsiteUri()).toString());
+        if (restaurantInfo != null && restaurantInfo.getWebsiteUri() != null)
+            this.showWebsite(restaurantInfo.getWebsiteUri().toString());
         else this.handleResponseAfterAction(NO_DATA);
     }
 
