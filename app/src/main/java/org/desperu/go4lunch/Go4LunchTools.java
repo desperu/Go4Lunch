@@ -64,6 +64,7 @@ public final class Go4LunchTools {
         // Shared preferences keys
         public static final String IS_FIRST_APK_START = "isFirstApkStart";
         public static final String NOTIFICATION_ENABLED = "notificationEnabled";
+        public static final String DISABLE_WEEK_END_NOTIFICATION = "disableWeekEnNotification";
         public static final String RESET_BOOKED_RESTAURANT = "resetBookedRestaurant";
         public static final String BOOKED_RESTAURANT_TIME = "bookedRestaurantTime";
         public static final String IS_BOOKED_NOTIFICATION_SENT = "isBookedNotificationSent";
@@ -77,6 +78,7 @@ public final class Go4LunchTools {
         // Settings default value
         public static final boolean FIRST_APK_START_DEFAULT = true;
         public static final boolean NOTIFICATION_DEFAULT = true;
+        public static final boolean WEEK_END_NOTIFICATION_DEFAULT = true;
         public static final boolean RESET_BOOKED_DEFAULT = false;
         public static final long BOOKED_TIME_DEFAULT = 0;
         public static final boolean BOOKED_NOTIFICATION_SENT_DEFAULT = false;

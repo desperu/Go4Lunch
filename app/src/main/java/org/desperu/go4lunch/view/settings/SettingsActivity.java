@@ -33,6 +33,8 @@ public class SettingsActivity extends BaseActivity {
     @BindView(R.id.activity_settings_text_map_zoom_level_value) TextView zoomLevelTextView;
     @BindView(R.id.activity_settings_map_zoom_button_switch) Switch zoomButtonSwitch;
     @BindView(R.id.activity_settings_map_auto_refresh_location_switch) Switch refreshLocationSwitch;
+    @BindView(R.id.activity_settings_notification_disable_week_end_switch) Switch disableWeekEndSwitch;
+    // ALERT DIALOG
     @Nullable @BindView(R.id.alert_dialog_linear_root) LinearLayout linearRoot;
 
     // FOR DATA
@@ -41,6 +43,7 @@ public class SettingsActivity extends BaseActivity {
     private int zoomLevel;
     private boolean isZoomButtonEnabled;
     private boolean isRefreshLocationEnabled;
+    private boolean disableWeekEndNotification;
     private static final int ZOOM_DIALOG = 0;
     private static final int RESET_DIALOG = 1;
 
@@ -83,6 +86,7 @@ public class SettingsActivity extends BaseActivity {
         zoomLevel = Go4LunchPrefs.getInt(getBaseContext(), MAP_ZOOM_LEVEL, ZOOM_LEVEL_DEFAULT);
         isZoomButtonEnabled = Go4LunchPrefs.getBoolean(getBaseContext(), MAP_ZOOM_BUTTON, ZOOM_BUTTON_DEFAULT);
         isRefreshLocationEnabled = Go4LunchPrefs.getBoolean(getBaseContext(), MAP_AUTO_REFRESH_LOCATION, AUTO_REFRESH_DEFAULT);
+        disableWeekEndNotification = Go4LunchPrefs.getBoolean(getBaseContext(), DISABLE_WEEK_END_NOTIFICATION, WEEK_END_NOTIFICATION_DEFAULT);
     }
 
     /**
@@ -94,6 +98,7 @@ public class SettingsActivity extends BaseActivity {
         Go4LunchPrefs.savePref(getBaseContext(), MAP_ZOOM_LEVEL, Integer.parseInt(zoomLevelTextView.getText().toString()));
         Go4LunchPrefs.savePref(getBaseContext(), MAP_ZOOM_BUTTON, zoomButtonSwitch.isChecked());
         Go4LunchPrefs.savePref(getBaseContext(), MAP_AUTO_REFRESH_LOCATION, refreshLocationSwitch.isChecked());
+        Go4LunchPrefs.savePref(getBaseContext(), DISABLE_WEEK_END_NOTIFICATION, disableWeekEndSwitch.isChecked());
     }
 
     // --------------
@@ -134,6 +139,11 @@ public class SettingsActivity extends BaseActivity {
     @OnClick(R.id.activity_settings_container_reset_settings)
     protected void onclickResetSettings() { this.alertDialog(RESET_DIALOG); }
 
+    @OnClick(R.id.activity_settings_container_notification_disable_week_end)
+    protected void onClickDisableWeekEnd() {
+        disableWeekEndSwitch.setChecked(!disableWeekEndSwitch.isChecked());
+    }
+
     // --------------
     // UI
     // --------------
@@ -147,6 +157,7 @@ public class SettingsActivity extends BaseActivity {
         zoomLevelTextView.setText(String.valueOf(zoomLevel));
         zoomButtonSwitch.setChecked(isZoomButtonEnabled);
         refreshLocationSwitch.setChecked(isRefreshLocationEnabled);
+        disableWeekEndSwitch.setChecked(disableWeekEndNotification);
     }
 
     /**
@@ -162,7 +173,7 @@ public class SettingsActivity extends BaseActivity {
 
             // Add edit text to dialog
             View editView = LayoutInflater.from(this).inflate(R.layout.alert_dialog, linearRoot);
-            final EditText editText = editView.findViewById(R.id.alert_dialog_input_text);
+            final EditText editText = editView.findViewById(R.id.alert_dialog_edit_text);
             editText.setText(String.valueOf(zoomLevel));
             editText.setSelection(editText.getText().length());
             dialog.setView(editView);
@@ -210,6 +221,7 @@ public class SettingsActivity extends BaseActivity {
         zoomLevelTextView.setText(String.valueOf(ZOOM_LEVEL_DEFAULT));
         zoomButtonSwitch.setChecked(ZOOM_BUTTON_DEFAULT);
         refreshLocationSwitch.setChecked(AUTO_REFRESH_DEFAULT);
+        disableWeekEndSwitch.setChecked(WEEK_END_NOTIFICATION_DEFAULT);
         Toast.makeText(getBaseContext(), R.string.activity_settings_toast_reset_settings_default, Toast.LENGTH_SHORT).show();
     }
 }

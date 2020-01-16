@@ -135,6 +135,8 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
         mMap.setMyLocationEnabled(isLocationEnabled);
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
         if (isLocationEnabled) this.updateMapWithLocation(this.getUserLocation());
+
+        // For location updates, auto refresh
         boolean isRefreshLocationEnabled = Go4LunchPrefs.getBoolean(getContext(), MAP_AUTO_REFRESH_LOCATION, AUTO_REFRESH_DEFAULT);
         if (isLocationEnabled && fusedLocationClient == null && isRefreshLocationEnabled) this.startLocationUpdates();
         else if (!isRefreshLocationEnabled) this.stopLocationUpdates();
@@ -174,7 +176,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
         if (marker.getSnippet() != null)
             mCallback.onClickedMarker(marker.getSnippet());
         else Toast.makeText(getContext(), R.string.fragment_maps_no_place_found, Toast.LENGTH_SHORT).show();
-        return true; // TODO false to show windows info and to navigate
+        return true;
     }
 
     @Override
@@ -187,7 +189,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
         mCallback.onNewCameraPosition(mMap.getCameraPosition());
         mCallback.onNewBounds(getRectangularBounds());
         assert getActivity() != null;
-        if (queryTerm != null && !isPlacesUpdating) // TODO how don't launch
+        if (queryTerm != null && !isPlacesUpdating)
             this.getAutocompleteRestaurant(queryTerm);
     }
 

@@ -32,15 +32,17 @@ import java.util.List;
 import java.util.Objects;
 
 import static org.desperu.go4lunch.Go4LunchTools.PrefsKeys.*;
-import static org.desperu.go4lunch.Go4LunchTools.SettingsDefault.NOTIFICATION_DEFAULT;
+import static org.desperu.go4lunch.Go4LunchTools.SettingsDefault.*;
 
 public class NotificationReceiver extends BroadcastReceiver {
 
+    // FOR NOTIFICATION
     private static final String CHANNEL_ID = "Go4LunchNotification";
     private static final String NOTIFICATION_NAME = "JoiningWorkmates";
     private static final int NOTIFICATION_ID = 1;
     private static final String CHANNEL_DESCRIPTION = "Go4lunch notifications channel";
 
+    // FOR DATA
     private Context context;
     private Restaurant bookedRestaurant;
 
@@ -50,7 +52,7 @@ public class NotificationReceiver extends BroadcastReceiver {
         if (intent.getAction() != null && intent.getAction().equals("android.intent.action.BOOT_COMPLETED")
                 && Go4LunchPrefs.getBoolean(context, NOTIFICATION_ENABLED, NOTIFICATION_DEFAULT))
                 NotificationAlarmManager.startNotificationsAlarm(context);
-        else if (checkTime()) getBookedRestaurantId();
+        else if (checkDateAndTime()) getBookedRestaurantId();
     }
 
     /**
@@ -103,9 +105,17 @@ public class NotificationReceiver extends BroadcastReceiver {
      * Check that current time is lower than 12.15am.
      * @return If current time is lower than 12.15am.
      */
-    private boolean checkTime() { // TODO disable notification for week end ok other day
+    private boolean checkDateAndTime() {
+        boolean weekEndDisabled = Go4LunchPrefs.getBoolean(context,
+                DISABLE_WEEK_END_NOTIFICATION, WEEK_END_NOTIFICATION_DEFAULT);
         Calendar cal = Calendar.getInstance();
-        return cal.get(Calendar.HOUR_OF_DAY) <= 12 && cal.get(Calendar.MINUTE) <= 15;
+
+        if (weekEndDisabled && (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY
+                || cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY)) {
+            // If notification for week end are disabled and we are in week end, don't create notification
+            return false;
+        } else
+            return cal.get(Calendar.HOUR_OF_DAY) <= 12 && cal.get(Calendar.MINUTE) <= 15;
     }
 
     /**

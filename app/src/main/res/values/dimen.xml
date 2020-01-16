@@ -82,6 +82,7 @@
 
     <!-- Settings Activity -->
     <dimen name="activity_settings_linear_container_padding_top">10dp</dimen>
+    <dimen name="activity_settings_divider_height">0.1dp</dimen>
     <dimen name="activity_settings_text_category_and_divider_margin">10dp</dimen>
     <dimen name="activity_settings_text_category_text_size">18sp</dimen>
     <dimen name="activity_settings_text_category_padding_start_and_end">5dp</dimen>

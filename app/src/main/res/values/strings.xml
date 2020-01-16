@@ -84,6 +84,8 @@
     <string name="activity_settings_text_category_notification">Notifications</string>
     <string name="activity_settings_text_notifications_state">Enable notifications</string>
     <string name="activity_settings_text_notifications_description">One notification per day, at 12am, when a restaurant is booked.</string>
+    <string name="activity_settings_text_notifications_disable_week_end">Disable notification for Week End</string>
+    <string name="activity_settings_text_notifications_disable_week_end_description">Disable notification for the Week End, Saturday and Sunday.</string>
     <string name="activity_settings_text_category_reset_booked_restaurant">Booked Restaurant</string>
     <string name="activity_settings_text_reset_booked_restaurant">Reset booked restaurant</string>
     <string name="activity_settings_text_reset_booked_restaurant_description">Reset booked restaurant every day, after lunch, at 2.30pm.</string>
