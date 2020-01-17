@@ -162,7 +162,7 @@ public class Go4LunchUtilsTest {
 
     @Test
     public void Given_restaurantNameCustomType_When_getRestaurantType_Then_checkRestaurantType() {
-        String restaurantNameCustomType = "La Cucina - Italien";
+        String restaurantNameCustomType = "La Cucina - Restaurant Italien";
         String output = Go4LunchUtils.getRestaurantType(restaurantNameCustomType);
 
         assertEquals(restaurantType, output);
@@ -369,8 +369,6 @@ public class Go4LunchUtilsTest {
 
     @Test
     public void Given_userAndRestaurantPositions_When_getRestaurantDistance_Then_checkDistance() {
-//        String expected = "50m";
-        // TODO problem don't calculate distance !!!!! But good in apk ...
         String expected = "0m";
 
         LatLng userPosition = new LatLng(48.11462, -1.6808367);

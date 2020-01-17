@@ -211,7 +211,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     /**
      * Enable notification at first apk start.
      */
-    private void enableNotifications() { // TODO if notification didn't sent use handler to resent and marker is_notification_sent
+    private void enableNotifications() {
         if (Go4LunchPrefs.getBoolean(getBaseContext(), IS_FIRST_APK_START, FIRST_APK_START_DEFAULT)) {
             NotificationAlarmManager.startNotificationsAlarm(getBaseContext());
             Go4LunchPrefs.savePref(getBaseContext(), IS_FIRST_APK_START, false);

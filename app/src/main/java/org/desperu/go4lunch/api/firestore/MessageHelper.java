@@ -20,7 +20,7 @@ public class MessageHelper {
     public static Query getAllMessageForChat(){
         return ChatHelper.getChatCollection()
                 .orderBy("dateCreated")
-                .limit(500);// TODO add to settings??
+                .limit(500);
     }
 
     // --- PUSH ---
