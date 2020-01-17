@@ -65,9 +65,12 @@ public class UserDBViewModel extends AndroidViewModel {
      */
     public void fetchUser() {
         UserHelper.getUser(uid).addOnSuccessListener(documentSnapshot -> {
-            this.setUserData(Objects.requireNonNull(documentSnapshot.toObject(User.class)));
-            this.fetchBookedRestaurant(Objects.requireNonNull(documentSnapshot.toObject(User.class)));
-        });
+            User user = documentSnapshot.toObject(User.class);
+            if (user != null) {
+                this.setUserData(user);
+                this.fetchBookedRestaurant(user);
+            }
+        }).addOnFailureListener(e -> setUserData(new User()));
     }
 
     /**

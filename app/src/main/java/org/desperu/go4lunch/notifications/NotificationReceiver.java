@@ -144,18 +144,8 @@ public class NotificationReceiver extends BroadcastReceiver {
         if (restaurantId != null && !restaurantId.isEmpty())
             RestaurantHelper.getRestaurant(restaurantId).addOnSuccessListener(documentSnapshot -> {
                 bookedRestaurant = documentSnapshot.toObject(Restaurant.class);
-                removeCurrentUserIdFromList(Objects.requireNonNull(bookedRestaurant).getBookedUsersId());
+                getBookedUserNameList(Objects.requireNonNull(bookedRestaurant).getBookedUsersId());
             });
-    }
-
-    /**
-     * Remove current user id from booked users list.
-     * @param bookedUserIdList Booked user id list for restaurant.
-     */
-    private void removeCurrentUserIdFromList(@NotNull List<String> bookedUserIdList) {
-        for (String userId : bookedUserIdList)
-            if (userId.equals(getUserId())) bookedUserIdList.remove(userId);
-        getBookedUserNameList(bookedUserIdList);
     }
 
     /**
@@ -163,6 +153,9 @@ public class NotificationReceiver extends BroadcastReceiver {
      * @param bookedUserIdList Booked user id list.
      */
     private void getBookedUserNameList(@NotNull List<String> bookedUserIdList) {
+        // Remove current user id from list
+        bookedUserIdList.remove(getUserId());
+
         List<String> bookedUserNameList = new ArrayList<>();
         for (int i = 0; i < bookedUserIdList.size(); i++) {
             UserHelper.getUser(bookedUserIdList.get(i)).addOnSuccessListener(documentSnapshot -> {

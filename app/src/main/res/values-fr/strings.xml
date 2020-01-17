@@ -35,7 +35,7 @@
     <string name="error_authentication_canceled">Authentification annulée !</string>
     <string name="error_no_internet">Pas de connexion internet !</string>
     <string name="error_unknown_error">Une erreur inconnu s\'est produite !</string>
-    <string name="connection_succeed">Connexion réussit !</string>
+    <string name="connection_succeed">Connexion réussie !</string>
     <!-- Your Lunch -->
     <string name="activity_main_message_no_booked_restaurant">Vous n\'avez pas résevé restaurant !</string>
 

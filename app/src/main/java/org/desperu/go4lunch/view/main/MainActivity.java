@@ -446,7 +446,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         userDBViewModel = new UserDBViewModel(getApplication(), userAuthViewModel.getUid());
         userDBViewModel.fetchUser();
         userDBViewModel.getUserLiveData().observe(this, user -> {
-            if (user == null)
+            if (user.getUid() == null)
                 userDBViewModel.createUserInFirestore(userAuthViewModel.getUid(),
                         userAuthViewModel.getUserName(), userAuthViewModel.getUserPicture());
         });
