@@ -74,7 +74,7 @@
     <!-- Chat Fragment Message Item-->
     <dimen name="fragment_chat_message_item_profile_image_width">50dp</dimen>
     <dimen name="fragment_chat_message_item_profile_image_height">50dp</dimen>
-    <dimen name="fragment_chat_message_item_container_text_and_image_message_container_margin_bottom">10dp</dimen>
+    <dimen name="fragment_chat_message_item_container_text_and_image_message_container_margin_bottom">5dp</dimen>
     <dimen name="fragment_chat_message_item_image_sent_cardview_image_width">100dp</dimen>
     <dimen name="fragment_chat_message_item_image_sent_cardview_image_height">100dp</dimen>
     <dimen name="fragment_chat_message_item_text_date_margin_start_and_end">65dp</dimen>

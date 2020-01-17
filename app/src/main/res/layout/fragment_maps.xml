@@ -18,7 +18,6 @@
             android:id="@+id/map"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
-<!--            tools:addMarker="@{nearbyPlaceViewModel.foundPlaceList}"/>-->
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fragment_maps_floating_button_location"

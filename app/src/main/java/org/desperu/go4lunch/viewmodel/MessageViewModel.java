@@ -141,6 +141,17 @@ public class MessageViewModel extends AndroidViewModel {
                         context.getResources().getDisplayMetrics()) / 2.5);
     }
 
+    /**
+     * Get margin bottom message container, dp to pixel.
+     * @param context Context from this method is called.
+     * @return Pixel value.
+     */
+    private static int getMarginBottom(@NotNull Context context) {
+        return (int) (TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                context.getResources().getDimension(R.dimen.fragment_chat_message_item_container_text_and_image_message_container_margin_bottom),
+                context.getResources().getDisplayMetrics()) / 2.5);
+    }
+
     // --- SETTERS ---
 
     /**
@@ -253,7 +264,7 @@ public class MessageViewModel extends AndroidViewModel {
                 R.id.fragment_chat_message_item_message_container);
         paramsLayoutMessage.addRule(RelativeLayout.BELOW, R.id.fragment_chat_message_item_container_image_sent_cardview);
         paramsLayoutMessage.setMargins(getDefaultMargin(linearLayout.getContext()), 0,
-                getDefaultMargin(linearLayout.getContext()), getDefaultMargin(linearLayout.getContext()));
+                getDefaultMargin(linearLayout.getContext()), getMarginBottom(linearLayout.getContext()));
         linearLayout.setLayoutParams(paramsLayoutMessage);
     }
 
@@ -264,7 +275,7 @@ public class MessageViewModel extends AndroidViewModel {
         paramsImageView.addRule(isCurrentUser ? RelativeLayout.ALIGN_PARENT_END : RelativeLayout.ALIGN_PARENT_START,
                 R.id.fragment_chat_message_item_message_container);
         paramsImageView.setMargins(getDefaultMargin(cardView.getContext()), 0,
-                getDefaultMargin(cardView.getContext()), getDefaultMargin(cardView.getContext()));
+                getDefaultMargin(cardView.getContext()), getMarginBottom(cardView.getContext()));
         cardView.setLayoutParams(paramsImageView);
     }
 

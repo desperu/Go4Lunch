@@ -123,7 +123,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/fragment_chat_message_item_message_container"
-                android:layout_alignParentBottom="true"
                 android:layout_marginStart="@dimen/fragment_chat_message_item_text_date_margin_start_and_end"
                 android:layout_marginEnd="@dimen/fragment_chat_message_item_text_date_margin_start_and_end"
                 android:textStyle="bold"

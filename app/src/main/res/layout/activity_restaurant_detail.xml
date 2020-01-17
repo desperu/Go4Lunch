@@ -36,10 +36,11 @@
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/activity_restaurant_detail_button_booked"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/activity_restaurant_detail_floating_button_width"
+                android:layout_height="@dimen/activity_restaurant_detail_floating_button_height"
                 android:layout_marginEnd="@dimen/activity_restaurant_detail_floating_button_margin_end"
                 android:scaleType="center"
+                app:fabCustomSize="@dimen/activity_restaurant_detail_floating_button_fab_custom_size"
                 app:maxImageSize="@dimen/activity_restaurant_detail_floating_button_max_image_size"
                 app:layout_constraintBottom_toTopOf="@+id/activity_restaurant_detail_info_container"
                 app:layout_constraintTop_toTopOf="@+id/activity_restaurant_detail_info_container"
@@ -65,7 +66,7 @@
                     android:textSize="@dimen/activity_restaurant_detail_text_restaurant_name_text_size"
                     android:textColor="@android:color/white"
                     android:maxLines="1"
-                    android:maxLength="25"
+                    android:maxLength="@integer/activity_restaurant_detail_text_restaurant_name_max_length"
                     android:ellipsize="end"/>
 
                 <ImageView
@@ -75,7 +76,7 @@
                     android:layout_toEndOf="@id/activity_restaurant_detail_text_view_restaurant_name"
                     android:layout_alignBottom="@id/activity_restaurant_detail_text_view_restaurant_name"
                     android:contentDescription="@null"
-                    app:srcCompat="@drawable/ic_baseline_star_black_24"
+                    app:srcCompat="@dimen/activity_restaurant_detail_star_image_drawable"
                     android:tint="@color/colorStar"
                     android:visibility="@{restaurantDBViewModel.starOneState}"/>
 
@@ -86,7 +87,7 @@
                     android:layout_toEndOf="@id/activity_restaurant_detail_image_restaurant_stars_1"
                     android:layout_alignBottom="@id/activity_restaurant_detail_text_view_restaurant_name"
                     android:contentDescription="@null"
-                    app:srcCompat="@drawable/ic_baseline_star_black_24"
+                    app:srcCompat="@dimen/activity_restaurant_detail_star_image_drawable"
                     android:tint="@color/colorStar"
                     android:visibility="@{restaurantDBViewModel.starTwoState}"/>
 
@@ -97,7 +98,7 @@
                     android:layout_toEndOf="@id/activity_restaurant_detail_image_restaurant_stars_2"
                     android:layout_alignBottom="@id/activity_restaurant_detail_text_view_restaurant_name"
                     android:contentDescription="@null"
-                    app:srcCompat="@drawable/ic_baseline_star_black_24"
+                    app:srcCompat="@dimen/activity_restaurant_detail_star_image_drawable"
                     android:tint="@color/colorStarLight"
                     android:visibility="@{restaurantDBViewModel.starThreeState}"/>
 
@@ -109,6 +110,7 @@
                     android:layout_marginTop="@dimen/activity_restaurant_detail_text_restaurant_address_margin_top"
                     android:text="@{restaurantInfoViewModel.typeAndAddress}"
                     android:textColor="@android:color/white"
+                    android:textSize="@dimen/activity_restaurant_detail_text_restaurant_address_text_size"
                     android:maxLines="1"
                     android:ellipsize="end"/>
 
@@ -137,7 +139,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/ic_baseline_call_black_24"
+                        app:srcCompat="@dimen/activity_restaurant_detail_call_button_image_drawable"
                         android:tint="@color/colorPrimary"
                         android:contentDescription="@null"
                         android:layout_margin="@dimen/activity_restaurant_detail_image_and_text_button_margin"/>
@@ -148,6 +150,7 @@
                         android:text="@string/activity_restaurant_detail_text_call"
                         android:textColor="@color/colorPrimary"
                         android:textAllCaps="true"
+                        android:textSize="@dimen/default_text_size"
                         android:textStyle="bold"
                         android:layout_margin="@dimen/activity_restaurant_detail_image_and_text_button_margin"/>
 
@@ -166,7 +169,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/ic_baseline_star_black_24"
+                        app:srcCompat="@dimen/activity_restaurant_detail_like_button_image_drawable"
                         android:tint="@color/colorPrimary"
                         android:contentDescription="@null"
                         android:layout_margin="@dimen/activity_restaurant_detail_image_and_text_button_margin"/>
@@ -177,6 +180,7 @@
                         android:text="@string/activity_restaurant_detail_text_like"
                         android:textColor="@color/colorPrimary"
                         android:textAllCaps="true"
+                        android:textSize="@dimen/default_text_size"
                         android:textStyle="bold"
                         android:layout_margin="@dimen/activity_restaurant_detail_image_and_text_button_margin"/>
 
@@ -196,7 +200,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        app:srcCompat="@drawable/ic_baseline_public_black_24"
+                        app:srcCompat="@dimen/activity_restaurant_detail_website_button_image_drawable"
                         android:tint="@color/colorPrimary"
                         android:contentDescription="@null"
                         android:layout_margin="@dimen/activity_restaurant_detail_image_and_text_button_margin"/>
@@ -207,6 +211,7 @@
                         android:text="@string/activity_restaurant_detail_text_website"
                         android:textColor="@color/colorPrimary"
                         android:textAllCaps="true"
+                        android:textSize="@dimen/default_text_size"
                         android:textStyle="bold"
                         android:layout_margin="@dimen/activity_restaurant_detail_image_and_text_button_margin"/>
 

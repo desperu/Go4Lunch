@@ -37,7 +37,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/activity_settings_divider_height"
                 android:layout_margin="@dimen/activity_settings_text_category_and_divider_margin"
-                android:background="@color/colorLightDark"/>
+                android:background="@color/colorLightGrey"/>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/activity_settings_container_notification_state"
@@ -60,10 +60,11 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/activity_settings_text_setting_description_margin_top"
-                    android:layout_marginEnd="@dimen/activity_settings_text_setting_description_margin_end"
+                    android:layout_marginTop="@dimen/activity_settings_text_setting_description_margin_top_and_end"
+                    android:layout_marginEnd="@dimen/activity_settings_text_setting_description_margin_top_and_end"
                     android:text="@string/activity_settings_text_notifications_description"
                     android:textStyle="italic"
+                    android:textSize="@dimen/activity_settings_text_settings_description_text_size"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/activity_settings_notification_switch"
                     app:layout_constraintTop_toBottomOf="@+id/activity_settings_text_notification_state"/>
@@ -82,7 +83,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/activity_settings_divider_height"
                 android:layout_margin="@dimen/activity_settings_text_category_and_divider_margin"
-                android:background="@color/colorLightDark"/>
+                android:background="@color/colorLightGrey"/>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/activity_settings_container_notification_disable_week_end"
@@ -105,10 +106,11 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/activity_settings_text_setting_description_margin_top"
-                    android:layout_marginEnd="@dimen/activity_settings_text_setting_description_margin_end"
+                    android:layout_marginTop="@dimen/activity_settings_text_setting_description_margin_top_and_end"
+                    android:layout_marginEnd="@dimen/activity_settings_text_setting_description_margin_top_and_end"
                     android:text="@string/activity_settings_text_notifications_disable_week_end_description"
                     android:textStyle="italic"
+                    android:textSize="@dimen/activity_settings_text_settings_description_text_size"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/activity_settings_notification_disable_week_end_switch"
                     app:layout_constraintTop_toBottomOf="@+id/activity_settings_text_notification_disable_week_week"/>
@@ -127,7 +129,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/activity_settings_divider_height"
                 android:layout_margin="@dimen/activity_settings_text_category_and_divider_margin"
-                android:background="@color/colorLightDark"/>
+                android:background="@color/colorLightGrey"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -144,7 +146,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/activity_settings_divider_height"
                 android:layout_margin="@dimen/activity_settings_text_category_and_divider_margin"
-                android:background="@color/colorLightDark"/>
+                android:background="@color/colorLightGrey"/>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/activity_settings_container_reset_booked_restaurant"
@@ -167,10 +169,11 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/activity_settings_text_setting_description_margin_top"
-                    android:layout_marginEnd="@dimen/activity_settings_text_setting_description_margin_end"
+                    android:layout_marginTop="@dimen/activity_settings_text_setting_description_margin_top_and_end"
+                    android:layout_marginEnd="@dimen/activity_settings_text_setting_description_margin_top_and_end"
                     android:text="@string/activity_settings_text_reset_booked_restaurant_description"
                     android:textStyle="italic"
+                    android:textSize="@dimen/activity_settings_text_settings_description_text_size"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/activity_settings_notification_reset_booked_restaurant_switch"
                     app:layout_constraintTop_toBottomOf="@+id/activity_settings_text_notification_reset_booked_restaurant"/>
@@ -189,7 +192,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/activity_settings_divider_height"
                 android:layout_margin="@dimen/activity_settings_text_category_and_divider_margin"
-                android:background="@color/colorLightDark"/>
+                android:background="@color/colorLightGrey"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -206,7 +209,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/activity_settings_divider_height"
                 android:layout_margin="@dimen/activity_settings_text_category_and_divider_margin"
-                android:background="@color/colorLightDark"/>
+                android:background="@color/colorLightGrey"/>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/activity_settings_container_map_zoom_level"
@@ -229,10 +232,11 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/activity_settings_text_setting_description_margin_top"
-                    android:layout_marginEnd="@dimen/activity_settings_text_setting_description_margin_end"
+                    android:layout_marginTop="@dimen/activity_settings_text_setting_description_margin_top_and_end"
+                    android:layout_marginEnd="@dimen/activity_settings_text_setting_description_margin_top_and_end"
                     android:text="@string/activity_settings_text_map_zoom_size_description"
                     android:textStyle="italic"
+                    android:textSize="@dimen/activity_settings_text_settings_description_text_size"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/activity_settings_text_map_zoom_level_value"
                     app:layout_constraintTop_toBottomOf="@+id/activity_settings_text_map_zoom_level"/>
@@ -254,7 +258,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/activity_settings_divider_height"
                 android:layout_margin="@dimen/activity_settings_text_category_and_divider_margin"
-                android:background="@color/colorLightDark"/>
+                android:background="@color/colorLightGrey"/>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/activity_settings_container_map_zoom_button"
@@ -277,10 +281,11 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/activity_settings_text_setting_description_margin_top"
-                    android:layout_marginEnd="@dimen/activity_settings_text_setting_description_margin_end"
+                    android:layout_marginTop="@dimen/activity_settings_text_setting_description_margin_top_and_end"
+                    android:layout_marginEnd="@dimen/activity_settings_text_setting_description_margin_top_and_end"
                     android:text="@string/activity_settings_text_map_zoom_button_description"
                     android:textStyle="italic"
+                    android:textSize="@dimen/activity_settings_text_settings_description_text_size"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/activity_settings_map_zoom_button_switch"
                     app:layout_constraintTop_toBottomOf="@+id/activity_settings_text_map_button"/>
@@ -299,7 +304,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/activity_settings_divider_height"
                 android:layout_margin="@dimen/activity_settings_text_category_and_divider_margin"
-                android:background="@color/colorLightDark"/>
+                android:background="@color/colorLightGrey"/>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/activity_settings_container_auto_refresh_location"
@@ -322,10 +327,11 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/activity_settings_text_setting_description_margin_top"
-                    android:layout_marginEnd="@dimen/activity_settings_text_setting_description_margin_end"
+                    android:layout_marginTop="@dimen/activity_settings_text_setting_description_margin_top_and_end"
+                    android:layout_marginEnd="@dimen/activity_settings_text_setting_description_margin_top_and_end"
                     android:text="@string/activity_settings_text_map_auto_refresh_location_description"
                     android:textStyle="italic"
+                    android:textSize="@dimen/activity_settings_text_settings_description_text_size"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/activity_settings_map_auto_refresh_location_switch"
                     app:layout_constraintTop_toBottomOf="@+id/activity_settings_text_map_auto_refresh_location"/>
@@ -344,7 +350,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/activity_settings_divider_height"
                 android:layout_margin="@dimen/activity_settings_text_category_and_divider_margin"
-                android:background="@color/colorLightDark"/>
+                android:background="@color/colorLightGrey"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -361,7 +367,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/activity_settings_divider_height"
                 android:layout_margin="@dimen/activity_settings_text_category_and_divider_margin"
-                android:background="@color/colorLightDark"/>
+                android:background="@color/colorLightGrey"/>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/activity_settings_container_reset_settings"
@@ -384,9 +390,11 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/activity_settings_text_setting_description_margin_top"
+                    android:layout_marginTop="@dimen/activity_settings_text_setting_description_margin_top_and_end"
+                    android:layout_marginEnd="@dimen/activity_settings_text_setting_description_margin_top_and_end"
                     android:text="@string/activity_settings_text_reset_settings_description"
                     android:textStyle="italic"
+                    android:textSize="@dimen/activity_settings_text_settings_description_text_size"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/activity_settings_text_reset_settings"/>

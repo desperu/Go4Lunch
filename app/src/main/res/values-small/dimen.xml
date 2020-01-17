@@ -9,30 +9,30 @@
     <dimen name="default_large_margin">20dip</dimen>
     <dimen name="default_margin">10dip</dimen>
     <dimen name="default_title_size">20sp</dimen>
-    <dimen name="default_text_size">14sp</dimen>
-    <dimen name="default_text_size_mini">10sp</dimen>
+    <dimen name="default_text_size">12sp</dimen>
+    <dimen name="default_text_size_mini">9sp</dimen>
 
     <!-- LAYOUTS -->
 
     <!-- Login Activity -->
     <!-- Logo image -->
-    <dimen name="activity_login_image_width">220dp</dimen>
-    <dimen name="activity_login_image_height">180dp</dimen>
-    <dimen name="activity_login_image_margin_top">50dp</dimen>
-    <dimen name="activity_login_image_margin_start">15dp</dimen>
+    <dimen name="activity_login_image_width">120dp</dimen>
+    <dimen name="activity_login_image_height">100dp</dimen>
+    <dimen name="activity_login_image_margin_top">20dp</dimen>
+    <dimen name="activity_login_image_margin_start">5dp</dimen>
     <!-- App Name -->
-    <dimen name="activity_login_text_app_name_text_size">70sp</dimen>
+    <dimen name="activity_login_text_app_name_text_size">40sp</dimen>
     <dimen name="activity_login_text_app_name_margin_top">-5dp</dimen>
     <dimen name="activity_login_text_app_name_margin_bottom">-10dp</dimen>
     <!-- Description text -->
-    <dimen name="activity_login_text_description_text_size">12sp</dimen>
+    <dimen name="activity_login_text_description_text_size">9sp</dimen>
     <!-- Buttons -->
-    <dimen name="activity_login_button_width">300dp</dimen>
-    <dimen name="activity_login_button_height">@dimen/wrap_content</dimen>
-    <dimen name="activity_login_button_text_size">14sp</dimen>
+    <dimen name="activity_login_button_width">200dp</dimen>
+    <dimen name="activity_login_button_height">35dp</dimen>
+    <dimen name="activity_login_button_text_size">12sp</dimen>
     <dimen name="activity_login_button_padding_start_end">15dp</dimen>
     <dimen name="activity_login_button_facebook_padding_start_end">7dp</dimen>
-    <dimen name="activity_login_button_margin">10dp</dimen>
+    <dimen name="activity_login_button_margin">5dp</dimen>
     <dimen name="activity_login_button_email_image_drawable" tools:ignore="ReferenceType">@drawable/ic_logo_mail_24</dimen>
     <dimen name="activity_login_button_google_image_drawable" tools:ignore="ReferenceType">@drawable/ic_logo_google_24</dimen>
     <dimen name="activity_login_button_facebook_image_drawable" tools:ignore="ReferenceType">@drawable/ic_logo_facebook_30</dimen>
@@ -40,8 +40,8 @@
 
     <!-- Main Activity -->
     <dimen name="nav_view_padding_top">24dp</dimen>
-    <dimen name="nav_view_image_view_height">120dp</dimen>
-    <dimen name="nav_view_image_view_margin_start">30dp</dimen>
+    <dimen name="nav_view_image_view_height">80dp</dimen>
+    <dimen name="nav_view_image_view_margin_start">20dp</dimen>
 
     <!-- Maps Fragment -->
     <dimen name="fragment_maps_floating_button_location">15dp</dimen>
@@ -52,25 +52,25 @@
 
     <!-- Restaurant List Fragment -->
     <dimen name="fragment_restaurant_list_item_linear_root_padding">10dp</dimen>
-    <dimen name="fragment_restaurant_list_item_text_restaurant_name_text_size">16sp</dimen>
-    <dimen name="fragment_restaurant_list_item_text_restaurant_address_text_size">14sp</dimen>
+    <dimen name="fragment_restaurant_list_item_text_restaurant_name_text_size">14sp</dimen>
+    <dimen name="fragment_restaurant_list_item_text_restaurant_address_text_size">12sp</dimen>
     <dimen name="fragment_restaurant_list_item_text_restaurant_address_margin_top_and_bottom">5dp</dimen>
     <dimen name="fragment_restaurant_list_item_linear_distance_joining_rating_margin_start_and_end">5dp</dimen>
-    <dimen name="fragment_restaurant_list_item_text_restaurant_opening_hours_text_size">14sp</dimen>
+    <dimen name="fragment_restaurant_list_item_text_restaurant_opening_hours_text_size">12sp</dimen>
     <dimen name="fragment_restaurant_list_item_text_distance_margin_start">3dp</dimen>
-    <dimen name="fragment_restaurant_list_item_text_distance_text_size">16sp</dimen>
+    <dimen name="fragment_restaurant_list_item_text_distance_text_size">14sp</dimen>
     <dimen name="fragment_restaurant_list_item_text_booked_number_margin_top_and_bottom">5dp</dimen>
     <dimen name="fragment_restaurant_list_item_text_booked_number_margin_end">2dp</dimen>
-    <dimen name="fragment_restaurant_list_item_text_booked_number_image_drawable" tools:ignore="ReferenceType">@drawable/ic_baseline_person_outline_black_24</dimen>
-    <dimen name="fragment_restaurant_list_item_text_booked_number_text_size">14sp</dimen>
+    <dimen name="fragment_restaurant_list_item_text_booked_number_image_drawable" tools:ignore="ReferenceType">@drawable/ic_baseline_person_outline_black_18</dimen>
+    <dimen name="fragment_restaurant_list_item_text_booked_number_text_size">12sp</dimen>
     <dimen name="fragment_restaurant_list_item_star_image_drawable" tools:ignore="ReferenceType">@drawable/ic_baseline_star_black_18</dimen>
-    <dimen name="fragment_restaurant_list_item_image_restaurant_width">75dp</dimen>
-    <dimen name="fragment_restaurant_list_item_image_restaurant_height">75dp</dimen>
+    <dimen name="fragment_restaurant_list_item_image_restaurant_width">60dp</dimen>
+    <dimen name="fragment_restaurant_list_item_image_restaurant_height">60dp</dimen>
     
     <!-- Chat Fragment -->
     <dimen name="fragment_chat_image_chosen_preview_width">50dp</dimen>
     <dimen name="fragment_chat_image_chosen_preview_height">50dp</dimen>
-    <dimen name="fragment_chat_add_file_button_image_drawable" tools:ignore="ReferenceType">@drawable/ic_add_circle_black_24</dimen>
+    <dimen name="fragment_chat_add_file_button_image_drawable" tools:ignore="ReferenceType">@drawable/ic_add_circle_black_48</dimen>
     <!-- Chat Fragment Message Item-->
     <dimen name="fragment_chat_message_item_profile_image_width">50dp</dimen>
     <dimen name="fragment_chat_message_item_profile_image_height">50dp</dimen>
@@ -83,54 +83,54 @@
     <dimen name="activity_restaurant_detail_constraint_margin_top">-25dp</dimen>
     <dimen name="activity_restaurant_detail_floating_button_width">@dimen/wrap_content</dimen>
     <dimen name="activity_restaurant_detail_floating_button_height">@dimen/wrap_content</dimen>
-    <dimen name="activity_restaurant_detail_floating_button_margin_end">20dp</dimen>
+    <dimen name="activity_restaurant_detail_floating_button_margin_end">15dp</dimen>
     <dimen name="activity_restaurant_detail_floating_button_fab_custom_size">56dp</dimen>
     <dimen name="activity_restaurant_detail_floating_button_max_image_size">30dp</dimen>
-    <dimen name="activity_restaurant_detail_info_container_padding">15dp</dimen>
+    <dimen name="activity_restaurant_detail_info_container_padding">10dp</dimen>
     <dimen name="activity_restaurant_detail_text_restaurant_name_margin_end">10dp</dimen>
-    <dimen name="activity_restaurant_detail_text_restaurant_name_text_size">20sp</dimen>
-    <item name="activity_restaurant_detail_text_restaurant_name_max_length" format="integer" type="integer">25</item>
+    <dimen name="activity_restaurant_detail_text_restaurant_name_text_size">16sp</dimen>
+    <item name="activity_restaurant_detail_text_restaurant_name_max_length" format="integer" type="integer">20</item>
     <dimen name="activity_restaurant_detail_star_image_drawable" tools:ignore="ReferenceType">@drawable/ic_baseline_star_black_24</dimen>
     <dimen name="activity_restaurant_detail_text_restaurant_address_margin_top">5dp</dimen>
     <dimen name="activity_restaurant_detail_text_restaurant_address_text_size">14sp</dimen>
-    <dimen name="activity_restaurant_detail_linear_button_padding">10dp</dimen>
+    <dimen name="activity_restaurant_detail_linear_button_padding">5dp</dimen>
     <dimen name="activity_restaurant_detail_call_button_image_drawable" tools:ignore="ReferenceType">@drawable/ic_baseline_call_black_24</dimen>
     <dimen name="activity_restaurant_detail_like_button_image_drawable" tools:ignore="ReferenceType">@drawable/ic_baseline_star_black_24</dimen>
     <dimen name="activity_restaurant_detail_website_button_image_drawable" tools:ignore="ReferenceType">@drawable/ic_baseline_public_black_24</dimen>
     <dimen name="activity_restaurant_detail_image_and_text_button_margin">5dp</dimen>
     <!-- Fragment Detail item -->
-    <dimen name="fragment_restaurant_detail_item_linear_root_padding">10dp</dimen>
-    <dimen name="fragment_restaurant_detail_item_image_user_width">60dp</dimen>
-    <dimen name="fragment_restaurant_detail_item_image_user_height">60dp</dimen>
-    <dimen name="fragment_restaurant_detail_item_text_user_margin">15dp</dimen>
-    <dimen name="fragment_restaurant_detail_item_text_user_size">16sp</dimen>
+    <dimen name="fragment_restaurant_detail_item_linear_root_padding">7dp</dimen>
+    <dimen name="fragment_restaurant_detail_item_image_user_width">50dp</dimen>
+    <dimen name="fragment_restaurant_detail_item_image_user_height">50dp</dimen>
+    <dimen name="fragment_restaurant_detail_item_text_user_margin">10dp</dimen>
+    <dimen name="fragment_restaurant_detail_item_text_user_size">14sp</dimen>
 
     <!-- Settings Activity -->
-    <dimen name="activity_settings_linear_container_padding_top">10dp</dimen>
-    <dimen name="activity_settings_text_category_and_divider_margin">10dp</dimen>
-    <dimen name="activity_settings_text_category_text_size">18sp</dimen>
+    <dimen name="activity_settings_linear_container_padding_top">7dp</dimen>
+    <dimen name="activity_settings_text_category_and_divider_margin">7dp</dimen>
+    <dimen name="activity_settings_text_category_text_size">16sp</dimen>
     <dimen name="activity_settings_text_category_padding_start_and_end">5dp</dimen>
     <dimen name="activity_settings_divider_height">0.1dp</dimen>
-    <dimen name="activity_settings_constraint_container_padding">10dp</dimen>
-    <dimen name="activity_settings_constraint_container_padding_start_and_end">15dp</dimen>
-    <dimen name="activity_settings_text_setting_title_text_size">16sp</dimen>
-    <dimen name="activity_settings_text_setting_description_margin_top_and_end">10dp</dimen>
-    <dimen name="activity_settings_text_settings_description_text_size">14sp</dimen>
-    <dimen name="activity_settings_text_zoom_value_margin_end">15dp</dimen>
-    <dimen name="activity_settings_text_zoom_value_text_size">18sp</dimen>
+    <dimen name="activity_settings_constraint_container_padding">7dp</dimen>
+    <dimen name="activity_settings_constraint_container_padding_start_and_end">10dp</dimen>
+    <dimen name="activity_settings_text_setting_title_text_size">14sp</dimen>
+    <dimen name="activity_settings_text_setting_description_margin_top_and_end">7dp</dimen>
+    <dimen name="activity_settings_text_settings_description_text_size">12sp</dimen>
+    <dimen name="activity_settings_text_zoom_value_margin_end">10dp</dimen>
+    <dimen name="activity_settings_text_zoom_value_text_size">16sp</dimen>
 
     <!-- MENU -->
 
     <!-- Menu Drawer -->
-    <dimen name="nav_header_height">220dp</dimen>
-    <dimen name="nav_header_margin_bottom">30dp</dimen>
-    <dimen name="nav_header_text_title_size">40sp</dimen>
+    <dimen name="nav_header_height">170dp</dimen>
+    <dimen name="nav_header_margin_bottom">20dp</dimen>
+    <dimen name="nav_header_text_title_size">35sp</dimen>
     <dimen name="nav_header_linear_profile_padding">15dp</dimen>
-    <dimen name="nav_header_linear_name_email_margin_start">10dp</dimen>
-    <dimen name="nav_header_text_name_text_size">16sp</dimen>
+    <dimen name="nav_header_linear_name_email_margin_start">5dp</dimen>
+    <dimen name="nav_header_text_name_text_size">14sp</dimen>
     <dimen name="nav_header_text_name_text_margin_start">5dp</dimen>
-    <dimen name="nav_header_text_email_text_size">14sp</dimen>
-    <dimen name="nav_drawer_text_item_text_size_theme">16sp</dimen>
+    <dimen name="nav_header_text_email_text_size">12sp</dimen>
+    <dimen name="nav_drawer_text_item_text_size_theme">14sp</dimen>
 
     <!-- Menu Bottom -->
     <dimen name="nav_bottom_height">56dp</dimen>

@@ -48,7 +48,7 @@
         <View
             android:layout_width="0dp"
             android:layout_height="0.01dp"
-            android:background="@color/colorLightDark"
+            android:background="@color/colorLightGrey"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintWidth_percent="0.8"/>

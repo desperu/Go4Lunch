@@ -49,6 +49,7 @@
                     android:layout_marginBottom="@dimen/fragment_restaurant_list_item_text_restaurant_address_margin_top_and_bottom"
                     android:text="@{obj.typeAndAddress}"
                     android:textColor="@color/colorLightDark"
+                    android:textSize="@dimen/fragment_restaurant_list_item_text_restaurant_address_text_size"
                     android:ellipsize="end"
                     android:maxLines="1"/>
 
@@ -57,8 +58,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
+                    android:textSize="@dimen/fragment_restaurant_list_item_text_restaurant_opening_hours_text_size"
                     android:text="@{obj.openingHoursString}"
                     android:textColor="@{obj.openingHoursColor}"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     tools:setStyle="@{obj.isOpeningHoursStyle}"/>
 
             </LinearLayout>
@@ -93,8 +97,10 @@
                     android:layout_marginBottom="@dimen/fragment_restaurant_list_item_text_booked_number_margin_top_and_bottom"
                     android:layout_marginEnd="@dimen/fragment_restaurant_list_item_text_booked_number_margin_end"
                     android:layout_gravity="end"
-                    android:drawableStart="@drawable/ic_baseline_person_outline_black_24"
+                    android:gravity="center"
+                    android:drawableStart="@dimen/fragment_restaurant_list_item_text_booked_number_image_drawable"
                     android:textColor="@android:color/black"
+                    android:textSize="@dimen/fragment_restaurant_list_item_text_booked_number_text_size"
                     android:text="@{obj2.bookedUsersNumber}"/>
 
                 <LinearLayout
@@ -109,7 +115,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:contentDescription="@null"
-                        app:srcCompat="@drawable/ic_baseline_star_black_18"
+                        app:srcCompat="@dimen/fragment_restaurant_list_item_star_image_drawable"
                         android:tint="@color/colorStar"
                         android:visibility="@{obj2.starThreeState}"/>
 
@@ -118,7 +124,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:contentDescription="@null"
-                        app:srcCompat="@drawable/ic_baseline_star_black_18"
+                        app:srcCompat="@dimen/fragment_restaurant_list_item_star_image_drawable"
                         android:tint="@color/colorStar"
                         android:visibility="@{obj2.starTwoState}"/>
 
@@ -127,7 +133,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:contentDescription="@null"
-                        app:srcCompat="@drawable/ic_baseline_star_black_18"
+                        app:srcCompat="@dimen/fragment_restaurant_list_item_star_image_drawable"
                         android:tint="@color/colorStar"
                         android:visibility="@{obj2.starOneState}"/>
 
