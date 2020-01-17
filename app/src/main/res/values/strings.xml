@@ -4,7 +4,7 @@
     <string name="app_name">Go4Lunch</string>
     <string name="title_activity_main">I\'m Hungry!</string>
     <string name="title_fragment_workmates">Available workmates</string>
-    <string name="title_fragment_chat">Chat</string>
+    <string name="title_fragment_chat" translatable="false">Chat</string>
     <string name="title_activity_settings">Settings</string>
 
     <!-- MENU -->
@@ -81,7 +81,7 @@
     <string name="go4lunch_utils_restaurant_distance_no_data">No data</string>
 
     <!-- SETTINGS ACTIVITY -->
-    <string name="activity_settings_text_category_notification">Notifications</string>
+    <string name="activity_settings_text_category_notification" translatable="false">Notifications</string>
     <string name="activity_settings_text_notifications_state">Enable notifications</string>
     <string name="activity_settings_text_notifications_description">One notification per day, at 12am, when a restaurant is booked.</string>
     <string name="activity_settings_text_notifications_disable_week_end">Disable notification for Week End</string>
@@ -93,9 +93,9 @@
     <string name="activity_settings_text_map_zoom_size">Map zoom level</string>
     <string name="activity_settings_text_map_zoom_size_description">Set zoom level for the map, default 18, min 2, max 21.</string>
     <string name="activity_settings_text_map_zoom_button">Enable map zoom button</string>
-    <string name="activity_settings_text_map_zoom_button_description">Show map zoom button.</string>
+    <string name="activity_settings_text_map_zoom_button_description">Show map zoom button, to control map zoom.</string>
     <string name="activity_settings_text_map_auto_refresh_location">Auto refresh location</string>
-    <string name="activity_settings_text_map_auto_refresh_location_description">Refresh your location every 5sec. Refresh map and restaurants if your location change.</string>
+    <string name="activity_settings_text_map_auto_refresh_location_description">Refresh your location every 5 sec. Refresh map and restaurants if your location change.</string>
     <string name="activity_settings_text_category_reset_settings">Reset Settings</string>
     <string name="activity_settings_text_reset_settings">Reset Settings</string>
     <string name="activity_settings_text_reset_settings_description">Reset settings to original state.</string>
@@ -104,7 +104,7 @@
     <string name="activity_settings_dialog_positive_button" translatable="false">OK</string>
     <string name="activity_settings_dialog_negative_button">Cancel</string>
     <!-- Toast -->
-    <string name="activity_settings_toast_zoom_level_wrong_value">Zoom level must be upper than 2 and lower than 21 !</string>
+    <string name="activity_settings_toast_zoom_level_wrong_value">Zoom level must be under 2 and 21 !</string>
     <string name="activity_settings_toast_reset_settings_default">Settings Reset to default !</string>
 
 

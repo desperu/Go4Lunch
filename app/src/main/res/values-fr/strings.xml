@@ -1,0 +1,125 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- ACTIVITY AND FRAGMENT NAME -->
+    <string name="app_name">Go4Lunch</string>
+    <string name="title_activity_main">J\'ai Faim!</string>
+    <string name="title_fragment_workmates">Collègues disponibles</string>
+    <string name="title_fragment_chat">Chat</string>
+    <string name="title_activity_settings">Paramètres</string>
+
+    <!-- MENU -->
+    <!-- Nav Drawer -->
+    <string name="navigation_drawer_your_lunch">VOTRE DÉJEUNER</string>
+    <string name="navigation_drawer_settings">PARAMÈTRES</string>
+    <string name="navigation_drawer_log_out">SE DÉCONNECTER</string>
+    <string name="navigation_drawer_open">Ouvre navigation drawer</string>
+    <string name="navigation_drawer_close">Ferme navigation drawer</string>
+    <!-- Menu Search -->
+    <string name="menu_item_search">Rechercher</string>
+    <string name="activity_main_search_edit_text_hint">Rechercher restaurant</string>
+    <!-- Nav bottom -->
+    <string name="activity_main_menu_bottom_map">Carte</string>
+    <string name="activity_main_menu_bottom_list">Liste</string>
+    <string name="activity_main_menu_bottom_workmates">Collègues</string>
+    <string name="activity_main_menu_bottom_chat" translatable="false">Chat</string>
+
+    <!-- MAIN ACTIVITY -->
+    <!-- Layout Login -->
+    <string name="activity_login_text_presentation">Trouvez un bon restaurant et invitez vos collègues pour déjeuner!</string>
+    <string name="activity_login_button_email">Se connecter avec Email</string>
+    <string name="activity_login_button_google">Se connecter avec Google</string>
+    <string name="activity_login_button_facebook">Se connecter avec Facebook</string>
+    <string name="activity_login_button_twitter">Se connecter avec Twitter</string>
+    <!-- Messages login -->
+    <string name="error_not_connected">Vous devez vous connecter !</string>
+    <string name="error_authentication_canceled">Authentification annulée !</string>
+    <string name="error_no_internet">Pas de connexion internet !</string>
+    <string name="error_unknown_error">Une erreur inconnu s\'est produite !</string>
+    <string name="connection_succeed">Connexion réussit !</string>
+    <!-- Your Lunch -->
+    <string name="activity_main_message_no_booked_restaurant">Vous n\'avez pas résevé restaurant !</string>
+
+    <!-- MAPS FRAGMENT -->
+    <string name="fragment_maps_popup_title_permission_location">Cette application a besoin des permissions de localisation.</string>
+    <string name="fragment_maps_no_place_found">Pas de place trouvée !</string>
+
+    <!-- RESTAURANT LIST FRAGMENT -->
+    <string name="fragment_restaurant_list_snackbar_refresh_nearby_restaurant">Seulement les restaurant près de vous !</string>
+
+    <!-- CHAT FRAGMENT -->
+    <string name="fragment_chat_text_input_title">Composez votre message</string>
+    <string name="fragment_chat_button_title">ENVOYER</string>
+    <string name="fragment_chat_text_view_error">Il n\'y a aucun message dans ce chat pour l\'instant&#8230;</string>
+    <string name="fragment_chat_popup_title_permission_files_access">Cette application a besoin des permissions de stockage.</string>
+    <string name="fragment_chat_toast_title_no_image_chosen">Pas d\'image sélectionnée&#8230;</string>
+    
+    <!-- RESTAURANT DETAIL ACTIVITY -->
+    <string name="activity_restaurant_detail_popup_title_permission_call">Cette application a besoin de la permission d\'appeler.</string>
+    <string name="activity_restaurant_detail_text_call">Appel</string>
+    <string name="activity_restaurant_detail_text_like">J\'aime</string>
+    <string name="activity_restaurant_detail_text_website">Site web</string>
+    <string name="activity_restaurant_detail_no_restaurant_data">Pas de données de restaurant, glissez vers le bas pour rafraîchir!</string>
+    <string name="activity_restaurant_detail_restaurant_booked">Restaurant réservé!</string>
+    <string name="activity_restaurant_detail_restaurant_unbooked">Résevation du restaurant annulée !</string>
+    <string name="activity_restaurant_detail_snackbar_add_like">J\'aime ajouté pour le restaurant !</string>
+    <string name="activity_restaurant_detail_snackbar_already_like">Vous aimez déjà ce restaurant ! Cliquez encore pour ne plus aimer !</string>
+    <string name="activity_restaurant_detail_snackbar_remove_like">J\'aime retiré pour le restaurant !</string>
+
+    <!-- VIEW MODEL -->
+    <string name="view_model_toast_request_failure">Délais de réponse de Google Place dépassé …</string>
+
+    <!-- GO4LUNCH UTILS -->
+    <string name="go4lunch_utils_text_user_joining">%1$s se joint !</string>
+    <string name="go4lunch_utils_text_user_eating_at">%1$s mange %2$s (%3$s)</string>
+    <string name="go4lunch_utils_text_user_eating_at_without_type">%1$s mange à (%2$s)</string>
+    <string name="go4lunch_utils_text_user_eating_not_decided">%1$s n\'a pas encore décidé</string>
+    <string name="go4lunch_utils_opening_hours_open_until">Ouvert jusqu\'à %1$s</string>
+    <string name="go4lunch_utils_opening_hours_open_at">Ouvre à %1$s</string>
+    <string name="go4lunch_utils_opening_hours_next_open_hour">"Ouvre %1$s à "</string>
+    <string name="go4lunch_utils_opening_hours_close">Fermé !</string>
+    <string name="go4lunch_utils_opening_hours_no_data">Pas de données d\'heure d\'ouverture !</string>
+    <string name="go4lunch_utils_restaurant_distance_no_data">Pas de données</string>
+
+    <!-- SETTINGS ACTIVITY -->
+    <string name="activity_settings_text_category_notification">Notifications</string>
+    <string name="activity_settings_text_notifications_state">Activer les notifications.</string>
+    <string name="activity_settings_text_notifications_description">Une notification par jour, à 12h, quand un restaurant est réservé.</string>
+    <string name="activity_settings_text_notifications_disable_week_end">Désactiver les notifications pour le week end</string>
+    <string name="activity_settings_text_notifications_disable_week_end_description">Désactive les notifications pour le week end, Samedi et Dimanche.</string>
+    <string name="activity_settings_text_category_reset_booked_restaurant">Réservation de Restaurant</string>
+    <string name="activity_settings_text_reset_booked_restaurant">Réinitialiser le restaurant réservé</string>
+    <string name="activity_settings_text_reset_booked_restaurant_description">Réinitialise le restaurant réservé tous les jours, après déjeuner, à 14h30.</string>
+    <string name="activity_settings_text_category_map">Carte</string>
+    <string name="activity_settings_text_map_zoom_size">Niveau de zoom de la carte</string>
+    <string name="activity_settings_text_map_zoom_size_description">Définir le niveau de zoom de la carte, valeur par default 18, min 2,  max 21.</string>
+    <string name="activity_settings_text_map_zoom_button">Activer les bouttons de zoom de la carte</string>
+    <string name="activity_settings_text_map_zoom_button_description">Affiche les bouttons de zoom de la carte pour contrôler le zoom de la carte.</string>
+    <string name="activity_settings_text_map_auto_refresh_location">Rafraîchir automatiquement la localisation</string>
+    <string name="activity_settings_text_map_auto_refresh_location_description">Rafraîchit vôtre localistion toute les 5 sec. Rafraîchit la carte et les restaurants si votre localisation à changé.</string>
+    <string name="activity_settings_text_category_reset_settings">Réinitialiser les paramètres</string>
+    <string name="activity_settings_text_reset_settings">Réinitialiser les paramètres</string>
+    <string name="activity_settings_text_reset_settings_description">Réinitialiser les paramètres à leur valeur d\'oriigne.</string>
+    <!-- Alert Dialog -->
+    <string name="activity_settings_dialog_reset_settings_message">Êtes-vous sûr de vouloir réinitialiser les paramètres à leur vaeur de default?</string>
+    <string name="activity_settings_dialog_positive_button" translatable="false">OK</string>
+    <string name="activity_settings_dialog_negative_button">Annuler</string>
+    <!-- Toast -->
+    <string name="activity_settings_toast_zoom_level_wrong_value">Le niveau de zoom doit être compris entre 2 et 21 !</string>
+    <string name="activity_settings_toast_reset_settings_default">Paramètres réinitialisé à leur valeur par default !</string>
+
+
+    <!-- NOTIFICATION -->
+    <string name="notification_title">Vous déjeunez à %1$s</string>
+    <string name="notification_text">"Collègues vous rejoingant : "</string>
+    <string name="notification_text_joining_users_and">", et "</string>
+    <string name="notification_text_no_joining_user">Personne ne déjeune avec vous …</string>
+
+    <!-- FACEBOOK PURPOSE -->
+    <string name="facebook_application_id" translatable="false">2475450979175039</string>
+    <string name="facebook_login_protocol_scheme" translatable="false" tools:ignore="UnusedResources">fb2475450979175039</string>
+
+    <!-- TWITTER PURPOSE -->
+    <string name="twitter_consumer_key" translatable="false">4wAnm8B6ASiWMdCPTTuwSlIRd</string>
+    <string name="twitter_consumer_secret" translatable="false">n7xapY3YccZ7FuOTdtCQyxrYvOuoUcs7Pfo9PPVJsG28WxXXVn</string>
+
+</resources>
