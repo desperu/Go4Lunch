@@ -44,7 +44,7 @@
     <string name="fragment_maps_no_place_found">Pas de place trouvée !</string>
 
     <!-- RESTAURANT LIST FRAGMENT -->
-    <string name="fragment_restaurant_list_snackbar_refresh_nearby_restaurant">Seulement les restaurant près de vous !</string>
+    <string name="fragment_restaurant_list_snackbar_refresh_nearby_restaurant">Uniquement les restaurants près de vous !</string>
 
     <!-- CHAT FRAGMENT -->
     <string name="fragment_chat_text_input_title">Composez votre message</string>
@@ -66,7 +66,7 @@
     <string name="activity_restaurant_detail_snackbar_remove_like">J\'aime retiré pour le restaurant !</string>
 
     <!-- VIEW MODEL -->
-    <string name="view_model_toast_request_failure">Délais de réponse de Google Place dépassé …</string>
+    <string name="view_model_toast_request_failure">Délais de réponse Google Place dépassé…</string>
 
     <!-- GO4LUNCH UTILS -->
     <string name="go4lunch_utils_text_user_joining">%1$s vient !</string>
@@ -109,7 +109,7 @@
 
 
     <!-- NOTIFICATION -->
-    <string name="notification_title">Vous déjeunez à %1$s</string>
+    <string name="notification_title">Vous déjeunez à %1$s, %2$s</string>
     <string name="notification_text">"Collègues vous rejoingant : "</string>
     <string name="notification_text_joining_users_and">", et "</string>
     <string name="notification_text_no_joining_user">Personne ne déjeune avec vous …</string>

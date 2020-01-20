@@ -134,7 +134,6 @@ public class WorkmatesFragment extends BaseFragment {
      */
     private void updateRecyclerView(@NotNull List<User> allUsersList) {
         assert getActivity() != null;
-        this.allUsersList = allUsersList;
         this.allWorkmatesList.clear();
         for (User user : allUsersList) {
             // User data from firestore
@@ -155,6 +154,7 @@ public class WorkmatesFragment extends BaseFragment {
      * @param allUsersList All users list.
      */
     private void manageRequestResponse(List<User> allUsersList) {
+        this.allUsersList = allUsersList;
         if (queryTerm != null && !queryTerm.isEmpty())
             this.updateRecyclerView(this.searchQueryInList());
         else this.updateRecyclerView(allUsersList);
@@ -174,8 +174,9 @@ public class WorkmatesFragment extends BaseFragment {
                 decidedUsers.add(user);
             else notDecidedUsers.add(user);
         }
-        setSortedRestaurantNameList(decidedUsers);
-        sortNotDecidedUserList(notDecidedUsers);
+        if (!decidedUsers.isEmpty())
+            setSortedRestaurantNameList(decidedUsers);
+        sortNotDecidedUserList(notDecidedUsers, decidedUsers.isEmpty());
     }
 
     /**
@@ -240,8 +241,9 @@ public class WorkmatesFragment extends BaseFragment {
     /**
      * Sort not decided user list alphabetically.
      * @param userList Not decider user list.
+     * @param isDecidedUsersEmpty Is decided users list is empty.
      */
-    private void sortNotDecidedUserList(@NotNull List<User> userList) {
+    private void sortNotDecidedUserList(@NotNull List<User> userList, boolean isDecidedUsersEmpty) {
         // Create sorted user name list
         Collection<String> sortedUserNames = new TreeSet<>(Collator.getInstance());
         for (User user : userList)
@@ -260,6 +262,7 @@ public class WorkmatesFragment extends BaseFragment {
         }
         notDecidedUsers.clear();
         notDecidedUsers.addAll(userList);
+        if (isDecidedUsersEmpty) this.manageRequestResponse(notDecidedUsers);
     }
 
     /**

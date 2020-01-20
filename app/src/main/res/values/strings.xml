@@ -109,7 +109,7 @@
 
 
     <!-- NOTIFICATION -->
-    <string name="notification_title">You lunch at %1$s</string>
+    <string name="notification_title">You lunch at %1$s, %2$s</string>
     <string name="notification_text">"Joining workmates : "</string>
     <string name="notification_text_joining_users_and">", and "</string>
     <string name="notification_text_no_joining_user">Nobody lunch with you …</string>
