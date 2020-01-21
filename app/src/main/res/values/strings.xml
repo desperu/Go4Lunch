@@ -41,7 +41,6 @@
 
     <!-- MAPS FRAGMENT -->
     <string name="fragment_maps_popup_title_permission_location">This application need location permission.</string>
-    <string name="fragment_maps_no_place_found">No Place found !</string>
 
     <!-- RESTAURANT LIST FRAGMENT -->
     <string name="fragment_restaurant_list_snackbar_refresh_nearby_restaurant">Only restaurant nearby your position !</string>

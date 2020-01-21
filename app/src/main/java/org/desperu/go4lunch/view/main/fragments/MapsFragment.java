@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -174,10 +173,11 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
     @Override
     public boolean onMarkerClick(@NotNull Marker marker) {
         this.repositionMapButton(GOOGLE_MAP_TOOLBAR, (int) getResources().getDimension(R.dimen.fragment_maps_toolbar_margin_bottom), (int) getResources().getDimension(R.dimen.fragment_maps_toolbar_margin_end));
-        if (marker.getSnippet() != null)
+        if (marker.getSnippet() != null) {
             mCallback.onClickedMarker(marker.getSnippet());
-        else Toast.makeText(getContext(), R.string.fragment_maps_no_place_found, Toast.LENGTH_SHORT).show();
-        return true;
+            return true;
+        } else
+            return false;
     }
 
     @Override
