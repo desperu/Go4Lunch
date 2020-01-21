@@ -260,7 +260,8 @@ public class RestaurantListFragment extends BaseFragment {
      * Update recycler view with corresponding data, from maps fragment or search with query term.
      */
     private void updateRecyclerViewWithData() {
-        if (this.placesIdList != null && !this.placesIdList.isEmpty() && this.getIsQueryForRestaurant())
+        if (this.placesIdList != null && !this.placesIdList.isEmpty() && this.getIsQueryForRestaurant()
+                || placesIdList == null || placesIdList.isEmpty())
             this.updateRecyclerView(this.placesIdList);
         else reloadRestaurantList();
     }
@@ -273,6 +274,7 @@ public class RestaurantListFragment extends BaseFragment {
         dataCallback.onNewPlacesIdList(placeIdList);
         this.setRestaurantInfoAndDBList(placeIdList);
         this.setRestaurantDistanceList();
+        if (placeIdList.isEmpty()) this.sortRestaurantByDistance();
         swipeRefreshLayout.setRefreshing(false);
     }
 

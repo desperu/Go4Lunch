@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -347,7 +348,8 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
                 placesIdList.add(place.getId());
             }
             mCallback.onNewPlacesIdList(placesIdList);
-            mCallback.saveNearbyBounds(this.getRectangularBounds());
+            // Wait map finished loading and move before save nearby bounds
+            new Handler().postDelayed(() -> mCallback.saveNearbyBounds(this.getRectangularBounds()), 1000);
         });
     }
 
