@@ -52,7 +52,8 @@ public class RestaurantDBViewModel extends AndroidViewModel {
      * @param place Restaurant place object.
      */
     void createRestaurant(@NotNull Place place) {
-        RestaurantHelper.createRestaurant(place.getId(), place.getName(), new ArrayList<>(), place.getRating(), new ArrayList<>());
+        RestaurantHelper.createRestaurant(place.getId(), place.getName(), place.getAddress(),
+                new ArrayList<>(), place.getRating(), new ArrayList<>());
     }
 
     /**

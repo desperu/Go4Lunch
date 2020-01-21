@@ -16,6 +16,7 @@ public class RestaurantTest {
 
     private String name = "restaurantName";
     private String restaurantId = "restaurantId";
+    private String address = "10 Place Sainte-Anne, 35000 Rennes, France";
     private List<String> bookedUsersId = new ArrayList<>();
     private Double stars = 4.5;
     private List<String> likeUsers = new ArrayList<>();
@@ -44,10 +45,11 @@ public class RestaurantTest {
 
     @Test
     public void Given_restaurantWithData_When_createRestaurant_Then_checkRestaurantData() {
-        Restaurant restaurant = new Restaurant(name, restaurantId, bookedUsersId, stars, likeUsers);
+        Restaurant restaurant = new Restaurant(name, restaurantId, address, bookedUsersId, stars, likeUsers);
 
         assertEquals(name, restaurant.getName());
         assertEquals(restaurantId, restaurant.getRestaurantId());
+        assertEquals(address, restaurant.getAddress());
         assertEquals(bookedUsersId, restaurant.getBookedUsersId());
         assertEquals(stars, restaurant.getStars());
         assertEquals(likeUsers, restaurant.getLikeUsers());
@@ -59,12 +61,14 @@ public class RestaurantTest {
 
         restaurant.setName(name);
         restaurant.setRestaurantId(restaurantId);
+        restaurant.setAddress(address);
         restaurant.setBookedUsersId(bookedUsersId);
         restaurant.setStars(stars);
         restaurant.setLikeUsers(likeUsers);
 
         assertEquals(name, restaurant.getName());
         assertEquals(restaurantId, restaurant.getRestaurantId());
+        assertEquals(address, restaurant.getAddress());
         assertEquals(bookedUsersId, restaurant.getBookedUsersId());
         assertEquals(stars, restaurant.getStars());
         assertEquals(likeUsers, restaurant.getLikeUsers());

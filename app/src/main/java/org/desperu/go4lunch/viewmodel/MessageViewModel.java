@@ -223,8 +223,8 @@ public class MessageViewModel extends AndroidViewModel {
     @BindingAdapter("messageBackground")
     public static void setMessageContainerBackground(@NotNull LinearLayout linear, boolean isCurrentUser) {
         linear.setBackground(isCurrentUser ?
-                linear.getContext().getResources().getDrawable(R.drawable.ic_chat_message_sender_background) :
-                linear.getContext().getResources().getDrawable(R.drawable.ic_chat_message_not_sender_background));
+                linear.getContext().getResources().getDrawable(R.drawable.ic_chat_message_not_sender_background) :
+                linear.getContext().getResources().getDrawable(R.drawable.ic_chat_message_sender_background));
     }
 
     @BindingAdapter("senderPicture")

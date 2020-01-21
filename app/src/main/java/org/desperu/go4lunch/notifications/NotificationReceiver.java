@@ -63,7 +63,9 @@ public class NotificationReceiver extends BroadcastReceiver {
         // Create notification.
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context,CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_base_logo_black)
-                .setContentTitle(context.getString(R.string.notification_title, Go4LunchUtils.getSimpleRestaurantName(bookedRestaurant.getName())))
+                .setContentTitle(context.getString(R.string.notification_title,
+                        Go4LunchUtils.getSimpleRestaurantName(bookedRestaurant.getName()),
+                        Go4LunchUtils.getRestaurantStreetAddress(bookedRestaurant.getAddress())))
                 .setContentText(bookedUserNameList.size() == 0 ?
                         context.getString(R.string.notification_text_no_joining_user) :
                         context.getString(R.string.notification_text) + Go4LunchUtils.getJoiningUsersName(context, bookedUserNameList))

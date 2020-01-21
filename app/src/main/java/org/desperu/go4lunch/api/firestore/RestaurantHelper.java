@@ -27,9 +27,9 @@ public class RestaurantHelper {
     // --- CREATE ---
 
     @NotNull
-    public static Task<Void> createRestaurant(String restaurantId, String name, List<String> bookedUsersId,
+    public static Task<Void> createRestaurant(String restaurantId, String name, String address, List<String> bookedUsersId,
                                               Double stars, List<String> likeUsers) {
-        Restaurant restaurantToCreate = new Restaurant(name, restaurantId, bookedUsersId, stars, likeUsers);
+        Restaurant restaurantToCreate = new Restaurant(name, restaurantId, address, bookedUsersId, stars, likeUsers);
         return RestaurantHelper.getRestaurantCollection().document(restaurantId).set(restaurantToCreate);
     }
 

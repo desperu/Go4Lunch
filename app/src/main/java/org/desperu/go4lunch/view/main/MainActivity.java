@@ -535,7 +535,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             // and current time over 2.30pm, reset booked restaurant
             if (isNotificationSent && bookedTime != 0 && resetBookedCal.compareTo(bookedCal) > 0) {
                 userDBViewModel.updateBookedRestaurant(Place.builder().build(),
-                        new Restaurant(RESET_BOOKED_RESTAURANT, "",
+                        new Restaurant(RESET_BOOKED_RESTAURANT, "", "",
                                 new ArrayList<>(), 0.0,new ArrayList<>()));
                 Go4LunchPrefs.clear(getBaseContext(), IS_BOOKED_NOTIFICATION_SENT);
                 Go4LunchPrefs.clear(getBaseContext(), BOOKED_RESTAURANT_TIME);

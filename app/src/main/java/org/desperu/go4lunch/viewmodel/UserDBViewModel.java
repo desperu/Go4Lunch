@@ -66,10 +66,9 @@ public class UserDBViewModel extends AndroidViewModel {
     public void fetchUser() {
         UserHelper.getUser(uid).addOnSuccessListener(documentSnapshot -> {
             User user = documentSnapshot.toObject(User.class);
-            if (user != null) {
-                this.setUserData(user);
-                this.fetchBookedRestaurant(user);
-            }
+            user = user != null ? user : new User();
+            this.setUserData(user);
+            this.fetchBookedRestaurant(user);
         }).addOnFailureListener(e -> setUserData(new User()));
     }
 
@@ -77,7 +76,7 @@ public class UserDBViewModel extends AndroidViewModel {
      * Fetch user booked restaurant from firestore.
      */
     private void fetchBookedRestaurant(@NotNull User user) {
-        if (user.getBookedRestaurantId() != null) {
+        if (user.getBookedRestaurantId() != null && !user.getBookedRestaurantId().isEmpty()) {
             RestaurantDBViewModel restaurantDBViewModel = new RestaurantDBViewModel(
                     getApplication(), user.getBookedRestaurantId());
             restaurantDBViewModel.fetchRestaurant();

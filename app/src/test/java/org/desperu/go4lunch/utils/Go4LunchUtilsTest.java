@@ -396,7 +396,7 @@ public class Go4LunchUtilsTest {
         bookedUsersList.add("user1");
         bookedUsersList.add("user2");
         bookedUsersList.add("user3");
-        Restaurant restaurant = new Restaurant(null, null, bookedUsersList,null, null);
+        Restaurant restaurant = new Restaurant(null, null, null, bookedUsersList,null, null);
         String output = Go4LunchUtils.getBookedUsersNumber(restaurant);
 
         assertEquals(expected, output);
