@@ -52,7 +52,7 @@ public class AutocompleteViewModel extends AndroidViewModel {
         placesClient.findAutocompletePredictions(request).addOnSuccessListener((response) -> {
             for (AutocompletePrediction prediction : response.getAutocompletePredictions()) {
                 for (Place.Type type : prediction.getPlaceTypes()) {
-                    if ((type.toString().equals("RESTAURANT"))) {
+                    if ((type.toString().toUpperCase().equals("RESTAURANT"))) {
                         Log.i(getClass().getSimpleName(), prediction.getPlaceId());
                         Log.i(getClass().getSimpleName(), prediction.getPrimaryText(null).toString());
                         this.placeIdList.add(prediction.getPlaceId());

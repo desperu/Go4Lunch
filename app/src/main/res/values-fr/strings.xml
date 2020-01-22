@@ -110,7 +110,7 @@
     <!-- NOTIFICATION -->
     <string name="notification_title">Vous déjeunez à %1$s, %2$s</string>
     <string name="notification_text">"Collègues vous rejoingant : "</string>
-    <string name="notification_text_joining_users_and">", et "</string>
+    <string name="notification_text_joining_users_and">" et "</string>
     <string name="notification_text_no_joining_user">Personne ne déjeune avec vous …</string>
 
     <!-- FACEBOOK PURPOSE -->

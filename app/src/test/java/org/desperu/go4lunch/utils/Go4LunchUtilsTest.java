@@ -56,7 +56,7 @@ public class Go4LunchUtilsTest {
     private String noData = "No opening hours data !";
 
     // Notification
-    private String notificationAnd = ", and ";
+    private String notificationAnd = " and ";
 
     @Before
     public void before() {
@@ -418,7 +418,7 @@ public class Go4LunchUtilsTest {
 
     @Test
     public void Given_bookedUsersNameList_When_getJoiningUserName_Then_joiningUsersName() {
-        String expected = "user1, user2, and user3.";
+        String expected = "user1, user2 and user3.";
 
         List<String> bookedUsersList = new ArrayList<>();
         bookedUsersList.add("user1");

@@ -60,7 +60,7 @@ public class NearbyPlaceViewModel extends AndroidViewModel {
 
                     assert placeLikelihood.getPlace().getTypes() != null;
                     for (Place.Type type : placeLikelihood.getPlace().getTypes()) {
-                        if ((type.toString().equals("RESTAURANT"))
+                        if ((type.toString().toUpperCase().equals("RESTAURANT"))
                                 && placeLikelihood.getPlace().getLatLng() != null) {
                             // Add to place list each Restaurant place found
                             this.tempPlaceList.add(placeLikelihood.getPlace());

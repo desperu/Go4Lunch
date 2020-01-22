@@ -259,7 +259,11 @@ public class Go4LunchUtils {
     private static String setTimeFormat(int hours, int minutes) {
         String language = Locale.getDefault().getDisplayLanguage();
         String strMinutes = minutes > 0 ? String.valueOf(minutes) : "";
-        if (language.equals("en")) return hours > 12 ? hours - 12 + "." + strMinutes + "pm" : hours + "." + strMinutes + "am";
+        if (language.toLowerCase().equals("english")) {
+            if (!strMinutes.isEmpty()) strMinutes = "." + strMinutes;
+            if (hours == 12) return hours + strMinutes + " pm";
+            return hours > 12 ? hours - 12 + strMinutes + " pm" : hours + strMinutes + " am";
+        }
         else return hours + "h" + strMinutes;
     }
 
