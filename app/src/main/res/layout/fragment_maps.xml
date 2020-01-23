@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_margin="@dimen/fragment_maps_floating_button_location"
+            android:layout_margin="@dimen/fragment_maps_floating_button_location_margin"
             app:backgroundTint="@android:color/white"
             app:srcCompat="@drawable/ic_baseline_my_location_black_24"/>
 

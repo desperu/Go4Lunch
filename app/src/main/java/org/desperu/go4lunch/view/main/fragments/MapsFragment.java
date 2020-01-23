@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
@@ -33,6 +34,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.model.RectangularBounds;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.desperu.go4lunch.R;
 import org.desperu.go4lunch.models.Restaurant;
@@ -64,6 +66,7 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
 
     // FOR DESIGN
     @BindView(R.id.map) MapView mapView;
+    @BindView(R.id.fragment_maps_floating_button_location) FloatingActionButton myLocationButton;
 
     // FOR BUNDLE
     public static final String QUERY_TERM_MAPS = "queryTerm";
@@ -453,6 +456,12 @@ public class MapsFragment extends BaseFragment implements OnMapReadyCallback, Go
                 // position to the top of custom My Location button
                 layoutParams.setMargins(0, 0, marginEnd, marginBottom);
             }
+        }
+        // Correct my location button position for KITKAT
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)
+                    myLocationButton.getLayoutParams();
+            layoutParams.setMargins(0,0, (int) getResources().getDimension(R.dimen.fragment_maps_floating_button_location_margin_kitkat), (int) getResources().getDimension(R.dimen.fragment_maps_floating_button_location_margin_kitkat));
         }
     }
 
