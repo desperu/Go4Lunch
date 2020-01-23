@@ -70,7 +70,7 @@
     <!-- Chat Fragment -->
     <dimen name="fragment_chat_image_chosen_preview_width">60dp</dimen>
     <dimen name="fragment_chat_image_chosen_preview_height">60dp</dimen>
-    <dimen name="fragment_chat_add_file_button_image_drawable" tools:ignore="ReferenceType">@drawable/ic_add_circle_black_48</dimen>
+    <dimen name="fragment_chat_add_file_button_image_drawable" tools:ignore="ReferenceType">@drawable/ic_add_circle_black_24</dimen>
     <!-- Chat Fragment Message Item-->
     <dimen name="fragment_chat_message_item_profile_image_width">60dp</dimen>
     <dimen name="fragment_chat_message_item_profile_image_height">60dp</dimen>

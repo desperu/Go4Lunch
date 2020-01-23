@@ -34,20 +34,6 @@
                 app:layout_constraintHeight_percent="0.4"
                 app:layout_constraintBottom_toTopOf="@+id/activity_restaurant_detail_info_container"/>
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/activity_restaurant_detail_button_booked"
-                android:layout_width="@dimen/activity_restaurant_detail_floating_button_width"
-                android:layout_height="@dimen/activity_restaurant_detail_floating_button_height"
-                android:layout_marginEnd="@dimen/activity_restaurant_detail_floating_button_margin_end"
-                android:scaleType="center"
-                app:fabCustomSize="@dimen/activity_restaurant_detail_floating_button_fab_custom_size"
-                app:maxImageSize="@dimen/activity_restaurant_detail_floating_button_max_image_size"
-                app:layout_constraintBottom_toTopOf="@+id/activity_restaurant_detail_info_container"
-                app:layout_constraintTop_toTopOf="@+id/activity_restaurant_detail_info_container"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:backgroundTint="@android:color/white"
-                tools:setFloatingImage="@{restaurantDBViewModel.isUserBookedRestaurant}"/>
-
             <RelativeLayout
                 android:id="@+id/activity_restaurant_detail_info_container"
                 android:layout_width="match_parent"
@@ -115,6 +101,20 @@
                     android:ellipsize="end"/>
 
             </RelativeLayout>
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/activity_restaurant_detail_button_booked"
+                android:layout_width="@dimen/activity_restaurant_detail_floating_button_width"
+                android:layout_height="@dimen/activity_restaurant_detail_floating_button_height"
+                android:layout_marginEnd="@dimen/activity_restaurant_detail_floating_button_margin_end"
+                android:scaleType="center"
+                app:fabCustomSize="@dimen/activity_restaurant_detail_floating_button_fab_custom_size"
+                app:maxImageSize="@dimen/activity_restaurant_detail_floating_button_max_image_size"
+                app:layout_constraintBottom_toTopOf="@+id/activity_restaurant_detail_info_container"
+                app:layout_constraintTop_toTopOf="@+id/activity_restaurant_detail_info_container"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:backgroundTint="@android:color/white"
+                tools:setFloatingImage="@{restaurantDBViewModel.isUserBookedRestaurant}"/>
 
             <LinearLayout
                 android:id="@+id/activity_restaurant_detail_button_container"

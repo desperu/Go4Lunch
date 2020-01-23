@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -59,10 +59,10 @@
             android:textAllCaps="false"
             android:textColor="@android:color/white"
             android:textSize="@dimen/activity_login_button_text_size"
-            android:drawableStart="@dimen/activity_login_button_email_image_drawable"
             android:paddingStart="@dimen/activity_login_button_padding_start_end"
             android:paddingEnd="@dimen/activity_login_button_padding_start_end"
-            android:layout_margin="@dimen/activity_login_button_margin"/>
+            android:layout_margin="@dimen/activity_login_button_margin"
+            app:drawableStartCompat="@dimen/activity_login_button_email_image_drawable"/>
 
         <Button
             android:id="@+id/activity_login_button_google"
@@ -73,10 +73,10 @@
             android:textAllCaps="false"
             android:textColor="@android:color/black"
             android:textSize="@dimen/activity_login_button_text_size"
-            android:drawableStart="@dimen/activity_login_button_google_image_drawable"
             android:paddingStart="@dimen/activity_login_button_padding_start_end"
             android:paddingEnd="@dimen/activity_login_button_padding_start_end"
-            android:layout_margin="@dimen/activity_login_button_margin"/>
+            android:layout_margin="@dimen/activity_login_button_margin"
+            app:drawableStartCompat="@dimen/activity_login_button_google_image_drawable"/>
 
         <Button
             android:id="@+id/activity_login_button_facebook"
@@ -87,10 +87,10 @@
             android:textAllCaps="false"
             android:textColor="@android:color/white"
             android:textSize="@dimen/activity_login_button_text_size"
-            android:drawableStart="@dimen/activity_login_button_facebook_image_drawable"
             android:paddingStart="@dimen/activity_login_button_facebook_padding_start_end"
             android:paddingEnd="@dimen/activity_login_button_facebook_padding_start_end"
-            android:layout_margin="@dimen/activity_login_button_margin"/>
+            android:layout_margin="@dimen/activity_login_button_margin"
+            app:drawableStartCompat="@dimen/activity_login_button_facebook_image_drawable"/>
 
         <Button
             android:id="@+id/activity_login_button_twitter"
@@ -101,10 +101,10 @@
             android:textAllCaps="false"
             android:textColor="@android:color/white"
             android:textSize="@dimen/activity_login_button_text_size"
-            android:drawableStart="@dimen/activity_login_button_twitter_image_drawable"
             android:paddingStart="@dimen/activity_login_button_padding_start_end"
             android:paddingEnd="@dimen/activity_login_button_padding_start_end"
-            android:layout_margin="@dimen/activity_login_button_margin"/>
+            android:layout_margin="@dimen/activity_login_button_margin"
+            app:drawableStartCompat="@dimen/activity_login_button_twitter_image_drawable"/>
 
     </LinearLayout>
 
