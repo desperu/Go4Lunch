@@ -91,13 +91,13 @@
     <string name="activity_settings_text_category_map">Carte</string>
     <string name="activity_settings_text_map_zoom_size">Niveau de zoom de la carte</string>
     <string name="activity_settings_text_map_zoom_size_description">Définir le niveau de zoom de la carte, valeur par defaut 18, min 2,  max 21.</string>
-    <string name="activity_settings_text_map_zoom_button">Activer les bouttons de zoom de la carte</string>
-    <string name="activity_settings_text_map_zoom_button_description">Affiche les bouttons de zoom de la carte pour contrôler le zoom de la carte.</string>
+    <string name="activity_settings_text_map_zoom_button">Activer les boutons de zoom de la carte</string>
+    <string name="activity_settings_text_map_zoom_button_description">Affiche les boutons de zoom de la carte pour contrôler le zoom de la carte.</string>
     <string name="activity_settings_text_map_auto_refresh_location">Rafraîchir automatiquement la localisation</string>
     <string name="activity_settings_text_map_auto_refresh_location_description">Rafraîchit vôtre localistion toute les 5 sec. Rafraîchit la carte et les restaurants si votre localisation à changé.</string>
     <string name="activity_settings_text_category_reset_settings">Réinitialiser les paramètres</string>
     <string name="activity_settings_text_reset_settings">Réinitialiser les paramètres</string>
-    <string name="activity_settings_text_reset_settings_description">Réinitialiser les paramètres à leur valeur d\'oriigne.</string>
+    <string name="activity_settings_text_reset_settings_description">Réinitialiser les paramètres à leur valeur d\'origne.</string>
     <!-- Alert Dialog -->
     <string name="activity_settings_dialog_reset_settings_message">Êtes-vous sûr de vouloir réinitialiser les paramètres à leur valeur de defaut?</string>
     <string name="activity_settings_dialog_positive_button" translatable="false">OK</string>

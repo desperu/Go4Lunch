@@ -496,6 +496,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_OK) { // SUCCESS
+                // Show map fragment after success login
+                bottomNavigationView.setSelectedItemId(R.id.activity_main_menu_bottom_map);
                 showToast(getString(R.string.connection_succeed));
             } else { // ERRORS
                 if (response == null) {
